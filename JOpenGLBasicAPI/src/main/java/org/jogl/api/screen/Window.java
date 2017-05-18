@@ -13,8 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jogl.api;
+package org.jogl.api.screen;
 
+import org.jogl.api.screen.Screen;
+import org.jogl.api.input.Keyboard;
+import org.jogl.api.input.events.Mouse;
 import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MAJOR;
 import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MINOR;
 import static org.lwjgl.glfw.GLFW.GLFW_FALSE;
@@ -54,7 +57,7 @@ public class Window {
     
     // The window handle
     private long window;
-    private Scene scene;
+    private Screen scene;
     private int width;
     private int height;
     private String title;
@@ -72,18 +75,18 @@ public class Window {
 //        }
 //    };
 
-    public Window(Scene scene, String title, int width, int height) {
+    public Window(Screen scene, String title, int width, int height) {
         this.scene = scene;
         this.title = title;
         this.width = width;
         this.height = height;
     }
 
-    public Window(Scene scene, String title) {
+    public Window(Screen scene, String title) {
         this(scene, title, 800, 600);
     }
 
-    public Window(Scene scene) {
+    public Window(Screen scene) {
         this(scene, "Game");
     }
 

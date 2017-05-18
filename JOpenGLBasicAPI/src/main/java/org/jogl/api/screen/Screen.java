@@ -13,40 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jogl.api;
+package org.jogl.api.screen;
 
 /**
  *
  * @author luis
  */
-public enum MouseButton {
+public interface Screen {
     
-    MOUSE_1(1),
-    MOUSE_2(2),
-    MOUSE_3(3);
-    
-    private final int code;
+    void init();
 
-    private MouseButton(int code) {
-        this.code = code;
-    }
+    void update(float secs);
 
-    public int getCode() {
-        return code;
-    }
-    
-    public static MouseButton from(int code){
-        for (MouseButton m:values()) {
-            if(m.getCode() == code){
-                return m;
-            }
-        }
-        
-        return null;
-    }
-    
-    public boolean is(int code){
-        return this.code == code;
-    }
-    
+    void draw();
+
+    void deinit();
 }

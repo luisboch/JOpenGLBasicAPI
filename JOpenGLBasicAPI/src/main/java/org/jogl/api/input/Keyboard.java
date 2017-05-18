@@ -1,4 +1,4 @@
-package org.jogl.api;
+package org.jogl.api.input;
 
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
@@ -33,7 +33,7 @@ public class Keyboard  {
         return releasedKeys.contains(key);
     }
     
-    void set(int key, int action) {
+    public void set(int key, int action) {
         if (action == GLFW_PRESS) {
             downKeys.add(key);
             pressedKeys.add(key);
@@ -44,7 +44,7 @@ public class Keyboard  {
         }
     }
     
-    void update() {
+    public void update() {
         pressedKeys.clear();
         releasedKeys.clear();
     }

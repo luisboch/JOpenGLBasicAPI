@@ -5,18 +5,16 @@
  */
 package org.jogl.api;
 
+import java.util.List;
+
 /**
  *
  * @author luis
  */
 public interface Scene {
-
-    void init();
-
-    void update(float secs);
-
-    void draw();
-
-    void deinit();
+    Shader getShader();
     
+    List<GlobalLight> getLights();
+    List<Filter> getFilters();
+    List<Object3D> getObjects();
 }
