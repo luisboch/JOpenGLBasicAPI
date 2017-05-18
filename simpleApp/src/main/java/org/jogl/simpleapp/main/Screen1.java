@@ -19,7 +19,7 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 
-public class Screen {
+public class Screen1 {
 
     private final Object lock = new Object();
     private boolean isRunning = false;
@@ -37,7 +37,7 @@ public class Screen {
     private Thread glThread;
 
     public static void main(String[] args) {
-        new Screen().runTester();
+        new Screen1().runTester();
     }
 
     private void runTester() {

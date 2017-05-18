@@ -18,5 +18,5 @@ public interface Scene {
     void draw();
 
     void deinit();
-
+    
 }

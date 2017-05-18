@@ -96,5 +96,11 @@
             <artifactId>JOpenGLBasicAPI-Impl</artifactId>
             <version>[0,)</version>
         </dependency>
+        <dependency>
+            <groupId>org.lwjgl.lwjgl</groupId>
+            <artifactId>lwjgl</artifactId>
+            <version>2.9.3</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
 </project>
