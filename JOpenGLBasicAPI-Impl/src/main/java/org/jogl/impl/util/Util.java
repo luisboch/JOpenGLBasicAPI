@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jogl.api;
+package org.jogl.impl.util;
 
 import org.joml.Vector3f;
 
@@ -21,11 +21,14 @@ import org.joml.Vector3f;
  *
  * @author luis
  */
-public interface Material {
-
-    Shader getShader();
-
-    Texture getTexture();
-
-    Vector3f getColor();
+public class Util {
+    public static final Vector3f colorFromRGB(int r, int g, int b){
+        return new Vector3f(r, g, b);
+    }
+    
+    public static final Vector3f convert(java.awt.Color c){
+        return colorFromRGB(c.getRed(), c.getGreen(), c.getBlue());
+    }
+    
+    
 }

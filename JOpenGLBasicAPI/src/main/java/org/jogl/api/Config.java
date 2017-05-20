@@ -15,17 +15,11 @@
  */
 package org.jogl.api;
 
-import org.joml.Vector3f;
-
 /**
  *
  * @author luis
  */
-public interface Material {
-
-    Shader getShader();
-
-    Texture getTexture();
-
-    Vector3f getColor();
+public class Config {
+    public static boolean cullFace = false;
+    public static boolean showOnlyLines = false;
 }

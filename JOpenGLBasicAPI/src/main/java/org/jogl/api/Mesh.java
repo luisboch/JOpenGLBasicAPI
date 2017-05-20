@@ -15,10 +15,24 @@
  */
 package org.jogl.api;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author luis
  */
-public interface Mesh {
+public class Mesh {
+    
+    private List<Vertex> vertices = new ArrayList<Vertex>();
+
+    public List<Vertex> getVertices() {
+        return vertices;
+    }
+    
+    public Mesh addVertice(Vertex v){
+        vertices.add(v);
+        return this;
+    }
     
 }

@@ -13,19 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jogl.api;
+package org.jogl.impl.util;
 
-import org.joml.Vector3f;
+import java.io.File;
+import org.jogl.api.Texture;
 
 /**
  *
  * @author luis
  */
-public interface Material {
-
-    Shader getShader();
-
-    Texture getTexture();
-
-    Vector3f getColor();
+public class TextureUtil {
+    
+    public Texture fromFile(String file){
+        return fromFile(new File(file));
+    }
+    
+    public Texture fromFile(File file){
+        return null;
+    }
 }

@@ -15,17 +15,14 @@
  */
 package org.jogl.api;
 
-import org.joml.Vector3f;
+import org.joml.Matrix4f;
 
 /**
  *
  * @author luis
  */
-public interface Material {
-
-    Shader getShader();
-
-    Texture getTexture();
-
-    Vector3f getColor();
+public interface Camera {
+    Matrix4f getProjectionMatrix();
+    Matrix4f getViewMatrix();
+    
 }

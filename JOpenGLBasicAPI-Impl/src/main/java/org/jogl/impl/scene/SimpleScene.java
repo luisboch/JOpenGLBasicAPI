@@ -13,19 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jogl.api;
+package org.jogl.impl.scene;
 
-import org.joml.Vector3f;
+import org.jogl.api.Shader;
 
 /**
  *
  * @author luis
  */
-public interface Material {
+public class SimpleScene extends AbstractScene{
 
-    Shader getShader();
-
-    Texture getTexture();
-
-    Vector3f getColor();
+    @Override
+    public void setShader(Shader shader) {
+        super.setShader(shader); //To change body of generated methods, choose Tools | Templates.
+    }
 }

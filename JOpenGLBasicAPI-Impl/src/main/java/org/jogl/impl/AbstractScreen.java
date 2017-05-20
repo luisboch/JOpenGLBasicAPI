@@ -13,19 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jogl.api;
+package org.jogl.impl;
 
-import org.joml.Vector3f;
+import org.jogl.api.Scene;
+import org.jogl.api.screen.Screen;
 
 /**
  *
  * @author luis
  */
-public interface Material {
+public abstract class AbstractScreen<S extends Scene> implements Screen {
+    
+    protected S scene;
 
-    Shader getShader();
+    @Override
+    public void init() {
+        scene.init();
+    }
 
-    Texture getTexture();
+    @Override
+    public void update(float secs) {
+        scene.update(secs);
+    }
 
-    Vector3f getColor();
+    @Override
+    public void draw() {
+        scene.render();
+    }
+
+    @Override
+    public void deinit() {
+        scene.deiInit();
+    }
+
 }

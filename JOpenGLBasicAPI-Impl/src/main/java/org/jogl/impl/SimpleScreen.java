@@ -13,19 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jogl.api;
+package org.jogl.impl;
 
-import org.joml.Vector3f;
+import org.jogl.impl.scene.AbstractScene;
+import org.jogl.impl.scene.SimpleScene;
+import org.jogl.impl.shaders.SimpleShader;
+import org.jogl.impl.util.objects.Triangle;
 
-/**
- *
- * @author luis
- */
-public interface Material {
 
-    Shader getShader();
+public class SimpleScreen extends AbstractScreen<SimpleScene> {
 
-    Texture getTexture();
+    public SimpleScreen() {
+    }
 
-    Vector3f getColor();
+    @Override
+    public void init() {
+        this.scene = new SimpleScene();
+        scene.setShader(new SimpleShader());
+        scene.addObject(new Triangle());
+        super.init();
+    }
+    
 }

@@ -19,6 +19,6 @@ package org.jogl.api;
  *
  * @author luis
  */
-public interface GlobalLight {
+public class GlobalLight {
     
 }

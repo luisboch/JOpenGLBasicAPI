@@ -15,17 +15,10 @@
  */
 package org.jogl.api;
 
-import org.joml.Vector3f;
-
 /**
  *
  * @author luis
  */
-public interface Material {
-
-    Shader getShader();
-
-    Texture getTexture();
-
-    Vector3f getColor();
+public interface RenderTexture extends Texture {
+    
 }

@@ -5,10 +5,34 @@
  */
 package org.jogl.api;
 
+import java.util.List;
+
 /**
  *
  * @author luis
  */
 public interface Shader {
     
+    /**
+     * Start this shader on GPU·
+     * 
+     * @throws Exception when error occurs.
+     * @return 
+     */
+    
+    Shader compile() throws Exception;
+    Shader setCamera(Camera camera);
+    
+    /**
+     * Enable this render on GPU (use program cmd)
+     * @return 
+     */
+    Shader enable();
+    Shader render(List<Scene.MeshReference> objects, List<GlobalLight> light);
+    
+    /**
+     * Enable this render on GPU (use program cmd)
+     * @return 
+     */
+    Shader disable();
 }

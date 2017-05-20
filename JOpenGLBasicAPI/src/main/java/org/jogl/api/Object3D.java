@@ -15,12 +15,21 @@
  */
 package org.jogl.api;
 
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
+
 /**
  *
  * @author luis
  */
 public interface Object3D {
+    
     Mesh getMesh();
+    
     LocalLight getLight();
+    
     Material getMaterial();
+    
+    Vector3f getPosition();
+    Matrix4f getTransform();
 }

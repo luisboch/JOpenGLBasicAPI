@@ -17,6 +17,8 @@ package org.jogl.simpleapp.main;
 
 import org.jogl.api.Scene;
 import org.jogl.api.screen.Window;
+import org.jogl.impl.SimpleScreen;
+import org.jogl.impl.scene.AbstractScene;
 import org.joml.AxisAngle4f;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
@@ -41,27 +43,7 @@ public class Screen {
 
 
     public static void main(String[] args) {
-        new Window(new org.jogl.api.screen.Screen() {
-            @Override
-            public void init() {
-//                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public void update(float secs) {
-//                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public void draw() {
-//                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
-            public void deinit() {
-//                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-        }).show();
+        new Window(new SimpleScreen()).show();
 
     }
 }
