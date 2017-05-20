@@ -39,9 +39,9 @@ public class Triangle implements Object3D {
     public Triangle() {
         mesh = new Mesh().addVertice(
                 new Vertex(
-                        new Vector3f(-.5f, -.5f, 0f),
-                        new Vector3f(.5f, -.5f, 0f),
-                        new Vector3f(0f, .5f, 0f)));
+                        new Vector3f(-0.5f, -0.5f, 0.6f),
+                        new Vector3f(0.5f, -0.5f, 0.6f),
+                        new Vector3f(0.0f, 0.5f, 0.6f)));
         material = new SmoothMaterial(Util.convert(Color.GREEN));
     }
 

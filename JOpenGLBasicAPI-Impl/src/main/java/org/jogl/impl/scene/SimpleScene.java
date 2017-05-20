@@ -15,16 +15,10 @@
  */
 package org.jogl.impl.scene;
 
-import org.jogl.api.Shader;
-
 /**
  *
  * @author luis
  */
 public class SimpleScene extends AbstractScene{
 
-    @Override
-    public void setShader(Shader shader) {
-        super.setShader(shader); //To change body of generated methods, choose Tools | Templates.
-    }
 }

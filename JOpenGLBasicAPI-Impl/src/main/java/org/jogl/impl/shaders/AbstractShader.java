@@ -26,7 +26,8 @@ public abstract class AbstractShader implements Shader {
     protected int programId;
     protected int vertexShaderId;
     protected int fragmentShaderId;
-
+    private boolean compiled = false;
+    
     private Camera camera;
 
     @Override
@@ -52,11 +53,16 @@ public abstract class AbstractShader implements Shader {
      * @return this instance
      */
     protected Shader createProgram() {
-
+        
+        if(isCompiled()){
+            // Already compiled
+            return this;
+        }
+        
         this.vertexShaderId = compileVertexShader();
         this.fragmentShaderId = compileFragmentShader();
         this.programId = linkProgram(this.vertexShaderId, this.fragmentShaderId);
-
+        this.compiled = true;
         return this;
     }
 
@@ -120,7 +126,6 @@ public abstract class AbstractShader implements Shader {
             glDetachShader(program, s);
             glDeleteShader(s);
         }
-
         return program;
 
     }
@@ -137,10 +142,7 @@ public abstract class AbstractShader implements Shader {
         return this;
     }
     
-    
-    
     protected void draw(String attribName, Scene.ArrayBuffer buffer, int glType) {
-
         int attrID = glGetAttribLocation(this.programId, attribName);
         glEnableVertexAttribArray(attrID);
         glBindBuffer(GL_ARRAY_BUFFER, buffer.id);
@@ -149,11 +151,17 @@ public abstract class AbstractShader implements Shader {
 
         glDisableVertexAttribArray(attrID);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glBindVertexArray(0);
 
     }
     protected void drawFloatArray(String attribName, Scene.ArrayBuffer buffer) {
         draw(attribName, buffer, GL_FLOAT);
 
     }
+
+    @Override
+    public boolean isCompiled() {
+        return compiled;
+    }
+    
+    
 }

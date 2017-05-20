@@ -15,11 +15,10 @@ public interface Shader {
     
     /**
      * Start this shader on GPU·
-     * 
+     * Can be called more than once
      * @throws Exception when error occurs.
      * @return 
      */
-    
     Shader compile() throws Exception;
     Shader setCamera(Camera camera);
     
@@ -35,4 +34,6 @@ public interface Shader {
      * @return 
      */
     Shader disable();
+    
+    boolean isCompiled();
 }

@@ -23,12 +23,19 @@ import org.joml.Vector3f;
  */
 public class Util {
     public static final Vector3f colorFromRGB(int r, int g, int b){
-        return new Vector3f(r, g, b);
+        return new Vector3f(r/255, g/255, b/255);
     }
     
     public static final Vector3f convert(java.awt.Color c){
         return colorFromRGB(c.getRed(), c.getGreen(), c.getBlue());
     }
     
-    
+    public static boolean isSubClass(Class clazzSub, Class clazzSuper ){
+        
+        if(clazzSub ==  null || clazzSuper ==  null){
+            return false;
+        }
+        
+        return clazzSuper.isAssignableFrom(clazzSub);
+    }
 }

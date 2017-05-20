@@ -29,9 +29,13 @@ public class SimpleScreen extends AbstractScreen<SimpleScene> {
     @Override
     public void init() {
         this.scene = new SimpleScene();
+        // Create shader
         scene.setShader(new SimpleShader());
-        scene.addObject(new Triangle());
+        // Initialize parent (with this shader)
         super.init();
+        
+        // Add objects
+        scene.addObject(new Triangle());
     }
     
 }
