@@ -15,9 +15,13 @@
  */
 package org.jogl.impl;
 
+import java.awt.Color;
 import org.jogl.impl.scene.SimpleScene;
 import org.jogl.impl.shaders.SimpleShader;
+import org.jogl.impl.util.Util;
 import org.jogl.impl.util.objects.Triangle;
+import org.jogl.materials.SmoothMaterial;
+import org.joml.Vector3f;
 
 
 public class SimpleScreen extends AbstractScreen<SimpleScene> {
@@ -33,6 +37,11 @@ public class SimpleScreen extends AbstractScreen<SimpleScene> {
         
         // Add objects
         scene.addObject(new Triangle());
+        scene.addObject(new Triangle()
+                .setPosition(new Vector3f(0.2f, -0.2f, 0f))
+                .setMaterial(new SmoothMaterial(Util.convert(Color.BLUE)))
+        );
+        
         scene.setShader(new SimpleShader());
 
         super.init();

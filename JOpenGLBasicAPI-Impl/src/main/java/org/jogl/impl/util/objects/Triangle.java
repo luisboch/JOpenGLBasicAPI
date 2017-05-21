@@ -30,12 +30,14 @@ import org.joml.Vector3f;
  *
  * @author luis
  */
-public class Triangle implements Object3D {
+public class Triangle implements Object3D<Triangle> {
 
     private Mesh mesh;
     private LocalLight light;
     private Material material;
-
+    
+    private Vector3f position = new Vector3f();
+    
     public Triangle() {
         mesh = new Mesh().addVertice(
                 new Vertex(
@@ -47,9 +49,15 @@ public class Triangle implements Object3D {
 
     @Override
     public Vector3f getPosition() {
-        return new Vector3f(0, 0, 0);
+        return position;
     }
 
+    @Override
+    public Triangle setPosition(Vector3f position) {
+        this.position = position;
+        return this;
+    }
+    
     @Override
     public Matrix4f getTransform() {
         return new Matrix4f().identity();
@@ -70,4 +78,9 @@ public class Triangle implements Object3D {
         return material;
     }
 
+    public Triangle setMaterial(Material material) {
+        this.material = material;
+        return this;
+    }
+    
 }

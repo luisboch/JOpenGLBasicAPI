@@ -22,7 +22,7 @@ import org.joml.Vector3f;
  *
  * @author luis
  */
-public interface Object3D {
+public interface Object3D<Type> {
     
     Mesh getMesh();
     
@@ -31,5 +31,6 @@ public interface Object3D {
     Material getMaterial();
     
     Vector3f getPosition();
+    Type setPosition(Vector3f position);
     Matrix4f getTransform();
 }
