@@ -17,27 +17,19 @@ package org.jogl.impl;
 
 import java.awt.Color;
 import org.jogl.api.Camera;
+import org.jogl.api.Object3D;
 import org.jogl.api.input.Key;
-import org.jogl.api.input.Keyboard;
-import org.jogl.api.input.events.Mouse;
 import org.jogl.impl.scene.SimpleScene;
 import org.jogl.impl.shaders.PhongShader;
 import org.jogl.impl.util.Util;
+import org.jogl.impl.util.objects.Cube;
 import org.jogl.impl.util.objects.Triangle;
 import org.jogl.impl.view.PerspectiveCamera;
 import org.jogl.materials.SmoothMaterial;
 import org.joml.Vector3f;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_C;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_Z;
 
 public class SimpleScreen extends AbstractScreen<SimpleScene> {
-
+    private Cube object = new Cube();
 
     public SimpleScreen() {
     }
@@ -49,17 +41,19 @@ public class SimpleScreen extends AbstractScreen<SimpleScene> {
         // Initialize parent (with this shader)
 
         // Add objects
-        scene.addObject(new Triangle());
-
-        scene.addObject(new Triangle()
-                .setPosition(new Vector3f(0.2f, -0.2f, 0f))
-                .setMaterial(new SmoothMaterial(Util.convert(Color.BLUE)))
-        );
-
-        scene.addObject(new Triangle()
-                .setPosition(new Vector3f(0.1f, -0.1f, 0f))
-                .setMaterial(new SmoothMaterial(Util.convert(Color.red)))
-        );
+        
+        
+        scene.addObject(object.setMaterial(new SmoothMaterial(Util.convert(Color.YELLOW))));
+//
+//        scene.addObject(new Triangle()
+//                .setPosition(new Vector3f(0.2f, -0.2f, 0f))
+//                .setMaterial(new SmoothMaterial(Util.convert(Color.BLUE)))
+//        );
+//
+//        scene.addObject(new Triangle()
+//                .setPosition(new Vector3f(0.1f, -0.1f, 0f))
+//                .setMaterial(new SmoothMaterial(Util.convert(Color.red)))
+//        );
 
         scene.setShader(new PhongShader());
         final Camera camera = new PerspectiveCamera();
@@ -93,6 +87,30 @@ public class SimpleScreen extends AbstractScreen<SimpleScene> {
 
         if (keyboard.isDown(Key.A)) {
             scene.getCamera().rotateLeft(secs);
+        }
+        
+        
+        if(keyboard.isDown(Key.U)){
+            object.getTransform().rotateY(secs);
+        }
+        
+        if(keyboard.isDown(Key.J)){
+            object.getTransform().rotateY(-secs);
+        }
+        
+        if(keyboard.isDown(Key.K)){
+            object.getTransform().rotateX(secs);
+        }
+        
+        if(keyboard.isDown(Key.H)){
+            object.getTransform().rotateX(-secs);
+        }
+        
+        if(keyboard.isDown(Key.I)){
+            object.getTransform().rotateZ(secs);
+        }
+        if(keyboard.isDown(Key.Y)){
+            object.getTransform().rotateZ(-secs);
         }
     }
 

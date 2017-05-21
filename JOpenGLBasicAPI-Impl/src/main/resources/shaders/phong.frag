@@ -1,6 +1,5 @@
 #version 330
 
-
 uniform vec3 uLightDir;
 
 uniform vec3 uAmbientLight;

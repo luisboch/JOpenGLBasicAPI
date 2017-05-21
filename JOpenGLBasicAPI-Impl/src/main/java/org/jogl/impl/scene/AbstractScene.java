@@ -41,6 +41,7 @@ import org.jogl.api.input.Keyboard;
 import org.jogl.api.input.events.Mouse;
 import org.jogl.impl.util.BufferUtils;
 import org.jogl.impl.util.Util;
+import org.joml.Vector3f;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
@@ -203,20 +204,29 @@ public abstract class AbstractScene implements Scene {
 
         final int meshId = createMesh();
         final Mesh mesh = object3D.getMesh();
-        final Buffer buffer = BufferUtils.convert(mesh.getVertices());
-        final int arrayBufferID = createBuffer(meshId, buffer);
-        final int elementSize = 3;
-        
-        final ArrayBuffer array = new ArrayBuffer(arrayBufferID, elementSize, (buffer.remaining() / elementSize));
-                
-        
+
+        // Vertex array
+        final Buffer vertexBuffer = BufferUtils.convert(mesh.getVertices());
+        final int arrayBufferID = createBuffer(meshId, vertexBuffer);
+        int elementSize = 3;
+
+        final ArrayBuffer array = new ArrayBuffer(arrayBufferID, elementSize, (vertexBuffer.remaining() / elementSize));
+
         if (mesh.getIndexBuffer() != null) {
             int indexBufferID = createIndexBuffer(meshId, BufferUtils.convertIndexBuffer(mesh.getIndexBuffer()));
             array.indexBuffer = new IndexBuffer(indexBufferID, mesh.getIndexBuffer().size());
         }
 
+        if (mesh.getNormals().isEmpty()) {
+            calculateNormals(mesh);
+        }
+
+        FloatBuffer normalBuffer = BufferUtils.convert(mesh.getNormals());
+        final int normalBufferID = createBuffer(meshId, vertexBuffer);
+        final ArrayBuffer normals = new ArrayBuffer(normalBufferID, elementSize, (normalBuffer.remaining() / elementSize));
+
         // Create referece
-        final MeshReference meshReference = new MeshReference(mesh, object3D, meshId, array);
+        final MeshReference meshReference = new MeshReference(mesh, object3D, meshId, array, normals);
 
         final List<MeshReference> meshs;
 
@@ -263,6 +273,7 @@ public abstract class AbstractScene implements Scene {
         glBindVertexArray(0);
         return id;
     }
+
     protected int createIndexBuffer(int meshId, Buffer buffer) {
         glBindVertexArray(meshId);
 
@@ -334,7 +345,7 @@ public abstract class AbstractScene implements Scene {
     public Camera getCamera() {
         return camera;
     }
-    
+
     protected void createRenderTexture(RenderTexture rtx) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
@@ -377,6 +388,33 @@ public abstract class AbstractScene implements Scene {
     @Override
     public Scene update(float secs) {
         return this;
+    }
+
+    private void calculateNormals(Mesh mesh) {
+
+        final List<Vector3f> vertices = new ArrayList<>();
+
+        if (mesh.getIndexBuffer() != null && !mesh.getIndexBuffer().isEmpty()) {
+            for (Integer idx : mesh.getIndexBuffer()) {
+                vertices.add(mesh.getVertices().get(idx));
+            }
+        } else {
+            vertices.addAll(mesh.getVertices());
+        }
+        
+        mesh.getNormals().clear();
+        
+        for (int i = 0; i < vertices.size(); i += 3) {
+            
+            Vector3f n1 = new Vector3f(vertices.get(i)).cross(vertices.get(i+1));
+            Vector3f n2 = new Vector3f(vertices.get(i+1)).cross(vertices.get(i+2));
+            Vector3f n3 = new Vector3f(vertices.get(i+2)).cross(vertices.get(i));
+            Vector3f normal = n1.add(n2).add(n3).normalize();
+            
+            mesh.getNormals().add(normal);
+            mesh.getNormals().add(normal);
+            mesh.getNormals().add(normal);
+        }
     }
 
 }

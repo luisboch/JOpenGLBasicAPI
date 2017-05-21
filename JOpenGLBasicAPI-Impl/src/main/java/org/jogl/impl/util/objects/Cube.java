@@ -22,9 +22,9 @@ import org.joml.Vector3f;
  *
  * @author luis
  */
-public class Square extends AbstractObject<Square> {
+public class Cube extends AbstractObject<Cube> {
 
-    public Square() {
+    public Cube() {
 
         mesh = new MeshCreator()
                 // Front face
@@ -32,7 +32,7 @@ public class Square extends AbstractObject<Square> {
                 .to(new Vector3f(-0.5f, +0.5f, -0.5f))
                 .to(new Vector3f(-0.5f, -0.5f, -0.5f))
                 .to(new Vector3f(+0.5f, -0.5f, -0.5f))
-                .to(new Vector3f(+0.5f, -0.5f, -0.5f))
+                .to(new Vector3f(+0.5f, +0.5f, -0.5f))
                 // Not folow path
                 
                 .close()
@@ -40,7 +40,7 @@ public class Square extends AbstractObject<Square> {
                 .to(new Vector3f(-0.5f, +0.5f, +0.5f))
                 .to(new Vector3f(-0.5f, -0.5f, +0.5f))
                 .to(new Vector3f(+0.5f, -0.5f, +0.5f))
-                .to(new Vector3f(+0.5f, -0.5f, +0.5f))
+                .to(new Vector3f(+0.5f, +0.5f, +0.5f))
                 
                 .close()
                 // Create right face

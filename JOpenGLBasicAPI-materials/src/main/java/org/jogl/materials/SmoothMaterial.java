@@ -30,7 +30,7 @@ public class SmoothMaterial implements PhongMaterial {
     }
 
     public SmoothMaterial(Vector3f color) {
-        this(new Vector3f(1.0f, 1.0f, 1.0f), new Vector3f(0.7f, 0.7f, 0.7f), new Vector3f(1.0f, 1.0f, 1.0f), 512.0f, color);
+        this(new Vector3f(1.0f, 1.0f, 1.0f), new Vector3f(0.7f, 0.7f, 0.7f), new Vector3f(1.0f, 1.0f, 1.0f), 2.0f, color);
     }
 
     public SmoothMaterial(Vector3f ambientMaterial, Vector3f diffuseMaterial, Vector3f specularMaterial, float specularPower, Vector3f color) {

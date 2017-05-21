@@ -55,13 +55,15 @@ public interface Scene {
         public final Mesh mesh;
         public final Object3D object;
         public final int meshId;
-        public final ArrayBuffer array;
+        public final ArrayBuffer vertexArray;
+        public final ArrayBuffer normalArray;
 
-        public MeshReference(Mesh mesh, Object3D object, int meshId, ArrayBuffer array) {
+        public MeshReference(Mesh mesh, Object3D object, int meshId, ArrayBuffer array, ArrayBuffer normalArray) {
             this.mesh = mesh;
             this.object = object;
             this.meshId = meshId;
-            this.array = array;
+            this.vertexArray = array;
+            this.normalArray = normalArray;
         }
     }
 

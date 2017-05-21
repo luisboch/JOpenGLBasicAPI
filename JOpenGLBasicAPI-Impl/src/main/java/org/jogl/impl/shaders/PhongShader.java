@@ -112,8 +112,10 @@ public class PhongShader extends AbstractShader {
                     
                 }
 
-                drawFloatArray("aVertex", ob.array);
+                drawFloatArray("aVertex", ob.vertexArray);
+                drawFloatArray("aNormal", ob.normalArray);
                 OpenGLUtil.setUniform(this.programId, "uPosition", ob.object.getPosition());
+                OpenGLUtil.setUniform(this.programId, "uTransform", ob.object.getTransform());
 
                 glBindVertexArray(0);
                 // Set vertex values of objects

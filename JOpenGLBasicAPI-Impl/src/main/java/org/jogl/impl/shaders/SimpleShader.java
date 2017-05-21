@@ -83,7 +83,7 @@ public class SimpleShader extends AbstractShader {
                     }
                 }
 
-                drawFloatArray("aVertex", ob.array);
+                drawFloatArray("aVertex", ob.vertexArray);
                 OpenGLUtil.setUniform(this.programId, "aPosition", ob.object.getPosition());
 
                 glBindVertexArray(0);

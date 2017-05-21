@@ -148,7 +148,7 @@ public abstract class AbstractShader implements Shader {
     }
     
     protected void draw(String attribName, Scene.ArrayBuffer buffer, int glType) {
-        OpenGLUtil.drawIndexBuffer(programId, attribName, buffer, glType);
+        OpenGLUtil.drawBuffer(programId, attribName, buffer, glType);
     }
     
     protected void drawFloatArray(String attribName, Scene.ArrayBuffer buffer) {
