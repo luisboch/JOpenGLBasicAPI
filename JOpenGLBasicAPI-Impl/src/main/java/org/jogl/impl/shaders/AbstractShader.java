@@ -97,12 +97,15 @@ public abstract class AbstractShader implements Shader {
     protected abstract String getFragmetShaderCode();
 
     private int compileShader(int shaderType, String code) {
+        
         int shader = glCreateShader(shaderType);
         glShaderSource(shader, code);
         glCompileShader(shader);
 
         if (glGetShaderi(shader, GL_COMPILE_STATUS) == GL_FALSE) {
-            throw new RuntimeException("Unable to compile shader: " + glGetShaderInfoLog(shader));
+            final String info = this.getClass().getSimpleName() +" ["+ (shaderType == GL_FRAGMENT_SHADER ? "FRAG" :"VERT")+ "]";
+            
+            throw new RuntimeException("Unable to compile shader " +info +": "+ glGetShaderInfoLog(shader));
         }
         return shader;
     }

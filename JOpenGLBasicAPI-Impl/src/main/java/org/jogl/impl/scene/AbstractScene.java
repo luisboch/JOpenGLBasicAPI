@@ -174,22 +174,15 @@ public abstract class AbstractScene implements Scene {
                 }
             }
 
-        }
-        float[] vertexData = new float[]{
-            0.0f, 0.5f,
-            -0.5f, -0.5f,
-            0.5f, -0.5f
-        };
-
-        final FloatBuffer buffer = org.lwjgl.BufferUtils.createFloatBuffer(vertexData.length);
-        buffer.put(vertexData).flip();
-
+        }  
+        
         final int meshId = createMesh();
         final Mesh mesh = object3D.getMesh();
-        final ArrayBuffer arrayBuffer = createBuffer(meshId, buffer, 2);
+        final ArrayBuffer buffer = createBuffer(meshId, BufferUtils.convert(mesh.getVertices()), 3);
+
 
         // Create referece
-        final MeshReference meshReference = new MeshReference(mesh, object3D, meshId, arrayBuffer);
+        final MeshReference meshReference = new MeshReference(mesh, object3D, meshId, buffer);
 
         final List<MeshReference> meshs;
 

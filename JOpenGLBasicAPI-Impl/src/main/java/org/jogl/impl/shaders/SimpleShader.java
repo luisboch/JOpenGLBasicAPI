@@ -20,6 +20,7 @@ import org.jogl.api.GlobalLight;
 import org.jogl.api.Material;
 import org.jogl.api.Scene;
 import org.jogl.api.Shader;
+import org.jogl.impl.util.FileUtil;
 import org.jogl.impl.util.OpenGLUtil;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
@@ -29,19 +30,17 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
  */
 public class SimpleShader extends AbstractShader {
 
+    private static final String PATH;
+
+    static {
+        PATH = SimpleShader.class.getClassLoader().getResource("shaders/").getPath();
+    }
+
     private static final String VERTEX_SHADER
-            = "#version 330\n"
-            + "in vec2 aVertex;\n"
-            + "void main(){\n"
-            + "     gl_Position = vec4(aVertex, 1.0, 1.0);\n"
-            + "}";
+            = FileUtil.readFile(PATH + "simpleshader.vert");
 
     private static final String FRAGMENT_SHADER
-            = "#version 330\n"
-            + "out vec4 out_color;\n"
-            + "void main(){\n"
-            + "     out_color = vec4(1.0, 1.0, 0.0, 1.0);\n"
-            + "}";
+            = FileUtil.readFile(PATH + "simpleshader.frag");
 
     @Override
     protected String getVertexShaderCode() {
@@ -67,9 +66,9 @@ public class SimpleShader extends AbstractShader {
         // camera DiffuseLight
         if (objects != null) {
             objects.forEach((Scene.MeshReference ob) -> {
-                
+
                 glBindVertexArray(ob.meshId);
-                
+
                 if (ob.object.getMaterial() != null) {
                     // CODE FOR MATERIAL
                     final Material material = ob.object.getMaterial();
