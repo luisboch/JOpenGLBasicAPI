@@ -21,6 +21,7 @@ import org.jogl.api.screen.Screen;
 /**
  *
  * @author luis
+ * @param <S>
  */
 public abstract class AbstractScreen<S extends Scene> implements Screen {
     

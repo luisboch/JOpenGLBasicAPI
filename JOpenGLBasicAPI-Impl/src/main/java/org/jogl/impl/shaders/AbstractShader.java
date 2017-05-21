@@ -8,11 +8,9 @@ package org.jogl.impl.shaders;
 import org.jogl.api.Camera;
 import org.jogl.api.Scene;
 import org.jogl.api.Shader;
-import org.joml.Matrix4f;
+import org.jogl.impl.util.OpenGLUtil;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL30.*;
 
 /**
  *
@@ -27,7 +25,7 @@ public abstract class AbstractShader implements Shader {
     protected int vertexShaderId;
     protected int fragmentShaderId;
     private boolean compiled = false;
-    
+    private boolean using ;
     private Camera camera;
 
     @Override
@@ -133,26 +131,22 @@ public abstract class AbstractShader implements Shader {
     @Override
     public Shader enable() {
         glUseProgram(programId);
+        
+        using = true;
         return this;
     }
 
     @Override
     public Shader disable() {
         glUseProgram(0);
+        using = false;
         return this;
     }
     
     protected void draw(String attribName, Scene.ArrayBuffer buffer, int glType) {
-        int attrID = glGetAttribLocation(this.programId, attribName);
-        glEnableVertexAttribArray(attrID);
-        glBindBuffer(GL_ARRAY_BUFFER, buffer.id);
-        glVertexAttribPointer(attrID, buffer.elementSize , glType, false, 0, 0);
-        glDrawArrays(GL_TRIANGLES, 0, buffer.elementCount);
-
-        glDisableVertexAttribArray(attrID);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-
+        OpenGLUtil.drawBuffer(programId, attribName, buffer, glType);
     }
+    
     protected void drawFloatArray(String attribName, Scene.ArrayBuffer buffer) {
         draw(attribName, buffer, GL_FLOAT);
 
@@ -161,6 +155,11 @@ public abstract class AbstractShader implements Shader {
     @Override
     public boolean isCompiled() {
         return compiled;
+    }
+    
+    
+    public boolean isUsing(){
+        return using;
     }
     
     

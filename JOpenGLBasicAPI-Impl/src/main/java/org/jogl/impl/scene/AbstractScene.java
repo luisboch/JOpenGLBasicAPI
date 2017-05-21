@@ -63,17 +63,16 @@ public abstract class AbstractScene implements Scene {
 
     @Override
     public Scene init() {
-        glEnable(GL_DEPTH_TEST);
+        glClearColor(0.0f, 0.0f, 0.2f, 1.0f);
 
         if (Config.cullFace) {
             glEnable(GL_CULL_FACE);
         }
 
-        if (Config.cullFace) {
+        if (Config.showOnlyLines) {
             glPolygonMode(GL_FRONT_FACE, GL_LINE);
         }
 
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         if (shader != null) {
             try {
                 shader.compile();
@@ -96,17 +95,17 @@ public abstract class AbstractScene implements Scene {
 
     @Override
     public List<GlobalLight> getLights() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return null;
     }
 
     @Override
     public List<Filter> getFilters() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return null;
     }
 
     @Override
     public List<Object3D> getObjects() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return null;
     }
 
     @Override
@@ -140,7 +139,7 @@ public abstract class AbstractScene implements Scene {
     protected void createObject(Object3D object3D) {
 
         // Used shader
-        Shader usedShader = getShader();
+        Shader usedShader = null;
 
         if (object3D.getMesh() == null) {
             throw new IllegalArgumentException("Object withou mesh not allowed!");
@@ -163,45 +162,54 @@ public abstract class AbstractScene implements Scene {
             }
         }
 
-        if (usedShader == null) {
-            throw new IllegalStateException("Object or scene must have a shader to render");
-        }
+        if (usedShader != null) {
 
-        // Compile
-        if (!shaderRef.containsKey(usedShader)) {
-            try {
-                usedShader.compile();
-            } catch (Exception ex) {
-                Logger.getLogger(AbstractScene.class.getName()).log(Level.SEVERE, null, ex);
-                throw new RuntimeException(ex);
+            // Compile
+            if (!shaderRef.containsKey(usedShader)) {
+                try {
+                    usedShader.compile();
+                } catch (Exception ex) {
+                    Logger.getLogger(AbstractScene.class.getName()).log(Level.SEVERE, null, ex);
+                    throw new RuntimeException(ex);
+                }
             }
+
         }
+        float[] vertexData = new float[]{
+            0.0f, 0.5f,
+            -0.5f, -0.5f,
+            0.5f, -0.5f
+        };
+
+        final FloatBuffer buffer = org.lwjgl.BufferUtils.createFloatBuffer(vertexData.length);
+        buffer.put(vertexData).flip();
 
         final int meshId = createMesh();
         final Mesh mesh = object3D.getMesh();
-        final ArrayBuffer buffer = createBuffer(meshId, BufferUtils.convert(mesh.getVertices()), 3);
+        final ArrayBuffer arrayBuffer = createBuffer(meshId, buffer, 2);
 
         // Create referece
-        final MeshReference meshReference = new MeshReference(mesh, object3D, meshId, buffer);
+        final MeshReference meshReference = new MeshReference(mesh, object3D, meshId, arrayBuffer);
 
         final List<MeshReference> meshs;
 
-        if (!shaderRef.containsKey(usedShader)) {
-            meshs = new ArrayList<>();
-            shaderRef.put(usedShader, meshs);
-        } else {
-            meshs = shaderRef.get(usedShader);
+        if (usedShader != null) {
+            if (!shaderRef.containsKey(usedShader)) {
+                meshs = new ArrayList<>();
+                shaderRef.put(usedShader, meshs);
+            } else {
+                meshs = shaderRef.get(usedShader);
+            }
+            // Group by shader to better performance when rendering.
+            meshs.add(meshReference);
+        } else {// When no shader is used, we will group to use our shader
+            objects.add(meshReference);
         }
-
-        // Group by shader to better performance when rendering.
-        meshs.add(meshReference);
-
-        objects.add(meshReference);
     }
 
     protected ArrayBuffer createBuffer(int meshId, Buffer buffer, int elementSize) {
-
         glBindVertexArray(meshId);
+
         int id = glGenBuffers();
 
         ArrayBuffer array = new ArrayBuffer(id, elementSize, (buffer.remaining() / elementSize));
@@ -210,24 +218,19 @@ public abstract class AbstractScene implements Scene {
 
         Class clazz = buffer.getClass();
 
-        if (Util.isSubClass(clazz, FloatBuffer.class
-        )) {
+        if (Util.isSubClass(clazz, FloatBuffer.class)) {
             glBufferData(GL_ARRAY_BUFFER, (FloatBuffer) buffer, GL_STATIC_DRAW);
 
-        } else if (Util.isSubClass(clazz, ByteBuffer.class
-        )) {
+        } else if (Util.isSubClass(clazz, ByteBuffer.class)) {
             glBufferData(GL_ARRAY_BUFFER, (ByteBuffer) buffer, GL_STATIC_DRAW);
 
-        } else if (Util.isSubClass(clazz, DoubleBuffer.class
-        )) {
+        } else if (Util.isSubClass(clazz, DoubleBuffer.class)) {
             glBufferData(GL_ARRAY_BUFFER, (DoubleBuffer) buffer, GL_STATIC_DRAW);
 
-        } else if (Util.isSubClass(clazz, IntBuffer.class
-        )) {
+        } else if (Util.isSubClass(clazz, IntBuffer.class)) {
             glBufferData(GL_ARRAY_BUFFER, (IntBuffer) buffer, GL_STATIC_DRAW);
 
-        } else if (Util.isSubClass(clazz, ShortBuffer.class
-        )) {
+        } else if (Util.isSubClass(clazz, ShortBuffer.class)) {
             glBufferData(GL_ARRAY_BUFFER, (ShortBuffer) buffer, GL_STATIC_DRAW);
         }
 
@@ -281,16 +284,21 @@ public abstract class AbstractScene implements Scene {
 
     @Override
     public Scene render() {
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
         for (Map.Entry<Shader, List<MeshReference>> entry : shaderRef.entrySet()) {
-
             final Shader sh = entry.getKey();
             final List<MeshReference> meshs = entry.getValue();
-            sh.enable();
-            sh.render(meshs, lights);
-            sh.disable();
+            sh.enable()
+                    .render(meshs, lights)
+                    .disable();
         }
+
+        getShader().enable()
+                .render(objects, lights)
+                .disable();
+
         return this;
     }
 

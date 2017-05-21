@@ -20,5 +20,5 @@ package org.jogl.api;
  * @author luis
  */
 public interface Filter {
-    
+    Shader getShader();
 }

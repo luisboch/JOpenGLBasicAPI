@@ -22,6 +22,7 @@ import org.joml.Vector3f;
  * @author luis
  */
 public class Util {
+    
     public static final Vector3f colorFromRGB(int r, int g, int b){
         return new Vector3f(r/255, g/255, b/255);
     }

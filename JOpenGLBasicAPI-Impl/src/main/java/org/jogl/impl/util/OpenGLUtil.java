@@ -17,6 +17,7 @@ package org.jogl.impl.util;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import org.jogl.api.Scene;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
@@ -24,6 +25,8 @@ import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 import static org.lwjgl.glfw.GLFW.glfwGetCurrentContext;
 import static org.lwjgl.glfw.GLFW.glfwGetWindowSize;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 
 /**
@@ -71,4 +74,17 @@ public class OpenGLUtil {
         return uniform;
     }
 
+    public static void drawFloatBuffer(int programID, String attribName, Scene.ArrayBuffer buffer){
+        drawBuffer(programID, attribName, buffer, GL_FLOAT);
+    }
+
+    public static void drawBuffer(int programID, String attribName, Scene.ArrayBuffer buffer, int glType){
+        int attrID = glGetAttribLocation(programID, attribName);
+        glEnableVertexAttribArray(attrID); //0
+        glBindBuffer(GL_ARRAY_BUFFER, buffer.id); //1
+        glVertexAttribPointer(attrID, buffer.elementSize , glType, false, 0, 0); //2 , 5126
+        glDrawArrays(GL_TRIANGLES, 0, buffer.elementCount);// 3
+        glDisableVertexAttribArray(attrID); //0
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+    }
 }

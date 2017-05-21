@@ -46,7 +46,9 @@ import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.glfw.GLFWWindowSizeCallback;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GLCapabilities;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 /**
@@ -54,14 +56,23 @@ import static org.lwjgl.system.MemoryUtil.NULL;
  * @author luis
  */
 public class Window {
-    
+
     // The window handle
-    private long window;
+    private long windowID;
     private Screen scene;
     private int width;
     private int height;
     private String title;
     private GLFWErrorCallback errorCallback = GLFWErrorCallback.createPrint(System.out);
+    private GLFWWindowSizeCallback resizeCallback = GLFWWindowSizeCallback.create(new GLFWWindowSizeCallback.SAM() {
+        @Override
+        public void invoke(long window, int w, int h) {
+            if (window == windowID) {
+                width = w;
+                height = h;
+            }
+        }
+    });
     private GLFWKeyCallback keyCallback = new GLFWKeyCallback() {
         @Override
         public void invoke(long window, int key, int scancode, int action, int mods) {
@@ -97,46 +108,47 @@ public class Window {
         glfwSetErrorCallback(errorCallback);
 
         // Initialize GLFW. Most GLFW functions will not work before doing this.
-        if (glfwInit() == GLFW_FALSE)
+        if (glfwInit() == GLFW_FALSE) {
             throw new IllegalStateException("Unable to initialize GLFW");
+        }
 
         // Configure our window
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden
-                                                  // after creation
+        // after creation
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be
-                                                   // resizable
+        // resizable
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
         // Create the window
-        window = glfwCreateWindow(width, height, title, NULL, NULL);
-        if (window == NULL)
+        windowID = glfwCreateWindow(width, height, title, NULL, NULL);
+        if (windowID == NULL) {
             throw new RuntimeException("Failed to create the GLFW window");
+        }
 
         // Setup a key callback. It will be called every time a key is pressed,
         // repeated or released.
-        glfwSetKeyCallback(window, keyCallback);
-        Mouse mouse =  Mouse.getInstance();
+        glfwSetKeyCallback(windowID, keyCallback);
+        Mouse mouse = Mouse.getInstance();
 //        glfwSetMouseButtonCallback(window, mouse.getButtonCallBack());
 //        glfwSetCursorPosCallback(window, mouse.getPosCallback());
         // Setup a Mouse callback. It will be called every time a key is pressed,
         // repeated or released.
-        
-        
+
         // Get the resolution of the primary monitor
         GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
         // Center our window
-        glfwSetWindowPos(window, (vidmode.width() - width) / 2, (vidmode.height() - height) / 2);
-        
+        glfwSetWindowPos(windowID, (vidmode.width() - width) / 2, (vidmode.height() - height) / 2);
+
         // Make the OpenGL context current
-        glfwMakeContextCurrent(window);
+        glfwMakeContextCurrent(windowID);
         // Enable v-sync
         glfwSwapInterval(1);
 
         // Make the window visible
-        glfwShowWindow(window);
+        glfwShowWindow(windowID);
     }
 
     private void loop() {
@@ -145,24 +157,25 @@ public class Window {
         // LWJGL detects the context that is current in the current thread,
         // creates the GLCapabilities instance and makes the OpenGL
         // bindings available for use.
-        GL.createCapabilities();
-
+        GLCapabilities capabilities = GL.createCapabilities();
+        
         // Set the clear color
         scene.init();
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
         long before = System.currentTimeMillis() - 1;
-        while (glfwWindowShouldClose(window)== GLFW_FALSE) {
+        while (glfwWindowShouldClose(windowID) == GLFW_FALSE) {
             float time = (System.currentTimeMillis() - before) / 1000f;
             before = System.currentTimeMillis() - 1;
             scene.update(time);
             scene.draw();
 
             Keyboard.getInstance().update();
-            glfwSwapBuffers(window);
+            glfwSwapBuffers(windowID);
             glfwPollEvents();
         }
+        
         scene.deinit();
     }
 
@@ -172,13 +185,14 @@ public class Window {
             loop();
 
             // Destroy window and window callbacks
-            glfwDestroyWindow(window);
+            glfwDestroyWindow(windowID);
         } finally {
             // Terminate GLFW and free the GLFWErrorCallback
             glfwTerminate();
         }
     }
+
     public static void main(String[] args) {
-        
+
     }
 }

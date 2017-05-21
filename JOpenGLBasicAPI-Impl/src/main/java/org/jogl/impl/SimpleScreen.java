@@ -15,7 +15,6 @@
  */
 package org.jogl.impl;
 
-import org.jogl.impl.scene.AbstractScene;
 import org.jogl.impl.scene.SimpleScene;
 import org.jogl.impl.shaders.SimpleShader;
 import org.jogl.impl.util.objects.Triangle;
@@ -30,12 +29,13 @@ public class SimpleScreen extends AbstractScreen<SimpleScene> {
     public void init() {
         this.scene = new SimpleScene();
         // Create shader
-        scene.setShader(new SimpleShader());
         // Initialize parent (with this shader)
-        super.init();
         
         // Add objects
         scene.addObject(new Triangle());
+        scene.setShader(new SimpleShader());
+
+        super.init();
     }
     
 }

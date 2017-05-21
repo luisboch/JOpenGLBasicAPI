@@ -46,4 +46,26 @@ public class BufferUtils {
         return buffer;
 
     }
+    
+    
+    public static FloatBuffer convertTo2d(List<Vertex> vertices){
+        
+        final int width = vertices.size() * 6;
+        
+        final float[] vertexData = new float[width];
+        
+        int idx = 0;
+        for(Vertex v:vertices){
+            for(Vector3f vf :v){
+                vertexData[idx++] = vf.x;
+                vertexData[idx++] = vf.y;
+            }
+        }
+        
+        final FloatBuffer buffer = org.lwjgl.BufferUtils.createFloatBuffer(vertexData.length);
+        buffer.put(vertexData).flip();
+        
+        return buffer;
+
+    }
 }

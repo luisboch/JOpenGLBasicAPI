@@ -21,5 +21,5 @@ package org.jogl.api;
  */
 public class Config {
     public static boolean cullFace = false;
-    public static boolean showOnlyLines = false;
+    public static boolean showOnlyLines = true;
 }
