@@ -16,71 +16,25 @@
 package org.jogl.impl.util.objects;
 
 import java.awt.Color;
-import org.jogl.api.LocalLight;
-import org.jogl.api.Material;
-import org.jogl.api.Mesh;
-import org.jogl.api.Object3D;
-import org.jogl.api.Vertex;
+import org.jogl.impl.util.MeshCreator;
 import org.jogl.impl.util.Util;
 import org.jogl.materials.SmoothMaterial;
-import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 /**
  *
  * @author luis
  */
-public class Triangle implements Object3D<Triangle> {
+public class Triangle extends AbstractObject<Triangle> {
 
-    private Mesh mesh;
-    private LocalLight light;
-    private Material material;
-    
-    private Vector3f position = new Vector3f();
-    
     public Triangle() {
-        mesh = new Mesh().addVertice(
-                new Vertex(
-                        new Vector3f(0.0f, 0.5f, 1.0f),
-                        new Vector3f(-0.5f, -0.5f, 1.0f),
-                        new Vector3f( 0.5f, -0.5f, 1.0f)));
+        
+        mesh = new MeshCreator()
+                .to(new Vector3f(0.0f, 0.5f, 0f))
+                .to(new Vector3f(-0.5f, -0.5f, 0f))
+                .to(new Vector3f(0.5f, -0.5f, 0f))
+                .create();
+        
         material = new SmoothMaterial(Util.convert(Color.GREEN));
     }
-
-    @Override
-    public Vector3f getPosition() {
-        return position;
-    }
-
-    @Override
-    public Triangle setPosition(Vector3f position) {
-        this.position = position;
-        return this;
-    }
-    
-    @Override
-    public Matrix4f getTransform() {
-        return new Matrix4f().identity();
-    }
-
-    @Override
-    public Mesh getMesh() {
-        return mesh;
-    }
-
-    @Override
-    public LocalLight getLight() {
-        return light;
-    }
-
-    @Override
-    public Material getMaterial() {
-        return material;
-    }
-
-    public Triangle setMaterial(Material material) {
-        this.material = material;
-        return this;
-    }
-    
 }

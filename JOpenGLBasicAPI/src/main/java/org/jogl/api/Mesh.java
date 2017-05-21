@@ -17,6 +17,7 @@ package org.jogl.api;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.joml.Vector3f;
 
 /**
  *
@@ -24,15 +25,29 @@ import java.util.List;
  */
 public class Mesh {
     
-    private List<Vertex> vertices = new ArrayList<Vertex>();
+    private final List<Vector3f> vertices = new ArrayList<>();
+    private final List<Integer> indexBuffer = new ArrayList<>();
 
-    public List<Vertex> getVertices() {
+    public Mesh() {
+    }
+
+    public Mesh(List<Vector3f> vertices, List<Integer> indexBuffer) {
+        this();
+        
+        this.vertices.addAll(vertices);
+        this.indexBuffer.addAll(indexBuffer);
+    }
+
+    public List<Vector3f> getVertices() {
         return vertices;
     }
     
-    public Mesh addVertice(Vertex v){
+    public Mesh addVertice(Vector3f v){
         vertices.add(v);
         return this;
     }
-    
+
+    public List<Integer> getIndexBuffer() {
+        return indexBuffer;
+    }
 }

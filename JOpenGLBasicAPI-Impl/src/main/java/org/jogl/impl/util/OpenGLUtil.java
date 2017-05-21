@@ -51,6 +51,16 @@ public class OpenGLUtil {
         glUniformMatrix4fv(uniform, false, buffer);
     }
 
+    public static void setUniform(int programID, String name, float value) {
+        int uniform = findUniform(programID, name);
+        glUniform1f(uniform, value);
+    }
+
+    public static void setUniform(int programID, String name, boolean value) {
+        int uniform = findUniform(programID, name);
+        glUniform1i(uniform, value ? GL_TRUE : GL_FALSE);
+    }
+
     public static void setUniform(int programID, String name, Matrix3f matrix) {
         int uniform = findUniform(programID, name);
 
@@ -74,17 +84,39 @@ public class OpenGLUtil {
         return uniform;
     }
 
-    public static void drawFloatBuffer(int programID, String attribName, Scene.ArrayBuffer buffer){
-        drawBuffer(programID, attribName, buffer, GL_FLOAT);
-    }
+    public static void drawIndexBuffer(int programID, String attribName, Scene.ArrayBuffer buffer, int glType){
 
-    public static void drawBuffer(int programID, String attribName, Scene.ArrayBuffer buffer, int glType){
         int attrID = glGetAttribLocation(programID, attribName);
         glEnableVertexAttribArray(attrID); //0
+
+        // Bind no FloatBuffer
         glBindBuffer(GL_ARRAY_BUFFER, buffer.id); //1
+        
+        // Aponta para o atributo
         glVertexAttribPointer(attrID, buffer.elementSize , glType, false, 0, 0); //2 , 5126
-        glDrawArrays(GL_TRIANGLES, 0, buffer.elementCount);// 3
-        glDisableVertexAttribArray(attrID); //0
+        
+        //Unbind do atributo
         glBindBuffer(GL_ARRAY_BUFFER, 0);
+        
+        
+        // Temos Index buffer?
+        if(buffer.indexBuffer.id == -1){
+            
+            // Nao
+            glDrawArrays(GL_TRIANGLES, 0, buffer.elementCount);
+        } else {
+            
+            // Faz o bind no indexBuffer
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer.indexBuffer.id);
+            // Escreve o array.
+            glDrawElements(GL_TRIANGLES, buffer.indexBuffer.elementCount, GL_UNSIGNED_INT,  0);
+            
+            // Unbind
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+            
+        }
+        
+        // Desabilita o atributo.
+        glDisableVertexAttribArray(attrID); //0
     }
 }

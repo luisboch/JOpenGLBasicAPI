@@ -18,6 +18,8 @@ package org.jogl.api.screen;
 import org.jogl.api.screen.Screen;
 import org.jogl.api.input.Keyboard;
 import org.jogl.api.input.events.Mouse;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
 import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MAJOR;
 import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MINOR;
 import static org.lwjgl.glfw.GLFW.GLFW_FALSE;
@@ -45,6 +47,7 @@ import static org.lwjgl.glfw.GLFW.glfwWindowHint;
 import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWKeyCallback;
+import org.lwjgl.glfw.GLFWMouseButtonCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
 import org.lwjgl.opengl.GL;
@@ -59,10 +62,13 @@ public class Window {
 
     // The window handle
     private long windowID;
-    private Screen scene;
+    private Screen screen;
     private int width;
     private int height;
     private String title;
+    private Mouse mouse;
+    private Keyboard keyboard;
+
     private GLFWErrorCallback errorCallback = GLFWErrorCallback.createPrint(System.out);
     private GLFWWindowSizeCallback resizeCallback = GLFWWindowSizeCallback.create(new GLFWWindowSizeCallback.SAM() {
         @Override
@@ -73,32 +79,20 @@ public class Window {
             }
         }
     });
-    private GLFWKeyCallback keyCallback = new GLFWKeyCallback() {
-        @Override
-        public void invoke(long window, int key, int scancode, int action, int mods) {
-            Keyboard.getInstance().set(key, action);
-        }
-    };
-//    private GLFWMouseButtonCallback mouseCallback  = new GLFWMouseButtonCallback() {
-//        @Override
-//        public void invoke(long window, int button, int action, int mods) {
-//            
-//        }
-//    };
 
-    public Window(Screen scene, String title, int width, int height) {
-        this.scene = scene;
+    public Window(Screen screen, String title, int width, int height) {
+        this.screen = screen;
         this.title = title;
         this.width = width;
         this.height = height;
     }
 
-    public Window(Screen scene, String title) {
-        this(scene, title, 800, 600);
+    public Window(Screen screen, String title) {
+        this(screen, title, 800, 600);
     }
 
-    public Window(Screen scene) {
-        this(scene, "Game");
+    public Window(Screen screen) {
+        this(screen, "Game");
     }
 
     private void init() {
@@ -130,13 +124,16 @@ public class Window {
 
         // Setup a key callback. It will be called every time a key is pressed,
         // repeated or released.
-        glfwSetKeyCallback(windowID, keyCallback);
-        Mouse mouse = Mouse.getInstance();
+        mouse = new Mouse(windowID);
+        keyboard = new Keyboard(windowID);
+        
+        screen.setMouse(mouse);
+        screen.setKeyboard(keyboard);
+
 //        glfwSetMouseButtonCallback(window, mouse.getButtonCallBack());
 //        glfwSetCursorPosCallback(window, mouse.getPosCallback());
         // Setup a Mouse callback. It will be called every time a key is pressed,
         // repeated or released.
-
         // Get the resolution of the primary monitor
         GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
         // Center our window
@@ -158,9 +155,9 @@ public class Window {
         // creates the GLCapabilities instance and makes the OpenGL
         // bindings available for use.
         GLCapabilities capabilities = GL.createCapabilities();
-        
+
         // Set the clear color
-        scene.init();
+        screen.init();
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
@@ -168,15 +165,17 @@ public class Window {
         while (glfwWindowShouldClose(windowID) == GLFW_FALSE) {
             float time = (System.currentTimeMillis() - before) / 1000f;
             before = System.currentTimeMillis() - 1;
-            scene.update(time);
-            scene.draw();
+            screen.update(time);
+            screen.draw();
 
-            Keyboard.getInstance().update();
+            keyboard.update();
+            mouse.update();
+            
             glfwSwapBuffers(windowID);
             glfwPollEvents();
         }
-        
-        scene.deinit();
+
+        screen.deinit();
     }
 
     public void show() {

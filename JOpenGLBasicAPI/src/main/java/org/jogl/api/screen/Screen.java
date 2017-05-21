@@ -15,11 +15,17 @@
  */
 package org.jogl.api.screen;
 
+import org.jogl.api.input.Keyboard;
+import org.jogl.api.input.events.Mouse;
+
 /**
  *
  * @author luis
  */
 public interface Screen {
+    
+    void setMouse(Mouse m);
+    void setKeyboard(Keyboard m);
     
     void init();
 

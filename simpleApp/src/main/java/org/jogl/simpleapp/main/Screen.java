@@ -15,14 +15,8 @@
  */
 package org.jogl.simpleapp.main;
 
-import org.jogl.api.Scene;
 import org.jogl.api.screen.Window;
 import org.jogl.impl.SimpleScreen;
-import org.jogl.impl.scene.AbstractScene;
-import org.joml.AxisAngle4f;
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
-import org.joml.Quaternionf;
 
 /**
  *

@@ -16,8 +16,8 @@
 package org.jogl.impl.util;
 
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.util.List;
-import org.jogl.api.Vertex;
 import org.joml.Vector3f;
 
 /**
@@ -25,46 +25,59 @@ import org.joml.Vector3f;
  * @author luis
  */
 public class BufferUtils {
-    public static FloatBuffer convert(List<Vertex> vertices){
+
+    public static IntBuffer convertIndexBuffer(List<Integer> buffer) {
+
+
+        final int[] vertexData = new int[buffer.size()];
         
-        final int width = vertices.size() * 9;
-        
-        final float[] vertexData = new float[width];
-        
-        int idx = 0;
-        for(Vertex v:vertices){
-            for(Vector3f vf :v){
-                vertexData[idx++] = vf.x;
-                vertexData[idx++] = vf.y;
-                vertexData[idx++] = vf.z;
-            }
+        for(int i =0; i < buffer.size(); i++){
+            vertexData[i] = buffer.get(i);
         }
         
+        final IntBuffer intBuffer = org.lwjgl.BufferUtils.createIntBuffer(vertexData.length);
+        intBuffer.put(vertexData).flip();
+
+        return intBuffer;
+
+    }
+    public static FloatBuffer convert(List<Vector3f> vertices) {
+
+        final int width = vertices.size() * 9;
+
+        final float[] vertexData = new float[width];
+
+        int idx = 0;
+
+        for (Vector3f v : vertices) {
+            vertexData[idx++] = v.x;
+            vertexData[idx++] = v.y;
+            vertexData[idx++] = v.z;
+        }
+
         final FloatBuffer buffer = org.lwjgl.BufferUtils.createFloatBuffer(vertexData.length);
         buffer.put(vertexData).flip();
-        
+
         return buffer;
 
     }
-    
-    
-    public static FloatBuffer convertTo2d(List<Vertex> vertices){
-        
+
+    public static FloatBuffer convertTo2d(List<Vector3f> vertices) {
+
         final int width = vertices.size() * 6;
-        
+
         final float[] vertexData = new float[width];
-        
+
         int idx = 0;
-        for(Vertex v:vertices){
-            for(Vector3f vf :v){
-                vertexData[idx++] = vf.x;
-                vertexData[idx++] = vf.y;
-            }
-        }
         
+        for (Vector3f v : vertices) {
+            vertexData[idx++] = v.x;
+            vertexData[idx++] = v.y;
+        }
+
         final FloatBuffer buffer = org.lwjgl.BufferUtils.createFloatBuffer(vertexData.length);
         buffer.put(vertexData).flip();
-        
+
         return buffer;
 
     }

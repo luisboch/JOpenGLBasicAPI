@@ -15,8 +15,10 @@
  */
 package org.jogl.api.input.events;
 
-import java.awt.event.MouseEvent;
+import java.util.HashSet;
+import java.util.Set;
 import org.joml.Vector2f;
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
 
@@ -25,66 +27,108 @@ import org.lwjgl.glfw.GLFWMouseButtonCallback;
  * @author luis
  */
 public class Mouse {
-    
+
+    private final long windowId;
+
+    private Vector2f pos = new Vector2f();
     private Listener listener = new MouseAdapter();
-    
+
+    private final Set<Integer> pressedKeys = new HashSet<>();
+    private final Set<Integer> downKeys = new HashSet<>();
+    private final Set<Integer> releasedKeys = new HashSet<>();
+
     private GLFWMouseButtonCallback buttonCallBack = new GLFWMouseButtonCallback() {
         @Override
         public void invoke(long window, int button, int action, int mods) {
-//            switch(action){
-//                case 1:
-//            }
+            if (window == windowId) {
+
+                Mouse.this.set(button, action);
+                Mouse.this.notify(MouseButton.from(button), action);
+
+            }
         }
     };
-    
+
     private GLFWCursorPosCallback posCallback = new GLFWCursorPosCallback() {
         @Override
         public void invoke(long window, double xpos, double ypos) {
             pos.x = (float) xpos;
             pos.y = (float) ypos;
+            System.out.println("mousePOS: " + xpos + ypos);
         }
     };
-    
-    private Vector2f pos = new Vector2f();
-    
-    private static Mouse instance;
 
-    public Mouse() {
-    }
-    
-    
-    public static synchronized Mouse getInstance() {
-        if(instance == null){
-            instance = new Mouse();
-        }
-        return instance;
-    }
+    public Mouse(long windowId) {
+        this.windowId = windowId;
 
-    public GLFWMouseButtonCallback getButtonCallBack() {
-        return buttonCallBack;
-    }
+        // registerCallback
+        GLFW.glfwSetCursorPosCallback(windowId, posCallback);
+        GLFW.glfwSetMouseButtonCallback(windowId, buttonCallBack);
 
-    public GLFWCursorPosCallback getPosCallback() {
-        return posCallback;
     }
 
     public Vector2f getPos() {
         return pos;
     }
-    
-    private static interface Listener{
-        void mousePress(MouseButton m, MouseEvent e);
-        void mouseRelease(MouseButton m, MouseEvent e);
-    }
-    
-    private static class MouseAdapter implements Listener{
-        @Override
-        public void mousePress(MouseButton m, MouseEvent e) {
+
+    public void set(int k, int action) {
+
+        if (action == GLFW.GLFW_PRESS) {
+            downKeys.add(k);
+            pressedKeys.add(k);
+        } else if (action == GLFW.GLFW_RELEASE) {
+            downKeys.remove(k);
+            releasedKeys.add(k);
         }
-        @Override
-        public void mouseRelease(MouseButton m, MouseEvent e) {
-        }
-        
     }
-    
+
+    public void update() {
+        pressedKeys.clear();
+        releasedKeys.clear();
+    }
+
+    public boolean isPressed(MouseButton m) {
+        return pressedKeys.contains(m.getCode());
+    }
+
+    public boolean isDown(MouseButton m) {
+        return downKeys.contains(m.getCode());
+    }
+
+    public boolean isReleased(MouseButton key) {
+        return releasedKeys.contains(key.getCode());
+    }
+
+    private void notify(MouseButton k, int action) {
+        if (listener != null) {
+
+            if (action == GLFW.GLFW_PRESS) {
+                listener.mousePress(k);
+            } else if (action == GLFW.GLFW_RELEASE) {
+                listener.mouseRelease(k);
+            }
+        }
+    }
+
+    private static interface Listener {
+
+        void mousePress(MouseButton m);
+
+        void mouseRelease(MouseButton m);
+    }
+
+    private static class MouseAdapter implements Listener {
+
+        @Override
+        public void mousePress(MouseButton m) {
+            System.out.println("Mouse pressed: " + m.name());
+        }
+
+        @Override
+        public void mouseRelease(MouseButton m) {
+            System.out.println("Mouse release: " + m.name());
+        }
+
+    }
+
 }

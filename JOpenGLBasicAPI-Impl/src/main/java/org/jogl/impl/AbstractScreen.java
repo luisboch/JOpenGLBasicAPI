@@ -15,7 +15,10 @@
  */
 package org.jogl.impl;
 
+import org.jogl.api.Camera;
 import org.jogl.api.Scene;
+import org.jogl.api.input.Keyboard;
+import org.jogl.api.input.events.Mouse;
 import org.jogl.api.screen.Screen;
 
 /**
@@ -26,6 +29,9 @@ import org.jogl.api.screen.Screen;
 public abstract class AbstractScreen<S extends Scene> implements Screen {
     
     protected S scene;
+    
+    protected Mouse mouse;
+    protected Keyboard keyboard;
 
     @Override
     public void init() {
@@ -45,6 +51,16 @@ public abstract class AbstractScreen<S extends Scene> implements Screen {
     @Override
     public void deinit() {
         scene.deiInit();
+    }
+    
+    @Override
+    public void setMouse(Mouse mouse) {
+        this.mouse = mouse;
+    }
+
+    @Override
+    public void setKeyboard(Keyboard keyboard) {
+        this.keyboard = keyboard;
     }
 
 }

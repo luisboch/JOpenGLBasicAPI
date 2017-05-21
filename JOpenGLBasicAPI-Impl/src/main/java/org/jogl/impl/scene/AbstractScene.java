@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.jogl.api.Camera;
 import org.jogl.api.Config;
 import org.jogl.api.Filter;
 import org.jogl.api.GlobalLight;
@@ -36,6 +37,8 @@ import org.jogl.api.RenderTexture;
 import org.jogl.api.Scene;
 import org.jogl.api.Shader;
 import org.jogl.api.Texture;
+import org.jogl.api.input.Keyboard;
+import org.jogl.api.input.events.Mouse;
 import org.jogl.impl.util.BufferUtils;
 import org.jogl.impl.util.Util;
 
@@ -60,9 +63,18 @@ public abstract class AbstractScene implements Scene {
     private Map<Shader, List<MeshReference>> shaderRef = new HashMap<>();
 
     private Shader shader;
+    private Camera camera;
+
+    protected Mouse mouse;
+    protected Keyboard keyboard;
 
     @Override
     public Scene init() {
+
+        if (camera == null) {
+            throw new IllegalStateException("Camera not defined, please set it to Scene");
+        }
+
         glClearColor(0.0f, 0.0f, 0.2f, 1.0f);
 
         if (Config.cullFace) {
@@ -81,6 +93,19 @@ public abstract class AbstractScene implements Scene {
                 throw new RuntimeException(ex);
             }
         }
+
+        return this;
+    }
+
+    @Override
+    public Scene setMouse(Mouse m) {
+        this.mouse = m;
+        return this;
+    }
+
+    @Override
+    public Scene setKeyboard(Keyboard m) {
+        this.keyboard = m;
         return this;
     }
 
@@ -174,15 +199,24 @@ public abstract class AbstractScene implements Scene {
                 }
             }
 
-        }  
-        
+        }
+
         final int meshId = createMesh();
         final Mesh mesh = object3D.getMesh();
-        final ArrayBuffer buffer = createBuffer(meshId, BufferUtils.convert(mesh.getVertices()), 3);
-
+        final Buffer buffer = BufferUtils.convert(mesh.getVertices());
+        final int arrayBufferID = createBuffer(meshId, buffer);
+        final int elementSize = 3;
+        
+        final ArrayBuffer array = new ArrayBuffer(arrayBufferID, elementSize, (buffer.remaining() / elementSize));
+                
+        
+        if (mesh.getIndexBuffer() != null) {
+            int indexBufferID = createIndexBuffer(meshId, BufferUtils.convertIndexBuffer(mesh.getIndexBuffer()));
+            array.indexBuffer = new IndexBuffer(indexBufferID, mesh.getIndexBuffer().size());
+        }
 
         // Create referece
-        final MeshReference meshReference = new MeshReference(mesh, object3D, meshId, buffer);
+        final MeshReference meshReference = new MeshReference(mesh, object3D, meshId, array);
 
         final List<MeshReference> meshs;
 
@@ -200,12 +234,10 @@ public abstract class AbstractScene implements Scene {
         }
     }
 
-    protected ArrayBuffer createBuffer(int meshId, Buffer buffer, int elementSize) {
+    protected int createBuffer(int meshId, Buffer buffer) {
         glBindVertexArray(meshId);
 
         int id = glGenBuffers();
-
-        ArrayBuffer array = new ArrayBuffer(id, elementSize, (buffer.remaining() / elementSize));
 
         glBindBuffer(GL_ARRAY_BUFFER, id);
 
@@ -229,7 +261,36 @@ public abstract class AbstractScene implements Scene {
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
-        return array;
+        return id;
+    }
+    protected int createIndexBuffer(int meshId, Buffer buffer) {
+        glBindVertexArray(meshId);
+
+        int id = glGenBuffers();
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
+
+        Class clazz = buffer.getClass();
+
+        if (Util.isSubClass(clazz, FloatBuffer.class)) {
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, (FloatBuffer) buffer, GL_STATIC_DRAW);
+
+        } else if (Util.isSubClass(clazz, ByteBuffer.class)) {
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, (ByteBuffer) buffer, GL_STATIC_DRAW);
+
+        } else if (Util.isSubClass(clazz, DoubleBuffer.class)) {
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, (DoubleBuffer) buffer, GL_STATIC_DRAW);
+
+        } else if (Util.isSubClass(clazz, IntBuffer.class)) {
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, (IntBuffer) buffer, GL_STATIC_DRAW);
+
+        } else if (Util.isSubClass(clazz, ShortBuffer.class)) {
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, (ShortBuffer) buffer, GL_STATIC_DRAW);
+        }
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        glBindVertexArray(0);
+        return id;
     }
 
     @Override
@@ -263,6 +324,17 @@ public abstract class AbstractScene implements Scene {
         }
     }
 
+    @Override
+    public Scene setCamera(Camera camera) {
+        this.camera = camera;
+        return this;
+    }
+
+    @Override
+    public Camera getCamera() {
+        return camera;
+    }
+    
     protected void createRenderTexture(RenderTexture rtx) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
@@ -283,14 +355,21 @@ public abstract class AbstractScene implements Scene {
         for (Map.Entry<Shader, List<MeshReference>> entry : shaderRef.entrySet()) {
             final Shader sh = entry.getKey();
             final List<MeshReference> meshs = entry.getValue();
-            sh.enable()
+
+            sh.setCamera(camera)
+                    .enable()
                     .render(meshs, lights)
                     .disable();
         }
 
-        getShader().enable()
-                .render(objects, lights)
-                .disable();
+        if (getShader() != null) {
+            getShader().setCamera(camera)
+                    .enable()
+                    .render(objects, lights)
+                    .disable();
+        } else if (!objects.isEmpty()) {
+            Logger.getLogger(AbstractScene.class.getSimpleName()).severe("No default shader defined in scene, but there are itens without custom shader.");
+        }
 
         return this;
     }

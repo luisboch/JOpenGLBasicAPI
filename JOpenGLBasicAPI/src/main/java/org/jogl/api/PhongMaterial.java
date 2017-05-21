@@ -15,20 +15,15 @@
  */
 package org.jogl.api;
 
-import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
-/**
- *
- * @author luis
- */
-public interface Object3D<Type> {
-    
-    Mesh getMesh();
-    
-    Material getMaterial();
-    
-    Vector3f getPosition();
-    Type setPosition(Vector3f position);
-    Matrix4f getTransform();
+public interface PhongMaterial extends Material {
+
+    public Vector3f getAmbientMaterial();
+
+    public Vector3f getDiffuseMaterial();
+
+    public Vector3f getSpecularMaterial();
+
+    public float getSpecularPower();
 }

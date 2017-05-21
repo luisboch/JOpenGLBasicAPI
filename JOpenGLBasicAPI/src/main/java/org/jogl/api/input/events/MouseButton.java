@@ -21,9 +21,17 @@ package org.jogl.api.input.events;
  */
 public enum MouseButton {
     
+    MOUSE_LEFT(0),
+    MOUSE_RIGTH(1),
+    MOUSE_MIDDLE(2),
+    MOUSE_0(0),
     MOUSE_1(1),
     MOUSE_2(2),
-    MOUSE_3(3);
+    MOUSE_3(3),
+    MOUSE_4(4),
+    MOUSE_5(5),
+    MOUSE_6(6),
+    MOUSE_7(7);
     
     private final int code;
 

@@ -25,60 +25,17 @@ import org.joml.Vector3f;
  *
  * @author luis
  */
-public class PerspectiveCamera implements Camera {
+public class PerspectiveCamera extends AbstractCamera {
 
-    private final Vector3f position;
-    private final Vector3f up;
-    private final Vector3f target;
     private final float fov;
-    private final float near;
-    private final float far;
 
     public PerspectiveCamera() {
-        this.far = 1000.0f;
-        this.near = 0.1f;
+        super(new Vector3f(0,0,2), new Vector3f(0, 1, 0),  new Vector3f(0,0,-2),  0.1f, 1000.0f);
         this.fov = (float) Math.toRadians(60);
-        this.target = new Vector3f(0, 0, 0);
-        this.up = new Vector3f(0, 1, 0);
-        this.position = new Vector3f(0, 0, 2);
-    }
-
-    public PerspectiveCamera(Vector3f position, Vector3f up, Vector3f target, float fov, float near, float far) {
-        this.position = position;
-        this.up = up;
-        this.target = target;
-        this.fov = fov;
-        this.near = near;
-        this.far = far;
-    }
-
-    public Vector3f getPosition() {
-        return position;
-    }
-
-    public Vector3f getUp() {
-        return up;
-    }
-
-    public Vector3f getTarget() {
-        return target;
     }
 
     public float getFov() {
         return fov;
-    }
-
-    public float getNear() {
-        return near;
-    }
-
-    public float getFar() {
-        return far;
-    }
-
-    private float getAspect() {
-        final Vector2f screenSize = OpenGLUtil.getScreenSize();
-        return screenSize.x / screenSize.y;
     }
 
     @Override

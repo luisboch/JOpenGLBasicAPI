@@ -6,6 +6,8 @@
 package org.jogl.api;
 
 import java.util.List;
+import org.jogl.api.input.Keyboard;
+import org.jogl.api.input.events.Mouse;
 
 /**
  *
@@ -42,6 +44,12 @@ public interface Scene {
 
     Scene removeLight(GlobalLight light);
 
+    Scene setMouse(Mouse m);
+    Scene setKeyboard(Keyboard keyboard);
+    Scene setCamera(Camera camera);
+    
+    Camera getCamera();
+    
     public static class MeshReference {
 
         public final Mesh mesh;
@@ -61,10 +69,22 @@ public interface Scene {
         public final int id;
         public final int elementSize;
         public final int elementCount;
+        public IndexBuffer indexBuffer;
 
         public ArrayBuffer(int id, int elementSize, int elementCount) {
             this.id = id;
             this.elementSize = elementSize;
+            this.elementCount = elementCount;
+            this.indexBuffer = new IndexBuffer(-1, -1);
+        }
+        
+    }
+    
+    public static class IndexBuffer{
+        public final int id;
+        public final int elementCount;
+        public IndexBuffer(int id, int elementCount) {
+            this.id = id;
             this.elementCount = elementCount;
         }
         

@@ -25,48 +25,15 @@ import org.joml.Vector3f;
  *
  * @author luis
  */
-public class OrthographicCamera implements Camera {
+public class OrthographicCamera extends AbstractCamera {
     
-    private final Vector3f position;
-    private final Vector3f up;
-    private final Vector3f target;
-    private final float near;
-    private final float far;
 
     public OrthographicCamera() {
-        this.far = 1000.0f;
-        this.near = 0.1f;
-        this.target = new Vector3f(0,0,0);
-        this.up = new Vector3f(0, 1, 0);
-        this.position = new Vector3f(0,0,2);
+        this(new Vector3f(0,0,2), new Vector3f(0, 1, 0),  new Vector3f(0,0,-2),  0.1f, 1000.0f);
     }
 
     public OrthographicCamera(Vector3f position, Vector3f up, Vector3f target,float near, float far) {
-        this.position = position;
-        this.up = up;
-        this.target = target;
-        this.near = near;
-        this.far = far;
-    }
-
-    public Vector3f getPosition() {
-        return position;
-    }
-
-    public Vector3f getUp() {
-        return up;
-    }
-
-    public Vector3f getTarget() {
-        return target;
-    }
-    
-    public float getNear() {
-        return near;
-    }
-
-    public float getFar() {
-        return far;
+       super(position, up, target, near, far);
     }
     
     @Override

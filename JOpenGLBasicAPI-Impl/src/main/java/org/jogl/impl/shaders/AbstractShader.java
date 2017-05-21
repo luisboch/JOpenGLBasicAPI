@@ -24,9 +24,10 @@ public abstract class AbstractShader implements Shader {
     protected int programId;
     protected int vertexShaderId;
     protected int fragmentShaderId;
+    protected Camera camera;
+    
     private boolean compiled = false;
     private boolean using ;
-    private Camera camera;
 
     @Override
     public Shader setCamera(Camera camera) {
@@ -147,14 +148,12 @@ public abstract class AbstractShader implements Shader {
     }
     
     protected void draw(String attribName, Scene.ArrayBuffer buffer, int glType) {
-        OpenGLUtil.drawBuffer(programId, attribName, buffer, glType);
+        OpenGLUtil.drawIndexBuffer(programId, attribName, buffer, glType);
     }
     
     protected void drawFloatArray(String attribName, Scene.ArrayBuffer buffer) {
         draw(attribName, buffer, GL_FLOAT);
-
     }
-
     @Override
     public boolean isCompiled() {
         return compiled;

@@ -16,15 +16,28 @@
 package org.jogl.impl;
 
 import java.awt.Color;
+import org.jogl.api.Camera;
+import org.jogl.api.input.Key;
+import org.jogl.api.input.Keyboard;
+import org.jogl.api.input.events.Mouse;
 import org.jogl.impl.scene.SimpleScene;
-import org.jogl.impl.shaders.SimpleShader;
+import org.jogl.impl.shaders.PhongShader;
 import org.jogl.impl.util.Util;
 import org.jogl.impl.util.objects.Triangle;
+import org.jogl.impl.view.PerspectiveCamera;
 import org.jogl.materials.SmoothMaterial;
 import org.joml.Vector3f;
-
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_C;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_Z;
 
 public class SimpleScreen extends AbstractScreen<SimpleScene> {
+
 
     public SimpleScreen() {
     }
@@ -34,17 +47,53 @@ public class SimpleScreen extends AbstractScreen<SimpleScene> {
         this.scene = new SimpleScene();
         // Create shader
         // Initialize parent (with this shader)
-        
+
         // Add objects
         scene.addObject(new Triangle());
+
         scene.addObject(new Triangle()
                 .setPosition(new Vector3f(0.2f, -0.2f, 0f))
                 .setMaterial(new SmoothMaterial(Util.convert(Color.BLUE)))
         );
-        
-        scene.setShader(new SimpleShader());
+
+        scene.addObject(new Triangle()
+                .setPosition(new Vector3f(0.1f, -0.1f, 0f))
+                .setMaterial(new SmoothMaterial(Util.convert(Color.red)))
+        );
+
+        scene.setShader(new PhongShader());
+        final Camera camera = new PerspectiveCamera();
+        scene.setCamera(camera);
 
         super.init();
     }
-    
+
+    @Override
+    public void update(float secs) {
+        super.update(secs); 
+        
+        if (keyboard.isDown(Key.UP)) {
+            scene.getCamera().moveToFront(secs);
+        }
+        if (keyboard.isDown(Key.DOWN)) {
+            scene.getCamera().moveToRear(secs);
+        }
+
+        if (keyboard.isDown(Key.LEFT)) {
+           scene.getCamera().strafeLeft(secs);
+        }
+
+        if (keyboard.isDown(Key.RIGHT)) {
+            scene.getCamera().strafeRight(secs);
+        }
+        
+        if (keyboard.isDown(Key.D)) {
+            scene.getCamera().rotateRight(secs);
+        }
+
+        if (keyboard.isDown(Key.A)) {
+            scene.getCamera().rotateLeft(secs);
+        }
+    }
+
 }
