@@ -63,22 +63,22 @@ public class PhongShader extends AbstractShader {
          */
         final Matrix4f world = new Matrix4f().identity();
 
-        OpenGLUtil.setUniform(this.programId, "uProjection", camera.getProjectionMatrix());
-        OpenGLUtil.setUniform(this.programId, "uView", camera.getViewMatrix());
-        OpenGLUtil.setUniform(this.programId, "uWorld", world);
-        OpenGLUtil.setUniform(this.programId, "uCameraPosition", camera.getPosition());
-
-        OpenGLUtil.setUniform(this.programId, "uLightDir", new Vector3f(1.0f, -3.0f, -1.0f));
-        OpenGLUtil.setUniform(this.programId, "uAmbientLight", new Vector3f(0.02f, 0.02f, 0.02f));
-        OpenGLUtil.setUniform(this.programId, "uDiffuseLight", new Vector3f(1.0f, 1.0f, 1.0f));
-        OpenGLUtil.setUniform(this.programId, "uSpecularLight", new Vector3f(1.0f, 1.0f, 1.0f));
-
         if (objects != null) {
             objects.forEach((Scene.MeshReference ob) -> {
 
                 glBindVertexArray(ob.meshId);
                 System.out.println(ob.meshId);
-                
+
+                OpenGLUtil.setUniform(this.programId, "uProjection", camera.getProjectionMatrix());
+                OpenGLUtil.setUniform(this.programId, "uView", camera.getViewMatrix());
+                OpenGLUtil.setUniform(this.programId, "uWorld", world);
+                OpenGLUtil.setUniform(this.programId, "uCameraPosition", camera.getPosition());
+
+                OpenGLUtil.setUniform(this.programId, "uLightDir", new Vector3f(1.0f, -3.0f, -1.0f));
+                OpenGLUtil.setUniform(this.programId, "uAmbientLight", new Vector3f(0.02f, 0.02f, 0.02f));
+                OpenGLUtil.setUniform(this.programId, "uDiffuseLight", new Vector3f(1.0f, 1.0f, 1.0f));
+                OpenGLUtil.setUniform(this.programId, "uSpecularLight", new Vector3f(1.0f, 1.0f, 1.0f));
+
                 if (ob.object.getMaterial() != null) {
                     // CODE FOR MATERIAL
                     final Material material = ob.object.getMaterial();
@@ -97,7 +97,7 @@ public class PhongShader extends AbstractShader {
                         OpenGLUtil.setUniform(this.programId, "uUseColor", true);
                         OpenGLUtil.setUniform(this.programId, "uColor", material.getColor());
                     }
-                    
+
                 }
 
                 drawFloatArray("aVertex", ob.vertexArray);
@@ -106,7 +106,6 @@ public class PhongShader extends AbstractShader {
                 OpenGLUtil.setUniform(this.programId, "uTransform", ob.object.getTransform());
 
                 glBindVertexArray(0);
-                // Set vertex values of objects
             });
         }
 
