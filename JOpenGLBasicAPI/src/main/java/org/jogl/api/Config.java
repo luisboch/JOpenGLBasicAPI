@@ -20,6 +20,6 @@ package org.jogl.api;
  * @author luis
  */
 public class Config {
-    public static boolean cullFace = false;
-    public static boolean showOnlyLines = true;
+    public static boolean cullFace = true;
+    public static boolean showOnlyLines = false;
 }

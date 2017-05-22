@@ -396,7 +396,11 @@ public abstract class AbstractScene implements Scene {
 
         if (mesh.getIndexBuffer() != null && !mesh.getIndexBuffer().isEmpty()) {
             for (Integer idx : mesh.getIndexBuffer()) {
+                try{
                 vertices.add(mesh.getVertices().get(idx));
+                } catch(Exception ex){
+                    throw new RuntimeException(ex);
+                }
             }
         } else {
             vertices.addAll(mesh.getVertices());

@@ -17,16 +17,13 @@ package org.jogl.impl;
 
 import java.awt.Color;
 import org.jogl.api.Camera;
-import org.jogl.api.Object3D;
 import org.jogl.api.input.Key;
 import org.jogl.impl.scene.SimpleScene;
 import org.jogl.impl.shaders.PhongShader;
 import org.jogl.impl.util.Util;
 import org.jogl.impl.util.objects.Cube;
-import org.jogl.impl.util.objects.Triangle;
 import org.jogl.impl.view.PerspectiveCamera;
 import org.jogl.materials.SmoothMaterial;
-import org.joml.Vector3f;
 
 public class SimpleScreen extends AbstractScreen<SimpleScene> {
     private Cube object = new Cube();

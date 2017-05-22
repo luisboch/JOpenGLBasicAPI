@@ -27,49 +27,50 @@ public class Cube extends AbstractObject<Cube> {
     public Cube() {
 
         mesh = new MeshCreator()
-                // Front face
-                
-                .to(new Vector3f(-0.5f, +0.5f, -0.5f))
-                .to(new Vector3f(-0.5f, -0.5f, -0.5f))
-                .to(new Vector3f(+0.5f, -0.5f, -0.5f))
-                .to(new Vector3f(+0.5f, +0.5f, -0.5f))
-                // Not folow path
-                
-                .close()
-                // Create back face
+                //  Front face
                 .to(new Vector3f(-0.5f, +0.5f, +0.5f))
                 .to(new Vector3f(-0.5f, -0.5f, +0.5f))
                 .to(new Vector3f(+0.5f, -0.5f, +0.5f))
-                .to(new Vector3f(+0.5f, +0.5f, +0.5f))
+                .flipTo(new Vector3f(+0.5f, +0.5f, +0.5f))
+                // Not folow path
+                .close()
+                // Create back face
+                .to(new Vector3f(+0.5f, +0.5f, -0.5f))
+                .to(new Vector3f(+0.5f, -0.5f, -0.5f))
+                .to(new Vector3f(-0.5f, -0.5f, -0.5f))
+                .flipTo(new Vector3f(-0.5f, +0.5f, -0.5f))
                 
                 .close()
-                // Create right face
+
+                 // Create right face
                 .to(new Vector3f(+0.5f, +0.5f, +0.5f))
                 .to(new Vector3f(+0.5f, -0.5f, +0.5f))
                 .to(new Vector3f(+0.5f, -0.5f, -0.5f))
-                .to(new Vector3f(+0.5f, +0.5f, -0.5f))
+                
+                .flipTo(new Vector3f(+0.5f, +0.5f, -0.5f))
 
                 .close()
                 // Create left face
+                .to(new Vector3f(-0.5f, -0.5f, +0.5f))
                 .to(new Vector3f(-0.5f, +0.5f, +0.5f))
-                .to(new Vector3f(-0.5f, -0.5f, +0.5f))
-                .to(new Vector3f(-0.5f, -0.5f, -0.5f))
                 .to(new Vector3f(-0.5f, +0.5f, -0.5f))
-                
+                .flipTo(new Vector3f(-0.5f, -0.5f, -0.5f))
+
                 .close()
-                // Create down face
-                .to(new Vector3f(-0.5f, -0.5f, +0.5f))
-                .to(new Vector3f(+0.5f, -0.5f, +0.5f))
-                .to(new Vector3f(+0.5f, -0.5f, -0.5f))
-                .to(new Vector3f(-0.5f, -0.5f, -0.5f))
                 
+                // Create down face
+                .to(new Vector3f(-0.5f, -0.5f, -0.5f))
+                .to(new Vector3f(+0.5f, -0.5f, -0.5f))
+                .to(new Vector3f(+0.5f, -0.5f, +0.5f))
+                .flipTo(new Vector3f(-0.5f, -0.5f, +0.5f))
+
                 .close()
                 // Create top face
                 .to(new Vector3f(-0.5f, +0.5f, +0.5f))
                 .to(new Vector3f(+0.5f, +0.5f, +0.5f))
                 .to(new Vector3f(+0.5f, +0.5f, -0.5f))
-                .to(new Vector3f(-0.5f, +0.5f, -0.5f))
-                
+                .flipTo(new Vector3f(-0.5f, +0.5f, -0.5f))
+//                
                 .create();
     }
 
