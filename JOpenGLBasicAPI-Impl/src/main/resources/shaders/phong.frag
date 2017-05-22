@@ -1,10 +1,10 @@
 #version 330
 
-uniform vec3 uLightDir;
+uniform vec3 uLightDir = vec3(1.0, -3.0, -1.0);
 
-uniform vec3 uAmbientLight;
-uniform vec3 uDiffuseLight;
-uniform vec3 uSpecularLight;
+uniform vec3 uAmbientLight = vec3(0.02, 0.02, 0.02);
+uniform vec3 uDiffuseLight = vec3(1.0, 1.0, 1.0);
+uniform vec3 uSpecularLight = vec3(1.0, 1.0, 1.0);
 
 uniform vec3 uAmbientMaterial = vec3(1.0f, 1.0f, 1.0f);
 uniform vec3 uDiffuseMaterial = vec3(0.7f, 0.7f, 0.7f);
@@ -13,7 +13,7 @@ uniform vec3 uSpecularMaterial = vec3(1.0f, 1.0f, 1.0f);
 uniform bool uUseColor = false;
 
 // MUST be definded when uUseColor is true
-uniform vec3 uColor;
+uniform vec3 uColor = vec3(1, 1, 1); // use #fff as default.
 
 uniform float uSpecularPower = 512.0;
 

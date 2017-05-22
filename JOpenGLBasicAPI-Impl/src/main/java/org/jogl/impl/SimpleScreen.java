@@ -36,22 +36,11 @@ public class SimpleScreen extends AbstractScreen<SimpleScene> {
     @Override
     public void init() {
         this.scene = new SimpleScene();
-        // Create shader
-        // Initialize parent (with this shader)
-
-        // Add objects
         
-        
-        scene.addObject(object.setMaterial(new SmoothMaterial(Util.convert(Color.YELLOW))).setPosition(new Vector3f(0.2f, -2f, -15f)));
+        scene.addObject(object.setMaterial(new SmoothMaterial(Util.convert(Color.YELLOW))).setPosition(new Vector3f(-0.5f, -0.3f, -0f)));
 //
-
         scene.addObject(new Triangle()
-                .setPosition(new Vector3f(0.1f, -0.1f, 0f))
-                .setMaterial(new SmoothMaterial(Util.convert(Color.red)))
-        );
-        
-        scene.addObject(new Triangle()
-                .setPosition(new Vector3f(0.2f, -0.2f, 0f))
+                .setPosition(new Vector3f(.8f, -0.2f, 0f))
                 .setMaterial(new SmoothMaterial(Util.convert(Color.BLUE)))
         );
 
@@ -65,29 +54,28 @@ public class SimpleScreen extends AbstractScreen<SimpleScene> {
     public void update(float secs) {
         super.update(secs); 
         
-        if (keyboard.isDown(Key.UP)) {
+        if (keyboard.isDown(Key.W)) {
             scene.getCamera().moveToFront(secs);
         }
-        if (keyboard.isDown(Key.DOWN)) {
+        if (keyboard.isDown(Key.S)) {
             scene.getCamera().moveToRear(secs);
         }
 
-        if (keyboard.isDown(Key.LEFT)) {
+        if (keyboard.isDown(Key.A)) {
            scene.getCamera().strafeLeft(secs);
         }
 
-        if (keyboard.isDown(Key.RIGHT)) {
+        if (keyboard.isDown(Key.D)) {
             scene.getCamera().strafeRight(secs);
         }
         
-        if (keyboard.isDown(Key.D)) {
+        if (keyboard.isDown(Key.E)) {
             scene.getCamera().rotateRight(secs);
         }
 
-        if (keyboard.isDown(Key.A)) {
+        if (keyboard.isDown(Key.Q)) {
             scene.getCamera().rotateLeft(secs);
         }
-        
         
         if(keyboard.isDown(Key.U)){
             object.getTransform().rotateY(secs);

@@ -54,7 +54,6 @@ public class Mouse {
         public void invoke(long window, double xpos, double ypos) {
             pos.x = (float) xpos;
             pos.y = (float) ypos;
-            System.out.println("mousePOS: " + xpos + ypos);
         }
     };
 
@@ -121,12 +120,10 @@ public class Mouse {
 
         @Override
         public void mousePress(MouseButton m) {
-            System.out.println("Mouse pressed: " + m.name());
         }
 
         @Override
         public void mouseRelease(MouseButton m) {
-            System.out.println("Mouse release: " + m.name());
         }
 
     }

@@ -34,6 +34,9 @@ public class Triangle extends AbstractObject<Triangle> {
                 .to(new Vector3f(-0.5f, -0.5f, 0f))
                 .to(new Vector3f(0.5f, -0.5f, 0f))
                 .create();
+        mesh.getNormals().add(new Vector3f(0f, 0f, 1f));
+        mesh.getNormals().add(new Vector3f(0f, 0f, 1f));
+        mesh.getNormals().add(new Vector3f(0f, 0f, 1f));
         
         material = new SmoothMaterial(Util.convert(Color.GREEN));
     }

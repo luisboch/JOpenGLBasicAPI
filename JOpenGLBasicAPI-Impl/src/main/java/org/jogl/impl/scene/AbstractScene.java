@@ -361,7 +361,7 @@ public abstract class AbstractScene implements Scene {
     @Override
     public Scene render() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+//        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
         for (Map.Entry<Shader, List<MeshReference>> entry : shaderRef.entrySet()) {
             final Shader sh = entry.getKey();
@@ -391,7 +391,9 @@ public abstract class AbstractScene implements Scene {
     }
 
     private void calculateNormals(Mesh mesh) {
-
+        
+        System.out.println("Calculating Normals for: "+mesh.getVertices().size());
+        
         final List<Vector3f> vertices = new ArrayList<>();
 
         if (mesh.getIndexBuffer() != null && !mesh.getIndexBuffer().isEmpty()) {

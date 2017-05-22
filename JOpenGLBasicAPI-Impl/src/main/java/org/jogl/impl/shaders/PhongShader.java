@@ -25,6 +25,7 @@ import org.jogl.impl.util.FileUtil;
 import org.jogl.impl.util.OpenGLUtil;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
+import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 /**
@@ -63,21 +64,20 @@ public class PhongShader extends AbstractShader {
          */
         final Matrix4f world = new Matrix4f().identity();
 
+        OpenGLUtil.setUniform(this.programId, "uProjection", camera.getProjectionMatrix());
+        OpenGLUtil.setUniform(this.programId, "uView", camera.getViewMatrix());
+        OpenGLUtil.setUniform(this.programId, "uWorld", world);
+        OpenGLUtil.setUniform(this.programId, "uCameraPosition", camera.getPosition());
+//
+//        OpenGLUtil.setUniform(this.programId, "uLightDir", new Vector3f(1.0f, -1.0f, -1.0f));
+//        OpenGLUtil.setUniform(this.programId, "uAmbientLight", new Vector3f(1.0f, 1.0f, 0.5f));
+//        OpenGLUtil.setUniform(this.programId, "uSpecularLight", new Vector3f(1.0f, 1.0f, 1.0f));
+//        OpenGLUtil.setUniform(this.programId, "uDiffuseLight", new Vector3f(1.0f, 0.2f, 1.0f));
+
         if (objects != null) {
             objects.forEach((Scene.MeshReference ob) -> {
 
                 glBindVertexArray(ob.meshId);
-                System.out.println(ob.meshId);
-
-                OpenGLUtil.setUniform(this.programId, "uProjection", camera.getProjectionMatrix());
-                OpenGLUtil.setUniform(this.programId, "uView", camera.getViewMatrix());
-                OpenGLUtil.setUniform(this.programId, "uWorld", world);
-                OpenGLUtil.setUniform(this.programId, "uCameraPosition", camera.getPosition());
-
-                OpenGLUtil.setUniform(this.programId, "uLightDir", new Vector3f(1.0f, -3.0f, -1.0f));
-                OpenGLUtil.setUniform(this.programId, "uAmbientLight", new Vector3f(0.02f, 0.02f, 0.02f));
-                OpenGLUtil.setUniform(this.programId, "uDiffuseLight", new Vector3f(1.0f, 1.0f, 1.0f));
-                OpenGLUtil.setUniform(this.programId, "uSpecularLight", new Vector3f(1.0f, 1.0f, 1.0f));
 
                 if (ob.object.getMaterial() != null) {
                     // CODE FOR MATERIAL
@@ -85,11 +85,11 @@ public class PhongShader extends AbstractShader {
 
                     if (material instanceof PhongMaterial) {
                         PhongMaterial phongMaterial = (PhongMaterial) material;
-
-                        OpenGLUtil.setUniform(this.programId, "uAmbientMaterial", phongMaterial.getAmbientMaterial());
-                        OpenGLUtil.setUniform(this.programId, "uDiffuseMaterial", phongMaterial.getDiffuseMaterial());
-                        OpenGLUtil.setUniform(this.programId, "uSpecularMaterial", phongMaterial.getSpecularMaterial());
-                        OpenGLUtil.setUniform(this.programId, "uSpecularPower", phongMaterial.getSpecularPower());
+//
+//                        OpenGLUtil.setUniform(this.programId, "uAmbientMaterial", phongMaterial.getAmbientMaterial());
+//                        OpenGLUtil.setUniform(this.programId, "uDiffuseMaterial", phongMaterial.getDiffuseMaterial());
+//                        OpenGLUtil.setUniform(this.programId, "uSpecularMaterial", phongMaterial.getSpecularMaterial());
+//                        OpenGLUtil.setUniform(this.programId, "uSpecularPower", phongMaterial.getSpecularPower());
 
                     }
 
@@ -100,10 +100,11 @@ public class PhongShader extends AbstractShader {
 
                 }
 
-                drawFloatArray("aVertex", ob.vertexArray);
-                drawFloatArray("aNormal", ob.normalArray);
                 OpenGLUtil.setUniform(this.programId, "uPosition", ob.object.getPosition());
                 OpenGLUtil.setUniform(this.programId, "uTransform", ob.object.getTransform());
+                
+                OpenGLUtil.drawBuffer(this.programId, "aVertex", ob.vertexArray, GL_FLOAT);
+                OpenGLUtil.drawBuffer(this.programId, "aNormal", ob.normalArray, GL_FLOAT);
 
                 glBindVertexArray(0);
             });
