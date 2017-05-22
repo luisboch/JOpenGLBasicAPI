@@ -22,8 +22,10 @@ import org.jogl.impl.scene.SimpleScene;
 import org.jogl.impl.shaders.PhongShader;
 import org.jogl.impl.util.Util;
 import org.jogl.impl.util.objects.Cube;
+import org.jogl.impl.util.objects.Triangle;
 import org.jogl.impl.view.PerspectiveCamera;
 import org.jogl.materials.SmoothMaterial;
+import org.joml.Vector3f;
 
 public class SimpleScreen extends AbstractScreen<SimpleScene> {
     private Cube object = new Cube();
@@ -40,21 +42,21 @@ public class SimpleScreen extends AbstractScreen<SimpleScene> {
         // Add objects
         
         
-        scene.addObject(object.setMaterial(new SmoothMaterial(Util.convert(Color.YELLOW))));
+        scene.addObject(object.setMaterial(new SmoothMaterial(Util.convert(Color.YELLOW))).setPosition(new Vector3f(0.2f, -2f, -15f)));
 //
-//        scene.addObject(new Triangle()
-//                .setPosition(new Vector3f(0.2f, -0.2f, 0f))
-//                .setMaterial(new SmoothMaterial(Util.convert(Color.BLUE)))
-//        );
-//
-//        scene.addObject(new Triangle()
-//                .setPosition(new Vector3f(0.1f, -0.1f, 0f))
-//                .setMaterial(new SmoothMaterial(Util.convert(Color.red)))
-//        );
+
+        scene.addObject(new Triangle()
+                .setPosition(new Vector3f(0.1f, -0.1f, 0f))
+                .setMaterial(new SmoothMaterial(Util.convert(Color.red)))
+        );
+        
+        scene.addObject(new Triangle()
+                .setPosition(new Vector3f(0.2f, -0.2f, 0f))
+                .setMaterial(new SmoothMaterial(Util.convert(Color.BLUE)))
+        );
 
         scene.setShader(new PhongShader());
-        final Camera camera = new PerspectiveCamera();
-        scene.setCamera(camera);
+        scene.setCamera(new PerspectiveCamera());
 
         super.init();
     }

@@ -27,6 +27,13 @@ public interface Shader {
      * @return 
      */
     Shader enable();
+    
+    /**
+     * Just render objects, in this context, the shader is, already enabled.
+     * @param objects
+     * @param light
+     * @return 
+     */
     Shader render(List<Scene.MeshReference> objects, List<GlobalLight> light);
     
     /**

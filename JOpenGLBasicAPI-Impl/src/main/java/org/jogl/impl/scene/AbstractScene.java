@@ -396,25 +396,25 @@ public abstract class AbstractScene implements Scene {
 
         if (mesh.getIndexBuffer() != null && !mesh.getIndexBuffer().isEmpty()) {
             for (Integer idx : mesh.getIndexBuffer()) {
-                try{
-                vertices.add(mesh.getVertices().get(idx));
-                } catch(Exception ex){
+                try {
+                    vertices.add(mesh.getVertices().get(idx));
+                } catch (Exception ex) {
                     throw new RuntimeException(ex);
                 }
             }
         } else {
             vertices.addAll(mesh.getVertices());
         }
-        
+
         mesh.getNormals().clear();
-        
+
         for (int i = 0; i < vertices.size(); i += 3) {
-            
-            Vector3f n1 = new Vector3f(vertices.get(i)).cross(vertices.get(i+1));
-            Vector3f n2 = new Vector3f(vertices.get(i+1)).cross(vertices.get(i+2));
-            Vector3f n3 = new Vector3f(vertices.get(i+2)).cross(vertices.get(i));
+
+            Vector3f n1 = new Vector3f(vertices.get(i)).cross(vertices.get(i + 1));
+            Vector3f n2 = new Vector3f(vertices.get(i + 1)).cross(vertices.get(i + 2));
+            Vector3f n3 = new Vector3f(vertices.get(i + 2)).cross(vertices.get(i));
             Vector3f normal = n1.add(n2).add(n3).normalize();
-            
+
             mesh.getNormals().add(normal);
             mesh.getNormals().add(normal);
             mesh.getNormals().add(normal);

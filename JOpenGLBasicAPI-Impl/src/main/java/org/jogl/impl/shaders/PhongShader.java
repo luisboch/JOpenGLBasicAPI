@@ -60,19 +60,6 @@ public class PhongShader extends AbstractShader {
 
         /*
         
-        //FRAG UNIFORMS
-        uniform vec3 uLightDir;
-
-        uniform vec3 uAmbientLight;
-        uniform vec3 uDiffuseLight;
-        uniform vec3 uSpecularLight;
-
-        uniform vec3 uAmbientMaterial;
-        uniform vec3 uDiffuseMaterial;
-        uniform vec3 uSpecularMaterial;
-
-        uniform float uSpecularPower;
-
          */
         final Matrix4f world = new Matrix4f().identity();
 
@@ -90,7 +77,8 @@ public class PhongShader extends AbstractShader {
             objects.forEach((Scene.MeshReference ob) -> {
 
                 glBindVertexArray(ob.meshId);
-
+                System.out.println(ob.meshId);
+                
                 if (ob.object.getMaterial() != null) {
                     // CODE FOR MATERIAL
                     final Material material = ob.object.getMaterial();

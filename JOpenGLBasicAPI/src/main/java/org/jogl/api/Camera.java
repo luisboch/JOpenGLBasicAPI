@@ -48,12 +48,12 @@ public interface Camera {
     }
 
     public default Camera rotateLeft(float secs){
-        getDirection().set(new Matrix4f().rotateY((float)Math.toRadians(30d) * secs * -1).transformDirection(getDirection()));
+        getDirection().set(new Matrix4f().rotateY((float)Math.toRadians(30d) * secs ).transformDirection(getDirection()));
         getTarget() .set(new Vector3f(getPosition()).add(getDirection()));
         return this;
     }
     public default Camera rotateRight(float secs){
-        getDirection().set(new Matrix4f().rotateY((float)Math.toRadians(30d) * secs).transformDirection(getDirection()));
+        getDirection().set(new Matrix4f().rotateY((float)Math.toRadians(30d) * secs * -1).transformDirection(getDirection()));
         getTarget().set( new Vector3f(getPosition()).add(getDirection()));
         return this;
     }

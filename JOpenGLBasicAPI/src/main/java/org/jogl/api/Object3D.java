@@ -21,6 +21,7 @@ import org.joml.Vector3f;
 /**
  *
  * @author luis
+ * @param <Type>
  */
 public interface Object3D<Type> {
     

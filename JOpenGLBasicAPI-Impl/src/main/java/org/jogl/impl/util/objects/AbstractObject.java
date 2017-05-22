@@ -25,13 +25,13 @@ import org.joml.Vector3f;
  *
  * @author luis
  */
-abstract class AbstractObject<A> implements Object3D<A>{
-    
+abstract class AbstractObject<A> implements Object3D<A> {
+
     protected Mesh mesh;
     protected Material material;
     protected Vector3f position = new Vector3f();
     protected Matrix4f transformation = new Matrix4f().identity();
-    
+
     @Override
     public Vector3f getPosition() {
         return position;
@@ -42,8 +42,7 @@ abstract class AbstractObject<A> implements Object3D<A>{
         this.position = position;
         return (A) this;
     }
-    
-    
+
     @Override
     public Matrix4f getTransform() {
         return transformation;
@@ -63,6 +62,10 @@ abstract class AbstractObject<A> implements Object3D<A>{
         this.material = material;
         return (A) this;
     }
-    
-    
+
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() + "{" + "position=" + position + ", transformation=" + transformation + '}';
+    }
+
 }
