@@ -76,14 +76,18 @@ public abstract class AbstractScene implements Scene {
             throw new IllegalStateException("Camera not defined, please set it to Scene");
         }
 
-        glClearColor(0.0f, 0.0f, 0.2f, 1.0f);
-
+        if (Config.depthTest) {
+            glEnable(GL_DEPTH_TEST);
+        }
+        
         if (Config.cullFace) {
             glEnable(GL_CULL_FACE);
         }
 
-        if (Config.showOnlyLines) {
-            glPolygonMode(GL_FRONT_FACE, GL_LINE);
+        if (!Config.modes.isEmpty()) {
+            for (Config.RenderMode m : Config.modes) {
+                glPolygonMode(m.getMode().getCode(), m.getType().getCode());
+            }
         }
 
         if (shader != null) {
@@ -391,9 +395,9 @@ public abstract class AbstractScene implements Scene {
     }
 
     private void calculateNormals(Mesh mesh) {
-        
-        System.out.println("Calculating Normals for: "+mesh.getVertices().size());
-        
+
+        System.out.println("Calculating Normals for: " + mesh.getVertices().size());
+
         final List<Vector3f> vertices = new ArrayList<>();
 
         if (mesh.getIndexBuffer() != null && !mesh.getIndexBuffer().isEmpty()) {

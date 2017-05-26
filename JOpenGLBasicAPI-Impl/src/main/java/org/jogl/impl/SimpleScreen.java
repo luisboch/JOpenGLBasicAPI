@@ -16,7 +16,7 @@
 package org.jogl.impl;
 
 import java.awt.Color;
-import org.jogl.api.Camera;
+import org.jogl.api.Config;
 import org.jogl.api.input.Key;
 import org.jogl.impl.scene.SimpleScene;
 import org.jogl.impl.shaders.PhongShader;
@@ -35,9 +35,12 @@ public class SimpleScreen extends AbstractScreen<SimpleScene> {
 
     @Override
     public void init() {
+        
+        Config.lineView();
+        
         this.scene = new SimpleScene();
         
-        scene.addObject(object.setMaterial(new SmoothMaterial(Util.convert(Color.YELLOW))).setPosition(new Vector3f(-0.5f, -0.3f, -0f)));
+        scene.addObject(object.setMaterial(new SmoothMaterial(Util.convert(Color.BLACK))).setPosition(new Vector3f(-0.5f, -0.3f, -0f)));
 //
         scene.addObject(new Triangle()
                 .setPosition(new Vector3f(.8f, -0.2f, 0f))

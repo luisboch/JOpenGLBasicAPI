@@ -68,16 +68,22 @@ public class PhongShader extends AbstractShader {
         OpenGLUtil.setUniform(this.programId, "uView", camera.getViewMatrix());
         OpenGLUtil.setUniform(this.programId, "uWorld", world);
         OpenGLUtil.setUniform(this.programId, "uCameraPosition", camera.getPosition());
-//
-//        OpenGLUtil.setUniform(this.programId, "uLightDir", new Vector3f(1.0f, -1.0f, -1.0f));
-//        OpenGLUtil.setUniform(this.programId, "uAmbientLight", new Vector3f(1.0f, 1.0f, 0.5f));
-//        OpenGLUtil.setUniform(this.programId, "uSpecularLight", new Vector3f(1.0f, 1.0f, 1.0f));
-//        OpenGLUtil.setUniform(this.programId, "uDiffuseLight", new Vector3f(1.0f, 0.2f, 1.0f));
 
         if (objects != null) {
             objects.forEach((Scene.MeshReference ob) -> {
 
                 glBindVertexArray(ob.meshId);
+
+                OpenGLUtil.setUniform(this.programId, "uPosition", ob.object.getPosition());
+                OpenGLUtil.setUniform(this.programId, "uTransform", ob.object.getTransform());
+
+                OpenGLUtil.drawBuffer(this.programId, "aNormal", ob.normalArray, GL_FLOAT);
+                OpenGLUtil.drawBuffer(this.programId, "aVertex", ob.vertexArray, GL_FLOAT);
+
+                OpenGLUtil.setUniform(this.programId, "uLightDir", new Vector3f(1.0f, -1.0f, -1.0f));
+                OpenGLUtil.setUniform(this.programId, "uAmbientLight", new Vector3f(1.0f, 1.0f, 0.5f));
+                OpenGLUtil.setUniform(this.programId, "uSpecularLight", new Vector3f(1.0f, 1.0f, 1.0f));
+                OpenGLUtil.setUniform(this.programId, "uDiffuseLight", new Vector3f(1.0f, 0.2f, 1.0f));
 
                 if (ob.object.getMaterial() != null) {
                     // CODE FOR MATERIAL
@@ -99,12 +105,6 @@ public class PhongShader extends AbstractShader {
                     }
 
                 }
-
-                OpenGLUtil.setUniform(this.programId, "uPosition", ob.object.getPosition());
-                OpenGLUtil.setUniform(this.programId, "uTransform", ob.object.getTransform());
-                
-                OpenGLUtil.drawBuffer(this.programId, "aVertex", ob.vertexArray, GL_FLOAT);
-                OpenGLUtil.drawBuffer(this.programId, "aNormal", ob.normalArray, GL_FLOAT);
 
                 glBindVertexArray(0);
             });
