@@ -16,83 +16,99 @@
 package org.jogl.impl;
 
 import java.awt.Color;
-import org.jogl.api.Camera;
+import org.jogl.api.Config;
+import org.jogl.api.Object3D;
 import org.jogl.api.input.Key;
-import org.jogl.api.input.Keyboard;
-import org.jogl.api.input.events.Mouse;
 import org.jogl.impl.scene.SimpleScene;
 import org.jogl.impl.shaders.PhongShader;
 import org.jogl.impl.util.Util;
+import org.jogl.impl.util.objects.Cube;
+import org.jogl.impl.util.objects.Square;
 import org.jogl.impl.util.objects.Triangle;
 import org.jogl.impl.view.PerspectiveCamera;
 import org.jogl.materials.SmoothMaterial;
 import org.joml.Vector3f;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_C;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_Z;
 
 public class SimpleScreen extends AbstractScreen<SimpleScene> {
-
+    private Cube cube = new Cube();
+    
+    private Square square = new Square();
 
     public SimpleScreen() {
     }
 
     @Override
     public void init() {
+        
+        Config.defaultView();
+        
         this.scene = new SimpleScene();
-        // Create shader
-        // Initialize parent (with this shader)
-
-        // Add objects
-        scene.addObject(new Triangle());
-
+        
+        scene.addObject(cube.setMaterial(new SmoothMaterial(Util.convert(Color.YELLOW))).setPosition(new Vector3f(-0.5f, -0.3f, -0f)));
+//
         scene.addObject(new Triangle()
-                .setPosition(new Vector3f(0.2f, -0.2f, 0f))
+                .setPosition(new Vector3f(.8f, -0.2f, 0f))
                 .setMaterial(new SmoothMaterial(Util.convert(Color.BLUE)))
         );
-
-        scene.addObject(new Triangle()
-                .setPosition(new Vector3f(0.1f, -0.1f, 0f))
-                .setMaterial(new SmoothMaterial(Util.convert(Color.red)))
-        );
+        
+        scene.addObject(square.setMaterial(new SmoothMaterial(Util.convert(Color.ORANGE))).setPosition(new Vector3f(-1f, -0.5f, 0)));
 
         scene.setShader(new PhongShader());
-        final Camera camera = new PerspectiveCamera();
-        scene.setCamera(camera);
+        scene.setCamera(new PerspectiveCamera());
 
         super.init();
     }
 
     @Override
     public void update(float secs) {
+        
+        final Object3D object = square;
         super.update(secs); 
         
-        if (keyboard.isDown(Key.UP)) {
+        if (keyboard.isDown(Key.W)) {
             scene.getCamera().moveToFront(secs);
         }
-        if (keyboard.isDown(Key.DOWN)) {
+        if (keyboard.isDown(Key.S)) {
             scene.getCamera().moveToRear(secs);
         }
 
-        if (keyboard.isDown(Key.LEFT)) {
+        if (keyboard.isDown(Key.A)) {
            scene.getCamera().strafeLeft(secs);
         }
 
-        if (keyboard.isDown(Key.RIGHT)) {
+        if (keyboard.isDown(Key.D)) {
             scene.getCamera().strafeRight(secs);
         }
         
-        if (keyboard.isDown(Key.D)) {
+        if (keyboard.isDown(Key.E)) {
             scene.getCamera().rotateRight(secs);
         }
 
-        if (keyboard.isDown(Key.A)) {
+        if (keyboard.isDown(Key.Q)) {
             scene.getCamera().rotateLeft(secs);
+        }
+        
+        if(keyboard.isDown(Key.U)){
+            object.getTransform().rotateY(secs);
+        }
+        
+        if(keyboard.isDown(Key.J)){
+            object.getTransform().rotateY(-secs);
+        }
+        
+        if(keyboard.isDown(Key.K)){
+            object.getTransform().rotateX(secs);
+        }
+        
+        if(keyboard.isDown(Key.H)){
+            object.getTransform().rotateX(-secs);
+        }
+        
+        if(keyboard.isDown(Key.I)){
+            object.getTransform().rotateZ(secs);
+        }
+        if(keyboard.isDown(Key.Y)){
+            object.getTransform().rotateZ(-secs);
         }
     }
 

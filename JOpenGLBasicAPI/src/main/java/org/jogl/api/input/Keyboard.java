@@ -45,7 +45,6 @@ public class Keyboard {
     }
     
     public void set(int k, int action) {
-    
         if (action == GLFW_PRESS) {
             downKeys.add(k);
             pressedKeys.add(k);

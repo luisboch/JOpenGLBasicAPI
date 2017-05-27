@@ -22,6 +22,7 @@ import org.jogl.api.Scene;
 import org.jogl.api.Shader;
 import org.jogl.impl.util.FileUtil;
 import org.jogl.impl.util.OpenGLUtil;
+import org.lwjgl.opengl.GL11;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 /**
@@ -83,7 +84,7 @@ public class SimpleShader extends AbstractShader {
                     }
                 }
 
-                drawFloatArray("aVertex", ob.array);
+                OpenGLUtil.drawBuffer(this.programId, "aVertex", ob.vertexArray,  GL11.GL_FLOAT);
                 OpenGLUtil.setUniform(this.programId, "aPosition", ob.object.getPosition());
 
                 glBindVertexArray(0);

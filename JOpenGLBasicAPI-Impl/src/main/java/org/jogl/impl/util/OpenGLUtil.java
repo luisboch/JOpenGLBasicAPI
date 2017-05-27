@@ -84,7 +84,7 @@ public class OpenGLUtil {
         return uniform;
     }
 
-    public static void drawIndexBuffer(int programID, String attribName, Scene.ArrayBuffer buffer, int glType){
+    public static void drawBuffer(int programID, String attribName, Scene.ArrayBuffer buffer, int glType){
 
         int attrID = glGetAttribLocation(programID, attribName);
         glEnableVertexAttribArray(attrID); //0

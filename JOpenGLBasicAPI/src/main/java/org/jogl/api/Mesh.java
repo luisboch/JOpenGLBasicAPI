@@ -24,30 +24,39 @@ import org.joml.Vector3f;
  * @author luis
  */
 public class Mesh {
-    
+
     private final List<Vector3f> vertices = new ArrayList<>();
     private final List<Integer> indexBuffer = new ArrayList<>();
+
+    private final List<Vector3f> normals = new ArrayList<>();
 
     public Mesh() {
     }
 
     public Mesh(List<Vector3f> vertices, List<Integer> indexBuffer) {
         this();
-        
+
         this.vertices.addAll(vertices);
         this.indexBuffer.addAll(indexBuffer);
+    }
+
+    public Mesh(List<Vector3f> vertices, List<Integer> indexBuffer, List<Vector3f> normals) {
+        this();
+        this.vertices.addAll(vertices);
+        this.indexBuffer.addAll(indexBuffer);
+        this.normals.addAll(normals);
     }
 
     public List<Vector3f> getVertices() {
         return vertices;
     }
-    
-    public Mesh addVertice(Vector3f v){
-        vertices.add(v);
-        return this;
-    }
 
     public List<Integer> getIndexBuffer() {
         return indexBuffer;
     }
+
+    public List<Vector3f> getNormals() {
+        return normals;
+    }
+
 }

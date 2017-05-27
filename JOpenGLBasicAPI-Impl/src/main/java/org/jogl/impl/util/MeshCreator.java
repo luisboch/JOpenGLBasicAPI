@@ -72,7 +72,32 @@ public class MeshCreator {
         lastPath = curIdx;
         return this;
     }
-
+    
+    public MeshCreator flipTo(Vector3f vector){
+        final int curIdx;
+        
+        // Make sure that we are using a copy from the vector (help the use, because can reutilize the same with their logic)
+        vector = new Vector3f(vector);
+        
+        if(vectors.contains(vector)){ 
+            // Ja temos este vetor na lista, logo, vamos apenas adicionar a sua posicao para o index buffer.
+            curIdx = vectors.indexOf(vector);
+        } else {
+            curIdx = vectors.size();
+            vectors.add(vector);
+        }
+        
+        if(vectors.size() > 3){
+            indexBuffer.add(indexBuffer.get(indexBuffer.size() - 3));
+            indexBuffer.add(lastPath);
+            indexBuffer.add(curIdx);
+        }
+        
+        beforeLastPath = lastPath;
+        lastPath = curIdx;
+        return this;
+    }
+    
     public MeshCreator copyTo(Float x, Float y, Float z) {
 
         x = ou(x, 1f);// Default
