@@ -57,7 +57,8 @@ public interface Scene {
         public final int meshId;
         public final ArrayBuffer vertexArray;
         public final ArrayBuffer normalArray;
-
+//        public final 
+//
         public MeshReference(Mesh mesh, Object3D object, int meshId, ArrayBuffer array, ArrayBuffer normalArray) {
             this.mesh = mesh;
             this.object = object;
@@ -89,6 +90,10 @@ public interface Scene {
             this.id = id;
             this.elementCount = elementCount;
         }
-        
     }
+//    
+//    public static class Texture{
+//        public final int id;
+//        public final
+//    }
 }

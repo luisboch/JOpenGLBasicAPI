@@ -31,7 +31,7 @@ public class PerspectiveCamera extends AbstractCamera {
 
     public PerspectiveCamera() {
         super(new Vector3f(0,0,2), new Vector3f(0, 1, 0),  new Vector3f(0,0,-2),  0.1f, 1000.0f);
-        this.fov = (float) Math.toRadians(60);
+        this.fov = (float) Math.toRadians(40);
     }
 
     public float getFov() {

@@ -116,7 +116,7 @@ public class Config {
         modes.add(new RenderMode(PoligonMode.FRONT, PoligonType.FILL));
     }
     
-    private static void defaultView() {
+    public static void defaultView() {
         cullFace = true;
         modes.clear();
         modes.add(new RenderMode(PoligonMode.FRONT_AND_BACK, PoligonType.FILL));

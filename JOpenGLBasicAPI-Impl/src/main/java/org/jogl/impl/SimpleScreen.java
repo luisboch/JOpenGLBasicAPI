@@ -17,18 +17,22 @@ package org.jogl.impl;
 
 import java.awt.Color;
 import org.jogl.api.Config;
+import org.jogl.api.Object3D;
 import org.jogl.api.input.Key;
 import org.jogl.impl.scene.SimpleScene;
 import org.jogl.impl.shaders.PhongShader;
 import org.jogl.impl.util.Util;
 import org.jogl.impl.util.objects.Cube;
+import org.jogl.impl.util.objects.Square;
 import org.jogl.impl.util.objects.Triangle;
 import org.jogl.impl.view.PerspectiveCamera;
 import org.jogl.materials.SmoothMaterial;
 import org.joml.Vector3f;
 
 public class SimpleScreen extends AbstractScreen<SimpleScene> {
-    private Cube object = new Cube();
+    private Cube cube = new Cube();
+    
+    private Square square = new Square();
 
     public SimpleScreen() {
     }
@@ -36,16 +40,18 @@ public class SimpleScreen extends AbstractScreen<SimpleScene> {
     @Override
     public void init() {
         
-        Config.lineView();
+        Config.defaultView();
         
         this.scene = new SimpleScene();
         
-        scene.addObject(object.setMaterial(new SmoothMaterial(Util.convert(Color.BLACK))).setPosition(new Vector3f(-0.5f, -0.3f, -0f)));
+        scene.addObject(cube.setMaterial(new SmoothMaterial(Util.convert(Color.YELLOW))).setPosition(new Vector3f(-0.5f, -0.3f, -0f)));
 //
         scene.addObject(new Triangle()
                 .setPosition(new Vector3f(.8f, -0.2f, 0f))
                 .setMaterial(new SmoothMaterial(Util.convert(Color.BLUE)))
         );
+        
+        scene.addObject(square.setMaterial(new SmoothMaterial(Util.convert(Color.ORANGE))).setPosition(new Vector3f(-1f, -0.5f, 0)));
 
         scene.setShader(new PhongShader());
         scene.setCamera(new PerspectiveCamera());
@@ -55,6 +61,8 @@ public class SimpleScreen extends AbstractScreen<SimpleScene> {
 
     @Override
     public void update(float secs) {
+        
+        final Object3D object = square;
         super.update(secs); 
         
         if (keyboard.isDown(Key.W)) {
