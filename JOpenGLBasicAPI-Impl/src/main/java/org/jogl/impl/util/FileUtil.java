@@ -43,5 +43,14 @@ public class FileUtil {
 
         return Strings.EMPTY;
     }
+    
+    
+    /**
+     * Returns path that can reference some files in jar.
+     * @return 
+     */
+    public String getReferencePath(){
+        return getClass().getClassLoader().getResource(".").getPath();
+    }
 
 }

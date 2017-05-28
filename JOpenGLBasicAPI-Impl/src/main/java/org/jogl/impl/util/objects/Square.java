@@ -15,30 +15,35 @@
  */
 package org.jogl.impl.util.objects;
 
-import java.awt.Color;
 import org.jogl.impl.util.MeshCreator;
-import org.jogl.impl.util.Util;
-import org.jogl.materials.SmoothMaterial;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 /**
  *
  * @author luis
  */
-public class Triangle extends AbstractObject<Triangle> {
+public class Square extends AbstractObject<Square>{
 
-    public Triangle() {
-        
+    public Square() {
         mesh = new MeshCreator()
-                .to(new Vector3f(0.0f, 0.5f, 0f))
+                .to(new Vector3f(0.5f, 0.5f, 0f))
+                .to(new Vector3f(-0.5f, 0.5f, 0f))
                 .to(new Vector3f(-0.5f, -0.5f, 0f))
-                .to(new Vector3f(0.5f, -0.5f, 0f))
+                .flipTo(new Vector3f(0.5f, -0.5f, 0f))
                 .create();
+        
+        mesh.getNormals().add(new Vector3f(0f, 0f, 1f));
         mesh.getNormals().add(new Vector3f(0f, 0f, 1f));
         mesh.getNormals().add(new Vector3f(0f, 0f, 1f));
         mesh.getNormals().add(new Vector3f(0f, 0f, 1f));
         
         
-        material = new SmoothMaterial(Util.convert(Color.GREEN));
+        mesh.getTexturePos().add(new Vector2f(0f, 0f));
+        mesh.getTexturePos().add(new Vector2f(1f, 0f));
+        mesh.getTexturePos().add(new Vector2f(0f, 1f));
+        mesh.getTexturePos().add(new Vector2f(1f, 1f));
     }
+    
+    
 }

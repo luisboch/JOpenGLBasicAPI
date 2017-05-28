@@ -5,7 +5,6 @@
  */
 package org.jogl.materials;
 
-import org.jogl.api.Material;
 import org.jogl.api.PhongMaterial;
 import org.jogl.api.Shader;
 import org.jogl.api.Texture;
@@ -21,7 +20,7 @@ public class SmoothMaterial implements PhongMaterial {
     private final Vector3f diffuseMaterial;
     private final Vector3f specularMaterial;
     private final float specularPower;
-
+    private Texture texture;
 
     private final Vector3f color;
 
@@ -52,9 +51,15 @@ public class SmoothMaterial implements PhongMaterial {
 
     @Override
     public Texture getTexture() {
-        return null;
+        return texture;
     }
 
+    public SmoothMaterial setTexture(Texture texture) {
+        this.texture = texture;
+        return this;
+    }
+
+    
     @Override
     public Vector3f getColor() {
         return color;

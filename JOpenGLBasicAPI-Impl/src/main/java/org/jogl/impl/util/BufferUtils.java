@@ -18,6 +18,7 @@ package org.jogl.impl.util;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.List;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 /**
@@ -41,6 +42,7 @@ public class BufferUtils {
         return intBuffer;
 
     }
+    
     public static FloatBuffer convert(List<Vector3f> vertices) {
 
         final int width = vertices.size() * 9;
@@ -53,6 +55,26 @@ public class BufferUtils {
             vertexData[idx++] = v.x;
             vertexData[idx++] = v.y;
             vertexData[idx++] = v.z;
+        }
+
+        final FloatBuffer buffer = org.lwjgl.BufferUtils.createFloatBuffer(vertexData.length);
+        buffer.put(vertexData).flip();
+
+        return buffer;
+
+    }
+    
+    public static FloatBuffer convertVec2f(List<Vector2f> vertices) {
+
+        final int width = vertices.size() * 9;
+
+        final float[] vertexData = new float[width];
+
+        int idx = 0;
+
+        for (Vector2f v : vertices) {
+            vertexData[idx++] = v.x;
+            vertexData[idx++] = v.y;
         }
 
         final FloatBuffer buffer = org.lwjgl.BufferUtils.createFloatBuffer(vertexData.length);

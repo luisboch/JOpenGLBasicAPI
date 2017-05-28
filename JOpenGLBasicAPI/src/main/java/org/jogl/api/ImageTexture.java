@@ -15,16 +15,14 @@
  */
 package org.jogl.api;
 
-import org.lwjgl.opengl.GL11;
-
 /**
  *
  * @author luis
  */
-public interface Texture {
+public interface ImageTexture extends Texture {
+
     TextureParameters getParameters();
     
-    default int getType(){
-        return GL11.GL_TEXTURE_2D;
-    }
+    Image getImage();
+    
 }

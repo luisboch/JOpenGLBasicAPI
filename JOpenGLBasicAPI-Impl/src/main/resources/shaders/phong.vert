@@ -10,13 +10,16 @@ uniform mat4 uTransform;
 
 in vec3 aVertex;
 in vec3 aNormal;
+in vec2 aTexCoord;
 
 out vec3 vNormal;
 out vec3 vViewPath;
+out vec2 vTexCoord;
 
 void main() {
     vec4 worldPos = uWorld * vec4(aVertex + uPosition, 1.0) * uTransform;
     gl_Position =  uProjection * uView * worldPos;
     vNormal = (uWorld * vec4(aNormal, 0.0)).xyz;
-    vViewPath = uCameraPosition - worldPos.xyz;    
+    vViewPath = uCameraPosition - worldPos.xyz;
+    vTexCoord = aTexCoord;    
 }

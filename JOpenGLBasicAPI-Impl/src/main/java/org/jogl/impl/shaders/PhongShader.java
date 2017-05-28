@@ -16,6 +16,7 @@
 package org.jogl.impl.shaders;
 
 import java.util.List;
+import java.util.Map;
 import org.jogl.api.GlobalLight;
 import org.jogl.api.Material;
 import org.jogl.api.PhongMaterial;
@@ -26,6 +27,8 @@ import org.jogl.impl.util.OpenGLUtil;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 /**
@@ -59,21 +62,17 @@ public class PhongShader extends AbstractShader {
     @Override
     public Shader render(List<Scene.MeshReference> objects, List<GlobalLight> light) {
 
-        /*
-        
-         */
         final Matrix4f world = new Matrix4f().identity();
-
-        OpenGLUtil.setUniform(this.programId, "uProjection", camera.getProjectionMatrix());
-        OpenGLUtil.setUniform(this.programId, "uView", camera.getViewMatrix());
-        OpenGLUtil.setUniform(this.programId, "uWorld", world);
-        OpenGLUtil.setUniform(this.programId, "uCameraPosition", camera.getPosition());
 
         if (objects != null) {
             objects.forEach((Scene.MeshReference ob) -> {
+                enable();
+                OpenGLUtil.setUniform(this.programId, "uProjection", camera.getProjectionMatrix());
+                OpenGLUtil.setUniform(this.programId, "uView", camera.getViewMatrix());
+                OpenGLUtil.setUniform(this.programId, "uWorld", world);
+                OpenGLUtil.setUniform(this.programId, "uCameraPosition", camera.getPosition());
 
                 glBindVertexArray(ob.meshId);
-
 
                 OpenGLUtil.setUniform(this.programId, "uPosition", ob.object.getPosition());
                 OpenGLUtil.setUniform(this.programId, "uTransform", ob.object.getTransform());
@@ -104,9 +103,20 @@ public class PhongShader extends AbstractShader {
 
                 }
 
+                if (ob.texture != null) {
+                    OpenGLUtil.setUniform(this.programId, "uUseTexture", true);
+                    glActiveTexture(GL_TEXTURE0);
+                    glBindTexture(GL_TEXTURE_2D, ob.texture.id);
+                    OpenGLUtil.setUniform(this.programId, "uTexture", GL_TEXTURE0);
+                    glBindTexture(GL_TEXTURE_2D, 0);
+                    OpenGLUtil.drawBuffer(this.programId, "aTexCoord", ob.texture.texCoord, GL_FLOAT);
+                }
+
                 OpenGLUtil.drawBuffer(this.programId, "aNormal", ob.normalArray, GL_FLOAT);
                 OpenGLUtil.drawBuffer(this.programId, "aVertex", ob.vertexArray, GL_FLOAT);
                 glBindVertexArray(0);
+
+                disable();
             });
         }
 

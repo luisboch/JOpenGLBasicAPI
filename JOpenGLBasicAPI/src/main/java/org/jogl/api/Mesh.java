@@ -17,6 +17,7 @@ package org.jogl.api;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 /**
@@ -29,6 +30,7 @@ public class Mesh {
     private final List<Integer> indexBuffer = new ArrayList<>();
 
     private final List<Vector3f> normals = new ArrayList<>();
+    private final List<Vector2f> texturePos = new ArrayList<>();
 
     public Mesh() {
     }
@@ -59,4 +61,9 @@ public class Mesh {
         return normals;
     }
 
+    public List<Vector2f> getTexturePos() {
+        return texturePos;
+    }
+
+    
 }

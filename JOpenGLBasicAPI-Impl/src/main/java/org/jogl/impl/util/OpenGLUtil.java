@@ -100,7 +100,7 @@ public class OpenGLUtil {
         
         
         // Temos Index buffer?
-        if(buffer.indexBuffer.id == -1){
+        if(!buffer.indexBuffer.validIndexBuffer()){
             
             // Nao
             glDrawArrays(GL_TRIANGLES, 0, buffer.elementCount);

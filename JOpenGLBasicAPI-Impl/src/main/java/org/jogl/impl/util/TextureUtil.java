@@ -16,7 +16,19 @@
 package org.jogl.impl.util;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
+import java.nio.channels.SeekableByteChannel;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import org.jogl.api.Texture;
+import org.jogl.api.Image;
+import static org.lwjgl.stb.STBImage.stbi_load_from_memory;
 
 /**
  *
@@ -24,11 +36,70 @@ import org.jogl.api.Texture;
  */
 public class TextureUtil {
     
-    public Texture fromFile(String file){
-        return fromFile(new File(file));
+    public static ByteBuffer loadResourceToBuffer(String resource) throws IOException {
+        ByteBuffer buffer;
+
+        Path path = Paths.get(resource);
+        if (Files.isReadable(path)) {
+            try (SeekableByteChannel fc = Files.newByteChannel(path)) {
+                buffer = org.lwjgl.BufferUtils.createByteBuffer((int) fc.size() + 1);
+                while (fc.read(buffer) != -1) {
+                    //Just keep reading
+                }
+            }
+        } else {
+            try (InputStream source = Thread.currentThread().getContextClassLoader().getResourceAsStream(resource);
+                    ReadableByteChannel rbc = Channels.newChannel(source)) {
+                buffer = org.lwjgl.BufferUtils.createByteBuffer(8 * 1024);
+
+                while (true) {
+                    int bytes = rbc.read(buffer);
+                    if (bytes == -1) {
+                        break;
+                    }
+                    if (buffer.remaining() == 0) {
+                        buffer = resizeBuffer(buffer, buffer.capacity() * 2);
+                    }
+                }
+            }
+        }
+
+        buffer.flip();
+        return buffer;
     }
     
-    public Texture fromFile(File file){
-        return null;
+    public static Image loadImage(String path){
+        final Image img = new Image();
+        try {
+            ByteBuffer buffer = loadResourceToBuffer(path);
+            IntBuffer w = org.lwjgl.BufferUtils.createIntBuffer(1);
+            IntBuffer h = org.lwjgl.BufferUtils.createIntBuffer(1);
+            IntBuffer c = org.lwjgl.BufferUtils.createIntBuffer(1);
+    
+            img.setPixels(stbi_load_from_memory(buffer, w, h, c, 0));
+            
+            if (img.getPixels() == null) {
+                throw new RuntimeException("Failed to load image: " + path);
+            }
+
+            img.setWidth(w.get());
+            img.setHeight(h.get());
+            img.setChannels (c.get());
+            
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load image: " + path, e);
+        }
+        
+        return img;
     }
+    
+    
+
+    private static ByteBuffer resizeBuffer(ByteBuffer buffer, int newCapacity) {
+        ByteBuffer newBuffer = org.lwjgl.BufferUtils.createByteBuffer(newCapacity);
+        buffer.flip();
+        newBuffer.put(buffer);
+        return newBuffer;
+    }
+
 }

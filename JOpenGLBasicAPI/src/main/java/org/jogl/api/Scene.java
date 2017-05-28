@@ -45,11 +45,13 @@ public interface Scene {
     Scene removeLight(GlobalLight light);
 
     Scene setMouse(Mouse m);
+
     Scene setKeyboard(Keyboard keyboard);
+
     Scene setCamera(Camera camera);
-    
+
     Camera getCamera();
-    
+
     public static class MeshReference {
 
         public final Mesh mesh;
@@ -57,18 +59,22 @@ public interface Scene {
         public final int meshId;
         public final ArrayBuffer vertexArray;
         public final ArrayBuffer normalArray;
+        public final TextureInfo texture;
 //        public final 
 //
-        public MeshReference(Mesh mesh, Object3D object, int meshId, ArrayBuffer array, ArrayBuffer normalArray) {
+
+        public MeshReference(Mesh mesh, Object3D object, int meshId, ArrayBuffer array, ArrayBuffer normalArray, TextureInfo texture) {
             this.mesh = mesh;
             this.object = object;
             this.meshId = meshId;
             this.vertexArray = array;
             this.normalArray = normalArray;
+            this.texture = texture;
         }
     }
 
     public static class ArrayBuffer {
+
         public final int id;
         public final int elementSize;
         public final int elementCount;
@@ -80,20 +86,36 @@ public interface Scene {
             this.elementCount = elementCount;
             this.indexBuffer = new IndexBuffer(-1, -1);
         }
-        
+
     }
-    
-    public static class IndexBuffer{
+
+    public static class IndexBuffer {
+
         public final int id;
         public final int elementCount;
+
         public IndexBuffer(int id, int elementCount) {
             this.id = id;
             this.elementCount = elementCount;
         }
+
+        public boolean validIndexBuffer() {
+            return id != -1;
+        }
     }
 //    
-//    public static class Texture{
-//        public final int id;
-//        public final
-//    }
+
+    public static class TextureInfo {
+
+        public final int id;
+        public final ArrayBuffer texCoord;
+        public final TextureParameters parameters;
+
+        public TextureInfo(int id, ArrayBuffer texCoord, TextureParameters parameters) {
+            this.id = id;
+            this.parameters = parameters;
+            this.texCoord = texCoord;
+        }
+
+    }
 }

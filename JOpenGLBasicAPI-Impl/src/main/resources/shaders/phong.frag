@@ -11,14 +11,19 @@ uniform vec3 uDiffuseMaterial = vec3(0.7f, 0.7f, 0.7f);
 uniform vec3 uSpecularMaterial = vec3(1.0f, 1.0f, 1.0f);
 	
 uniform bool uUseColor = false;
+uniform bool uUseTexture = false;
 
 // MUST be definded when uUseColor is true
 uniform vec3 uColor = vec3(1, 1, 1); // use #fff as default.
 
 uniform float uSpecularPower = 512.0;
 
+// MUST be definded when uUseTexture is true
+uniform sampler2D uTexture;
+
 in vec3 vNormal;
 in vec3 vViewPath;
+in vec2 vTexCoord;
 
 out vec4 outColor;
 
@@ -43,7 +48,10 @@ void main() {
     vec3 specular = specularIntensity * uSpecularLight * uSpecularMaterial;
 
     vec3 color;
-    if(uUseColor) {
+    if (uUseTexture){
+        vec4 texel = texture(uTexture, vTexCoord);
+        color = clamp(texel.rgb * (ambient + diffuse) + specular, 0.0, 1.0);
+    } else if(uUseColor) {
         color = clamp(ambient + diffuse + specular + uColor , 0.0, 1.0);
     } else {
         color = clamp(ambient + diffuse + specular, 0.0, 1.0);

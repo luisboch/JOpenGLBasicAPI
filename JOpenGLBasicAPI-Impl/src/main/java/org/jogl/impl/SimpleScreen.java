@@ -18,9 +18,11 @@ package org.jogl.impl;
 import java.awt.Color;
 import org.jogl.api.Config;
 import org.jogl.api.Object3D;
+import org.jogl.api.TextureParameters;
 import org.jogl.api.input.Key;
 import org.jogl.impl.scene.SimpleScene;
 import org.jogl.impl.shaders.PhongShader;
+import org.jogl.impl.textures.ImageTextureImpl;
 import org.jogl.impl.util.Util;
 import org.jogl.impl.util.objects.Cube;
 import org.jogl.impl.util.objects.Square;
@@ -44,7 +46,11 @@ public class SimpleScreen extends AbstractScreen<SimpleScene> {
         
         this.scene = new SimpleScene();
         
-        scene.addObject(cube.setMaterial(new SmoothMaterial(Util.convert(Color.YELLOW))).setPosition(new Vector3f(-0.5f, -0.3f, -0f)));
+        scene.addObject(cube.setMaterial(new SmoothMaterial(Util.convert(Color.YELLOW))
+//                        .setTexture(new ImageTextureImpl("textures/bricks_t.jpg", new TextureParameters()))
+        )
+                .setPosition(new Vector3f(-0.5f, -0.3f, -0f))
+        );
 //
         scene.addObject(new Triangle()
                 .setPosition(new Vector3f(.8f, -0.2f, 0f))

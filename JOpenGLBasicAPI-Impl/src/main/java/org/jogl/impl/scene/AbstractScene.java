@@ -31,6 +31,8 @@ import org.jogl.api.Camera;
 import org.jogl.api.Config;
 import org.jogl.api.Filter;
 import org.jogl.api.GlobalLight;
+import org.jogl.api.Image;
+import org.jogl.api.ImageTexture;
 import org.jogl.api.Mesh;
 import org.jogl.api.Object3D;
 import org.jogl.api.RenderTexture;
@@ -47,6 +49,7 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
+import static org.lwjgl.opengl.GL30.glGenerateMipmap;
 
 /**
  *
@@ -174,22 +177,31 @@ public abstract class AbstractScene implements Scene {
         if (object3D.getMesh() == null) {
             throw new IllegalArgumentException("Object withou mesh not allowed!");
         }
-
+        
+        final int meshId = createMesh();
+        final Mesh mesh = object3D.getMesh();
+        
+        final TextureInfo texture;
         if (object3D.getMaterial() != null) {
             if (object3D.getMaterial().getTexture() != null) {
                 final Texture tx = object3D.getMaterial().getTexture();
                 if (tx instanceof RenderTexture) {
                     final RenderTexture rtx = (RenderTexture) tx;
-                    createRenderTexture(rtx);
+                    texture = createRenderTexture(rtx, meshId, mesh);
+                } else if (tx instanceof ImageTexture) {
+                    texture = createTexture((ImageTexture) tx, meshId, mesh);
                 } else {
-                    createTexture(tx);
-
+                    texture = null;
                 }
+            } else {
+                texture = null;
             }
 
             if (object3D.getMaterial().getShader() != null) {
                 usedShader = object3D.getMaterial().getShader();
             }
+        } else {
+            texture = null;
         }
 
         if (usedShader != null) {
@@ -206,8 +218,6 @@ public abstract class AbstractScene implements Scene {
 
         }
 
-        final int meshId = createMesh();
-        final Mesh mesh = object3D.getMesh();
 
         // Vertex array
         final Buffer vertexBuffer = BufferUtils.convert(mesh.getVertices());
@@ -230,7 +240,7 @@ public abstract class AbstractScene implements Scene {
         final ArrayBuffer normals = new ArrayBuffer(normalBufferID, elementSize, (normalBuffer.remaining() / elementSize));
 
         // Create referece
-        final MeshReference meshReference = new MeshReference(mesh, object3D, meshId, array, normals);
+        final MeshReference meshReference = new MeshReference(mesh, object3D, meshId, array, normals, texture);
 
         final List<MeshReference> meshs;
 
@@ -350,12 +360,41 @@ public abstract class AbstractScene implements Scene {
         return camera;
     }
 
-    protected void createRenderTexture(RenderTexture rtx) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    private TextureInfo createRenderTexture(RenderTexture rtx, int meshId, Mesh mesh) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    
+    protected TextureInfo createTexture(ImageTexture tx, int meshId, Mesh mesh) {
+        
+        Image image = tx.getImage();
+        int format = image.getChannels() == 3 ? GL_RGB : GL_RGBA;
 
-    protected void createTexture(Texture tx) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        final int id = glGenTextures();
+        //Copia os dados        
+        glBindTexture(GL_TEXTURE_2D, id);
+        glTexImage2D(GL_TEXTURE_2D, 0, format,
+                image.getWidth(), image.getHeight(), 0,
+                format, GL_UNSIGNED_BYTE, image.getPixels());
+
+        //Ajuste dos parametros
+        glTexParameteri(tx.getType(), GL_TEXTURE_MIN_FILTER, tx.getParameters().getMinFilter());
+        glTexParameteri(tx.getType(), GL_TEXTURE_MAG_FILTER, tx.getParameters().getMagFilter());
+        glTexParameteri(tx.getType(), GL_TEXTURE_WRAP_S, tx.getParameters().getWrapS());
+        glTexParameteri(tx.getType(), GL_TEXTURE_WRAP_T, tx.getParameters().getWrapT());
+
+        
+        if (tx.getParameters().isMipMapped()) {
+            glGenerateMipmap(tx.getType());
+        }
+
+        //Limpeza
+        glBindTexture(tx.getType(), 0);
+        
+        FloatBuffer texCoordBuffer = BufferUtils.convertVec2f(mesh.getTexturePos());
+        final int texCoordBufferID = createBuffer(meshId, texCoordBuffer);
+        final ArrayBuffer aTexCoord = new ArrayBuffer(texCoordBufferID, 2, (texCoordBuffer.remaining() / 2));
+        
+        return new TextureInfo(id, aTexCoord, tx.getParameters());
     }
 
     protected int createMesh() {
@@ -372,9 +411,7 @@ public abstract class AbstractScene implements Scene {
             final List<MeshReference> meshs = entry.getValue();
 
             sh.setCamera(camera)
-                    .enable()
-                    .render(meshs, lights)
-                    .disable();
+                    .render(meshs, lights);
         }
 
         if (getShader() != null) {
@@ -426,5 +463,6 @@ public abstract class AbstractScene implements Scene {
             mesh.getNormals().add(normal);
         }
     }
+
 
 }
