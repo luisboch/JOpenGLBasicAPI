@@ -60,6 +60,7 @@ public interface Scene {
         public final ArrayBuffer vertexArray;
         public final ArrayBuffer normalArray;
         public final TextureInfo texture;
+        public final IndexBuffer indexBuffer;
 //        public final 
 //
 
@@ -70,6 +71,17 @@ public interface Scene {
             this.vertexArray = array;
             this.normalArray = normalArray;
             this.texture = texture;
+            this.indexBuffer = new IndexBuffer(-1, -1);
+        }
+
+        public MeshReference(Mesh mesh, Object3D object, int meshId, ArrayBuffer array, ArrayBuffer normalArray, TextureInfo texture, IndexBuffer indexBuffer) {
+            this.mesh = mesh;
+            this.object = object;
+            this.meshId = meshId;
+            this.vertexArray = array;
+            this.normalArray = normalArray;
+            this.texture = texture;
+            this.indexBuffer = indexBuffer;
         }
     }
 
@@ -78,13 +90,11 @@ public interface Scene {
         public final int id;
         public final int elementSize;
         public final int elementCount;
-        public IndexBuffer indexBuffer;
 
         public ArrayBuffer(int id, int elementSize, int elementCount) {
             this.id = id;
             this.elementSize = elementSize;
             this.elementCount = elementCount;
-            this.indexBuffer = new IndexBuffer(-1, -1);
         }
 
     }

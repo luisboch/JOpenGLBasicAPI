@@ -46,18 +46,26 @@ public class SimpleScreen extends AbstractScreen<SimpleScene> {
         
         this.scene = new SimpleScene();
         
-        scene.addObject(cube.setMaterial(new SmoothMaterial(Util.convert(Color.YELLOW))
-//                        .setTexture(new ImageTextureImpl("textures/bricks_t.jpg", new TextureParameters()))
-        )
-                .setPosition(new Vector3f(-0.5f, -0.3f, -0f))
+        scene.addObject(cube.setMaterial(new SmoothMaterial(Util.convert(Color.YELLOW)))
+                .setPosition(new Vector3f(-1.2f, 0f, -5f))
         );
-//
+
         scene.addObject(new Triangle()
                 .setPosition(new Vector3f(.8f, -0.2f, 0f))
                 .setMaterial(new SmoothMaterial(Util.convert(Color.BLUE)))
         );
         
-        scene.addObject(square.setMaterial(new SmoothMaterial(Util.convert(Color.ORANGE))).setPosition(new Vector3f(-1f, -0.5f, 0)));
+        scene.addObject(square.setMaterial(
+                new SmoothMaterial(Util.convert(Color.RED))
+//                .setTexture(new ImageTextureImpl("textures/bricks_t.jpg", new TextureParameters()))
+                ).setPosition(new Vector3f(-0.5f, -0.5f, -12f)
+        ));
+        
+        scene.addObject(new Square().setMaterial(
+                new SmoothMaterial(Util.convert(Color.GREEN))
+                .setTexture(new ImageTextureImpl("textures/bricks_t.jpg", new TextureParameters()))
+                ).setPosition(new Vector3f(1f, -1f, -11f)
+        ));
 
         scene.setShader(new PhongShader());
         scene.setCamera(new PerspectiveCamera());

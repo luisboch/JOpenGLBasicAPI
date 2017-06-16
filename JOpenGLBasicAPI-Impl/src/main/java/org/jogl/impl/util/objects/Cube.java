@@ -25,7 +25,6 @@ import org.joml.Vector3f;
 public class Cube extends AbstractObject<Cube> {
 
     public Cube() {
-
         mesh = new MeshCreator()
                 //  Front face
                 .to(new Vector3f(-0.5f, +0.5f, +0.5f))

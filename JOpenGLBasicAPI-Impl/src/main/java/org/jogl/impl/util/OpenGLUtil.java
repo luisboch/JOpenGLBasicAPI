@@ -84,7 +84,7 @@ public class OpenGLUtil {
         return uniform;
     }
 
-    public static void drawBuffer(int programID, String attribName, Scene.ArrayBuffer buffer, int glType){
+    public static void bindBuffer(int programID, String attribName, Scene.ArrayBuffer buffer, int glType){
 
         int attrID = glGetAttribLocation(programID, attribName);
         glEnableVertexAttribArray(attrID); //0
@@ -98,25 +98,11 @@ public class OpenGLUtil {
         //Unbind do atributo
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         
-        
-        // Temos Index buffer?
-        if(!buffer.indexBuffer.validIndexBuffer()){
-            
-            // Nao
-            glDrawArrays(GL_TRIANGLES, 0, buffer.elementCount);
-        } else {
-            
-            // Faz o bind no indexBuffer
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer.indexBuffer.id);
-            // Escreve o array.
-            glDrawElements(GL_TRIANGLES, buffer.indexBuffer.elementCount, GL_UNSIGNED_INT,  0);
-            
-            // Unbind
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-            
-        }
-        
+    }
+    public static void unbindBuffer(int programID, String attribName, Scene.ArrayBuffer buffer, int glType){
+        int attrID = glGetAttribLocation(programID, attribName);
         // Desabilita o atributo.
         glDisableVertexAttribArray(attrID); //0
+        
     }
 }

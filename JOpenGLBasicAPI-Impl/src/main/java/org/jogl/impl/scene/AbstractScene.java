@@ -181,15 +181,46 @@ public abstract class AbstractScene implements Scene {
         final int meshId = createMesh();
         final Mesh mesh = object3D.getMesh();
         
+        // Vertex array
+        final Buffer vertexBuffer = BufferUtils.convert(mesh.getVertices());
+        final int arrayBufferID = createBuffer(meshId, vertexBuffer);
+        int elementSize = 3;
+        final ArrayBuffer arrayBuff = new ArrayBuffer(arrayBufferID, elementSize, (vertexBuffer.remaining() / elementSize));
+
+        // Normal
+        if (mesh.getNormals().isEmpty()) {
+            calculateNormals(mesh);
+        }
+        
+        final FloatBuffer normalBuffer = BufferUtils.convert(mesh.getNormals());
+        final int normalBufferID = createBuffer(meshId, vertexBuffer);
+        final ArrayBuffer normals = new ArrayBuffer(normalBufferID, elementSize, (normalBuffer.remaining() / elementSize));
+        
+        final IndexBuffer indexBuffer;
+        if (mesh.getIndexBuffer() != null) {
+            int indexBufferID = createIndexBuffer(meshId, BufferUtils.convertIndexBuffer(mesh.getIndexBuffer()));
+             indexBuffer = new IndexBuffer(indexBufferID, mesh.getIndexBuffer().size());
+        } else {
+             indexBuffer = new IndexBuffer(-1, 0);
+        }
+        
         final TextureInfo texture;
         if (object3D.getMaterial() != null) {
             if (object3D.getMaterial().getTexture() != null) {
                 final Texture tx = object3D.getMaterial().getTexture();
+                
+                
+        
+                FloatBuffer texCoordBuffer = BufferUtils.convertVec2f(mesh.getTexturePos());
+                final int texCoordBufferID = createBuffer(meshId, texCoordBuffer);
+                final ArrayBuffer aTexCoord = new ArrayBuffer(texCoordBufferID, 2, (texCoordBuffer.remaining() / 2));
+
+                
                 if (tx instanceof RenderTexture) {
                     final RenderTexture rtx = (RenderTexture) tx;
-                    texture = createRenderTexture(rtx, meshId, mesh);
+                    texture = createRenderTexture(rtx, meshId, mesh, aTexCoord);
                 } else if (tx instanceof ImageTexture) {
-                    texture = createTexture((ImageTexture) tx, meshId, mesh);
+                    texture = createTexture((ImageTexture) tx, meshId, mesh, aTexCoord);
                 } else {
                     texture = null;
                 }
@@ -218,29 +249,8 @@ public abstract class AbstractScene implements Scene {
 
         }
 
-
-        // Vertex array
-        final Buffer vertexBuffer = BufferUtils.convert(mesh.getVertices());
-        final int arrayBufferID = createBuffer(meshId, vertexBuffer);
-        int elementSize = 3;
-
-        final ArrayBuffer array = new ArrayBuffer(arrayBufferID, elementSize, (vertexBuffer.remaining() / elementSize));
-
-        if (mesh.getIndexBuffer() != null) {
-            int indexBufferID = createIndexBuffer(meshId, BufferUtils.convertIndexBuffer(mesh.getIndexBuffer()));
-            array.indexBuffer = new IndexBuffer(indexBufferID, mesh.getIndexBuffer().size());
-        }
-
-        if (mesh.getNormals().isEmpty()) {
-            calculateNormals(mesh);
-        }
-
-        FloatBuffer normalBuffer = BufferUtils.convert(mesh.getNormals());
-        final int normalBufferID = createBuffer(meshId, vertexBuffer);
-        final ArrayBuffer normals = new ArrayBuffer(normalBufferID, elementSize, (normalBuffer.remaining() / elementSize));
-
         // Create referece
-        final MeshReference meshReference = new MeshReference(mesh, object3D, meshId, array, normals, texture);
+        final MeshReference meshReference = new MeshReference(mesh, object3D, meshId, arrayBuff, normals, texture, indexBuffer);
 
         final List<MeshReference> meshs;
 
@@ -360,11 +370,11 @@ public abstract class AbstractScene implements Scene {
         return camera;
     }
 
-    private TextureInfo createRenderTexture(RenderTexture rtx, int meshId, Mesh mesh) {
+    private TextureInfo createRenderTexture(RenderTexture rtx, int meshId, Mesh mesh, ArrayBuffer aTexCoord) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
-    protected TextureInfo createTexture(ImageTexture tx, int meshId, Mesh mesh) {
+    protected TextureInfo createTexture(ImageTexture tx, int meshId, Mesh mesh, ArrayBuffer aTexCoord) {
         
         Image image = tx.getImage();
         int format = image.getChannels() == 3 ? GL_RGB : GL_RGBA;
@@ -390,10 +400,6 @@ public abstract class AbstractScene implements Scene {
         //Limpeza
         glBindTexture(tx.getType(), 0);
         
-        FloatBuffer texCoordBuffer = BufferUtils.convertVec2f(mesh.getTexturePos());
-        final int texCoordBufferID = createBuffer(meshId, texCoordBuffer);
-        final ArrayBuffer aTexCoord = new ArrayBuffer(texCoordBufferID, 2, (texCoordBuffer.remaining() / 2));
-        
         return new TextureInfo(id, aTexCoord, tx.getParameters());
     }
 
@@ -416,9 +422,10 @@ public abstract class AbstractScene implements Scene {
 
         if (getShader() != null) {
             getShader().setCamera(camera)
-                    .enable()
+//                    .enable()
                     .render(objects, lights)
-                    .disable();
+//                    .disable()
+                    ;
         } else if (!objects.isEmpty()) {
             Logger.getLogger(AbstractScene.class.getSimpleName()).severe("No default shader defined in scene, but there are itens without custom shader.");
         }

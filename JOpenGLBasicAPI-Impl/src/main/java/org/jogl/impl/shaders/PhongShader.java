@@ -29,6 +29,8 @@ import org.joml.Vector3f;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
+import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL15.glBindBuffer;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 /**
@@ -64,31 +66,39 @@ public class PhongShader extends AbstractShader {
 
         final Matrix4f world = new Matrix4f().identity();
 
+        enable();
+
+        // Apply camera
+        OpenGLUtil.setUniform(this.programId, "uProjection", camera.getProjectionMatrix());
+        OpenGLUtil.setUniform(this.programId, "uView", camera.getViewMatrix());
+        OpenGLUtil.setUniform(this.programId, "uWorld", world);
+        OpenGLUtil.setUniform(this.programId, "uCameraPosition", camera.getPosition());
+
+        // LIGHT
+        OpenGLUtil.setUniform(this.programId, "uLightDir", new Vector3f(1.0f, -3.0f, -1.0f).normalize());
+        OpenGLUtil.setUniform(this.programId, "uAmbientLight", new Vector3f(0.02f, 0.02f, 0.02f));
+        OpenGLUtil.setUniform(this.programId, "uSpecularLight", new Vector3f(1.0f, 1.0f, 1.0f));
+        OpenGLUtil.setUniform(this.programId, "uDiffuseLight", new Vector3f(1.0f, 0.2f, 1.0f));
+
+        disable();
         if (objects != null) {
             objects.forEach((Scene.MeshReference ob) -> {
-                enable();
-                OpenGLUtil.setUniform(this.programId, "uProjection", camera.getProjectionMatrix());
-                OpenGLUtil.setUniform(this.programId, "uView", camera.getViewMatrix());
-                OpenGLUtil.setUniform(this.programId, "uWorld", world);
-                OpenGLUtil.setUniform(this.programId, "uCameraPosition", camera.getPosition());
-
                 glBindVertexArray(ob.meshId);
 
+                enable();
+
+                
                 OpenGLUtil.setUniform(this.programId, "uPosition", ob.object.getPosition());
                 OpenGLUtil.setUniform(this.programId, "uTransform", ob.object.getTransform());
-
-                OpenGLUtil.setUniform(this.programId, "uLightDir", new Vector3f(1.0f, -3.0f, -1.0f));
-                OpenGLUtil.setUniform(this.programId, "uAmbientLight", new Vector3f(0.02f, 0.02f, 0.02f));
-                OpenGLUtil.setUniform(this.programId, "uSpecularLight", new Vector3f(1.0f, 1.0f, 1.0f));
-                OpenGLUtil.setUniform(this.programId, "uDiffuseLight", new Vector3f(1.0f, 0.2f, 1.0f));
-
+                OpenGLUtil.bindBuffer(this.programId, "aVertex", ob.vertexArray, GL_FLOAT);
+                OpenGLUtil.bindBuffer(this.programId, "aNormal", ob.normalArray, GL_FLOAT);
+                
                 if (ob.object.getMaterial() != null) {
-                    // CODE FOR MATERIAL
+
                     final Material material = ob.object.getMaterial();
 
                     if (material instanceof PhongMaterial) {
-                        PhongMaterial phongMaterial = (PhongMaterial) material;
-
+                        final PhongMaterial phongMaterial = (PhongMaterial) material;
                         OpenGLUtil.setUniform(this.programId, "uAmbientMaterial", phongMaterial.getAmbientMaterial());
                         OpenGLUtil.setUniform(this.programId, "uDiffuseMaterial", phongMaterial.getDiffuseMaterial());
                         OpenGLUtil.setUniform(this.programId, "uSpecularMaterial", phongMaterial.getSpecularMaterial());
@@ -99,24 +109,48 @@ public class PhongShader extends AbstractShader {
                     if (material.getColor() != null) {
                         OpenGLUtil.setUniform(this.programId, "uUseColor", true);
                         OpenGLUtil.setUniform(this.programId, "uColor", material.getColor());
+                    } else {
+                        OpenGLUtil.setUniform(this.programId, "uUseColor", false);
+                    }
+
+                    if (ob.texture != null) {
+                        OpenGLUtil.setUniform(this.programId, "uUseTexture", true);
+                        glActiveTexture(GL_TEXTURE0);
+                        glBindTexture(GL_TEXTURE_2D, ob.texture.id);
+                        OpenGLUtil.setUniform(this.programId, "uTexture", GL_TEXTURE0);
+                        glBindTexture(GL_TEXTURE_2D, 0);
+                        OpenGLUtil.bindBuffer(this.programId, "aTexCoord", ob.texture.texCoord, GL_FLOAT);
+                    } else {
+                        OpenGLUtil.setUniform(this.programId, "uUseTexture", false);
                     }
 
                 }
+                
+                
+                // Temos Index buffer?
+                if(!ob.indexBuffer.validIndexBuffer()){
 
-                if (ob.texture != null) {
-                    OpenGLUtil.setUniform(this.programId, "uUseTexture", true);
-                    glActiveTexture(GL_TEXTURE0);
-                    glBindTexture(GL_TEXTURE_2D, ob.texture.id);
-                    OpenGLUtil.setUniform(this.programId, "uTexture", GL_TEXTURE0);
-                    glBindTexture(GL_TEXTURE_2D, 0);
-                    OpenGLUtil.drawBuffer(this.programId, "aTexCoord", ob.texture.texCoord, GL_FLOAT);
+                    // Nao
+                    glDrawArrays(GL_TRIANGLES, 0, ob.vertexArray.elementCount);
+                } else {
+
+                    // Faz o bind no indexBuffer
+                    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ob.indexBuffer.id);
+                    // Escreve o array.
+                    glDrawElements(GL_TRIANGLES, ob.indexBuffer.elementCount, GL_UNSIGNED_INT,  0);
+
+                    // Unbind
+                    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
                 }
 
-                OpenGLUtil.drawBuffer(this.programId, "aNormal", ob.normalArray, GL_FLOAT);
-                OpenGLUtil.drawBuffer(this.programId, "aVertex", ob.vertexArray, GL_FLOAT);
+                OpenGLUtil.unbindBuffer(this.programId, "aVertex", ob.vertexArray, GL_FLOAT);
+                OpenGLUtil.unbindBuffer(this.programId, "aNormal", ob.normalArray, GL_FLOAT);
+                OpenGLUtil.unbindBuffer(this.programId, "aTexCoord", null, GL_FLOAT);
+                
+                disable();
                 glBindVertexArray(0);
 
-                disable();
             });
         }
 

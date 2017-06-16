@@ -20,9 +20,5 @@ package org.jogl.api;
  * @author luis
  */
 public interface ImageTexture extends Texture {
-
-    TextureParameters getParameters();
-    
     Image getImage();
-    
 }

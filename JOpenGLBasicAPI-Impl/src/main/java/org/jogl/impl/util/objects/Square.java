@@ -27,10 +27,10 @@ public class Square extends AbstractObject<Square>{
 
     public Square() {
         mesh = new MeshCreator()
-                .to(new Vector3f(0.5f, 0.5f, 0f))
                 .to(new Vector3f(-0.5f, 0.5f, 0f))
                 .to(new Vector3f(-0.5f, -0.5f, 0f))
-                .flipTo(new Vector3f(0.5f, -0.5f, 0f))
+                .to(new Vector3f(0.5f, -0.5f, 0f))
+                .flipTo(new Vector3f(0.5f, 0.5f, 0f))
                 .create();
         
         mesh.getNormals().add(new Vector3f(0f, 0f, 1f));
