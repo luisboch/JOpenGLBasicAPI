@@ -26,75 +26,45 @@ public class Cube extends AbstractObject<Cube> {
 
     public Cube() {
         mesh = new MeshCreator()
+                .setOptimizeIndexBuffer(false)
                 //  Front face
                 .to(new Vector3f(-0.5f, +0.5f, +0.5f))
                 .to(new Vector3f(-0.5f, -0.5f, +0.5f))
                 .to(new Vector3f(+0.5f, -0.5f, +0.5f))
-                .flipTo(new Vector3f(+0.5f, +0.5f, +0.5f))
+                .flipTo(new Vector3f(+0.5f, +0.5f, +0.5f)) // 3+ vertexs
                 // Not folow path
                 .close()
                 // Create back face
                 .to(new Vector3f(+0.5f, +0.5f, -0.5f))
                 .to(new Vector3f(+0.5f, -0.5f, -0.5f))
                 .to(new Vector3f(-0.5f, -0.5f, -0.5f))
-                .flipTo(new Vector3f(-0.5f, +0.5f, -0.5f))
+                .flipTo(new Vector3f(-0.5f, +0.5f, -0.5f)) // 3+ vertexs
                 .close()
                 // Create right face
                 .to(new Vector3f(+0.5f, +0.5f, +0.5f))
                 .to(new Vector3f(+0.5f, -0.5f, +0.5f))
                 .to(new Vector3f(+0.5f, -0.5f, -0.5f))
-                .flipTo(new Vector3f(+0.5f, +0.5f, -0.5f))
+                .flipTo(new Vector3f(+0.5f, +0.5f, -0.5f)) // 3+ vertexs
                 .close()
                 // Create left face
                 .to(new Vector3f(-0.5f, -0.5f, +0.5f))
                 .to(new Vector3f(-0.5f, +0.5f, +0.5f))
                 .to(new Vector3f(-0.5f, +0.5f, -0.5f))
-                .flipTo(new Vector3f(-0.5f, -0.5f, -0.5f))
+                .flipTo(new Vector3f(-0.5f, -0.5f, -0.5f)) // 3+ vertexs
                 .close()
                 // Create down face
                 .to(new Vector3f(-0.5f, -0.5f, -0.5f))
                 .to(new Vector3f(+0.5f, -0.5f, -0.5f))
                 .to(new Vector3f(+0.5f, -0.5f, +0.5f))
-                .flipTo(new Vector3f(-0.5f, -0.5f, +0.5f))
+                .flipTo(new Vector3f(-0.5f, -0.5f, +0.5f)) // 3+ vertexs
                 .close()
                 // Create top face
                 .to(new Vector3f(-0.5f, +0.5f, +0.5f))
                 .to(new Vector3f(+0.5f, +0.5f, +0.5f))
                 .to(new Vector3f(+0.5f, +0.5f, -0.5f))
-                .flipTo(new Vector3f(-0.5f, +0.5f, -0.5f))
+                .flipTo(new Vector3f(-0.5f, +0.5f, -0.5f)) // 3+ vertexs
                 //                
                 .create();
-
-        // create normals
-        mesh.getNormals().add(new Vector3f(0f, 0f, 1f));
-        mesh.getNormals().add(new Vector3f(0f, 0f, 1f));
-        mesh.getNormals().add(new Vector3f(0f, 0f, 1f));
-        mesh.getNormals().add(new Vector3f(0f, 0f, 1f));
-
-        mesh.getNormals().add(new Vector3f(0f, 0f, -1f));
-        mesh.getNormals().add(new Vector3f(0f, 0f, -1f));
-        mesh.getNormals().add(new Vector3f(0f, 0f, -1f));
-        mesh.getNormals().add(new Vector3f(0f, 0f, -1f));
-
-        mesh.getNormals().add(new Vector3f(1f, 0f, 0f));
-        mesh.getNormals().add(new Vector3f(1f, 0f, 0f));
-        mesh.getNormals().add(new Vector3f(1f, 0f, 0f));
-        mesh.getNormals().add(new Vector3f(1f, 0f, 0f));
-        
-        mesh.getNormals().add(new Vector3f(-1f, 0f, 0f));
-        mesh.getNormals().add(new Vector3f(-1f, 0f, 0f));
-        mesh.getNormals().add(new Vector3f(-1f, 0f, 0f));
-        mesh.getNormals().add(new Vector3f(-1f, 0f, 0f));
-
-        mesh.getNormals().add(new Vector3f(0f, -1f, 0f));
-        mesh.getNormals().add(new Vector3f(0f, -1f, 0f));
-        mesh.getNormals().add(new Vector3f(0f, -1f, 0f));
-        mesh.getNormals().add(new Vector3f(0f, -1f, 0f));
-        
-        mesh.getNormals().add(new Vector3f(0f, 1f, 0f));
-        mesh.getNormals().add(new Vector3f(0f, 1f, 0f));
-        mesh.getNormals().add(new Vector3f(0f, 1f, 0f));
-        mesh.getNormals().add(new Vector3f(0f, 1f, 0f));
     }
 
 }

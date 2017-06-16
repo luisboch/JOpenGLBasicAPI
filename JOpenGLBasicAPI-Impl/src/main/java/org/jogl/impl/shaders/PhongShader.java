@@ -73,12 +73,17 @@ public class PhongShader extends AbstractShader {
         OpenGLUtil.setUniform(this.programId, "uView", camera.getViewMatrix());
         OpenGLUtil.setUniform(this.programId, "uWorld", world);
         OpenGLUtil.setUniform(this.programId, "uCameraPosition", camera.getPosition());
-
+        
         // LIGHT
-        OpenGLUtil.setUniform(this.programId, "uLightDir", new Vector3f(1.0f, -3.0f, -1.0f).normalize());
-        OpenGLUtil.setUniform(this.programId, "uAmbientLight", new Vector3f(0.02f, 0.02f, 0.02f));
-        OpenGLUtil.setUniform(this.programId, "uSpecularLight", new Vector3f(1.0f, 1.0f, 1.0f));
-        OpenGLUtil.setUniform(this.programId, "uDiffuseLight", new Vector3f(1.0f, 0.2f, 1.0f));
+        
+//                .setUniform("uAmbientLight", new Vector3f(0.1f, 0.1f, 0.1f))
+//                .setUniform("uDiffuseLight", new Vector3f(1.0f, 1.0f, 0.5f))
+//                .setUniform("uSpecularLight", new Vector3f(1.0f, 1.0f, 1.0f))
+
+        OpenGLUtil.setUniform(this.programId, "uLightDir", new Vector3f(-1.0f, -1.0f, -1.0f).normalize());
+        OpenGLUtil.setUniform(this.programId, "uAmbientLight", new Vector3f(0.1f, 0.1f, 0.1f));
+        OpenGLUtil.setUniform(this.programId, "uDiffuseLight", new Vector3f(1f, 1f, 0.5f));
+        OpenGLUtil.setUniform(this.programId, "uSpecularLight", new Vector3f(1.0f, 1.0f, 1f));
 
         disable();
         if (objects != null) {
@@ -87,7 +92,6 @@ public class PhongShader extends AbstractShader {
 
                 enable();
 
-                
                 OpenGLUtil.setUniform(this.programId, "uPosition", ob.object.getPosition());
                 OpenGLUtil.setUniform(this.programId, "uTransform", ob.object.getTransform());
                 OpenGLUtil.bindBuffer(this.programId, "aVertex", ob.vertexArray, GL_FLOAT);
@@ -125,7 +129,6 @@ public class PhongShader extends AbstractShader {
                     }
 
                 }
-                
                 
                 // Temos Index buffer?
                 if(!ob.indexBuffer.validIndexBuffer()){

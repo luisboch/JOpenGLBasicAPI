@@ -17,9 +17,11 @@ out vec3 vViewPath;
 out vec2 vTexCoord;
 
 void main() {
-    vec4 worldPos = uWorld * vec4(aVertex + uPosition, 1.0) * uTransform;
+    vec4 transf = vec4(aVertex , 1.0) * uTransform;
+    transf = vec4(transf.xyz + uPosition, 1.0);
+    vec4 worldPos = uWorld * transf;
     gl_Position =  uProjection * uView * worldPos;
-    vNormal = (uWorld * vec4(aNormal, 0.0)).xyz;
+    vNormal = (uWorld * (vec4(aNormal, 0.0) * uTransform)).xyz;
     vViewPath = uCameraPosition - worldPos.xyz;
     vTexCoord = aTexCoord;    
 }

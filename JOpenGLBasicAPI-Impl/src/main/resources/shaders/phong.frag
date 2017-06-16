@@ -51,8 +51,8 @@ void main() {
     if (uUseTexture){
         vec4 texel = texture(uTexture, vTexCoord);
         color = clamp(texel.rgb * (ambient + diffuse) + specular, 0.0, 1.0);
-    } else if(uUseColor) {
-        color = clamp(ambient + diffuse + specular + uColor , 0.0, 1.0);
+//    } else if(uUseColor) {
+//        color = clamp(uColor + (ambient + diffuse) + specular, 0.0, 1.0);
     } else {
         color = clamp(ambient + diffuse + specular, 0.0, 1.0);
     }

@@ -28,17 +28,38 @@ import org.joml.Vector3f;
 public class Triangle extends AbstractObject<Triangle> {
 
     public Triangle() {
-        
+
         mesh = new MeshCreator()
-                .to(new Vector3f(0.0f, 0.5f, 0f))
-                .to(new Vector3f(-0.5f, -0.5f, 0f))
-                .to(new Vector3f(0.5f, -0.5f, 0f))
+                .to(new Vector3f(0.0f, 0.5f, 0.5f))
+                .to(new Vector3f(-0.5f, -0.5f, 0.5f))
+                .to(new Vector3f(0.5f, -0.5f, 0.5f))
                 .create();
-        mesh.getNormals().add(new Vector3f(0f, 0f, 1f));
-        mesh.getNormals().add(new Vector3f(0f, 0f, 1f));
-        mesh.getNormals().add(new Vector3f(0f, 0f, 1f));
-        
-        
-        material = new SmoothMaterial(Util.convert(Color.GREEN));
+//
+
+//      Metal
+//        setMaterial(
+//                new SmoothMaterial(
+//                        new Vector3f(0.5f, 0.5f, 0.2f), // ambient 
+//                        new Vector3f(1.01f, 1.00f, 1.01f), // difuse
+//                        new Vector3f(0.1f, 0.1f, 0.1f), // specular material
+//                        0.1f, // power
+//                        Util.convert(Color.BLUE), // color
+//                        null)); // texture
+//      
+
+// Shapado
+//
+//                .setUniform("uDiffuseMaterial", new Vector3f(1f, 0.2f, 1f))
+//                .setUniform("uAmbientMaterial", new Vector3f(1f, 1f, 1f))
+//                .setUniform("uSpecularMaterial", new Vector3f(1f, 1f, 1f))
+        setMaterial(
+                new SmoothMaterial(
+                        new Vector3f(1f, 1f, 1f), // ambient 
+                        new Vector3f(1f, 0.2f, 1f), // difuse
+                        new Vector3f(1f, 1f, 1f), // specular material
+                        500f, // power
+                        Util.convert(Color.BLUE), // color
+                        null)); // texture
+
     }
 }

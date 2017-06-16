@@ -31,12 +31,20 @@ public class MeshCreator {
     private int beforeLastPath = -1;
     private final List<Vector3f> vectors;
     private final List<Integer> indexBuffer;
+    private boolean optimizeIndexBuffer = true;
 
     public MeshCreator() {
         vectors = new ArrayList<>();
         indexBuffer = new ArrayList<>();
     }
 
+    public MeshCreator setOptimizeIndexBuffer(boolean optimizeIndexBuffer) {
+        this.optimizeIndexBuffer = optimizeIndexBuffer;
+        return this;
+    }
+
+    
+    
     public MeshCreator to(float x, float y, float z) {
         return to(new Vector3f(x, y, z));
     }
@@ -54,7 +62,7 @@ public class MeshCreator {
         // Make sure that we are using a copy from the vector (help the use, because can reutilize the same with their logic)
         vector = new Vector3f(vector);
         
-        if(vectors.contains(vector)){ 
+        if(optimizeIndexBuffer && vectors.contains(vector)){ 
             // Ja temos este vetor na lista, logo, vamos apenas adicionar a sua posicao para o index buffer.
             curIdx = vectors.indexOf(vector);
         } else {
@@ -79,7 +87,7 @@ public class MeshCreator {
         // Make sure that we are using a copy from the vector (help the use, because can reutilize the same with their logic)
         vector = new Vector3f(vector);
         
-        if(vectors.contains(vector)){ 
+        if(optimizeIndexBuffer && vectors.contains(vector)){ 
             // Ja temos este vetor na lista, logo, vamos apenas adicionar a sua posicao para o index buffer.
             curIdx = vectors.indexOf(vector);
         } else {
