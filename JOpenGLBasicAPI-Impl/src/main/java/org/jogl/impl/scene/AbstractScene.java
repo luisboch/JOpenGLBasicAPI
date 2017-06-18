@@ -193,7 +193,7 @@ public abstract class AbstractScene implements Scene {
         }
         
         final FloatBuffer normalBuffer = BufferUtils.convert(mesh.getNormals());
-        final int normalBufferID = createBuffer(meshId, vertexBuffer);
+        final int normalBufferID = createBuffer(meshId, normalBuffer);
         final ArrayBuffer normals = new ArrayBuffer(normalBufferID, elementSize, (normalBuffer.remaining() / elementSize));
         
         final IndexBuffer indexBuffer;

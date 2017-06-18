@@ -51,26 +51,26 @@ public class SimpleScreen extends AbstractScreen<SimpleScene> {
         scene.addObject(cube.setMaterial(new SmoothMaterial(Util.convert(Color.YELLOW)))
                 .setPosition(new Vector3f(-1.2f, 0f, -5f))
         );
-
-        scene.addObject(triangle
-                .setPosition(new Vector3f(.8f, -0.2f, 0f))
-        );
-
-        scene.addObject(square1.setMaterial(
-                new SmoothMaterial(
-                        new Vector3f(1f, 1f, 1f), // ambient 
-                        new Vector3f(1f, 0.2f, 1f), // difuse
-                        new Vector3f(1f, 1f, 1f), // specular material
-                        300f, // power
-                        Util.convert(Color.BLUE), // color
-                        null)
-                        .setTexture(new ImageTextureImpl("textures/bricks_t.jpg", new TextureParameters()))
-        ).setPosition(new Vector3f(-0.5f, -0.5f, -1f)
-        ));
-//        
+//
+//        scene.addObject(triangle
+//                .setPosition(new Vector3f(.8f, -0.2f, 0f))
+//        );
+//
+//        scene.addObject(square1.setMaterial(
+//                new SmoothMaterial(
+//                        new Vector3f(1f, 1f, 1f), // ambient 
+//                        new Vector3f(1f, 0.2f, 1f), // difuse
+//                        new Vector3f(1f, 1f, 1f), // specular material
+//                        300f, // power
+//                        Util.convert(Color.BLUE), // color
+//                        null)
+////                        .setTexture(new ImageTextureImpl("textures/bricks_t.jpg", new TextureParameters()))
+//        ).setPosition(new Vector3f(-0.5f, -0.5f, -1f)
+//        ));
+////        
         scene.addObject(square2.setMaterial(
                 new SmoothMaterial(Util.convert(Color.GREEN))
-        //                .setTexture(new ImageTextureImpl("textures/bricks_t.jpg", new TextureParameters()))
+                        .setTexture(new ImageTextureImpl("textures/bricks_t.jpg", new TextureParameters()))
         ).setPosition(new Vector3f(1f, -1f, -01f)
         ));
 

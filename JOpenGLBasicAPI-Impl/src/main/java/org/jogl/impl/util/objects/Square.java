@@ -38,13 +38,6 @@ public class Square extends AbstractObject<Square>{
         mesh.getTexturePos().add(new Vector2f(1f, 0f));
         mesh.getTexturePos().add(new Vector2f(0f, 1f));
         mesh.getTexturePos().add(new Vector2f(1f, 1f));
-        
-        mesh.getNormals().add(new Vector3f(0f, 0f, +1f));
-        mesh.getNormals().add(new Vector3f(0f, 0f, +1f));
-        mesh.getNormals().add(new Vector3f(0f, 0f, +1f));
-        mesh.getNormals().add(new Vector3f(0f, 0f, +1f));
-        mesh.getNormals().add(new Vector3f(0f, 0f, +1f));
-        mesh.getNormals().add(new Vector3f(0f, 0f, +1f));
 //        
     }
     
