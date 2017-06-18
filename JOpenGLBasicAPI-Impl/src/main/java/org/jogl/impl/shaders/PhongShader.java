@@ -16,8 +16,6 @@
 package org.jogl.impl.shaders;
 
 import java.util.List;
-import java.util.Map;
-import org.jogl.api.GlobalLight;
 import org.jogl.api.Material;
 import org.jogl.api.PhongMaterial;
 import org.jogl.api.Scene;

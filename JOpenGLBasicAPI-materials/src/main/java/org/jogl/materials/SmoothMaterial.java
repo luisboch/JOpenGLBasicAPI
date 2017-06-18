@@ -35,9 +35,17 @@ public class SmoothMaterial implements PhongMaterial {
     }
 
     public SmoothMaterial(Vector3f ambientMaterial, Vector3f diffuseMaterial, Vector3f specularMaterial, float specularPower, Vector3f color, Texture texture) {
-        this.ambientMaterial = ambientMaterial.mul(color);
-        this.diffuseMaterial = diffuseMaterial.mul(color);
-        this.specularMaterial = specularMaterial.mul(color);
+        
+        if (color != null) {
+            this.ambientMaterial = ambientMaterial.mul(color);
+            this.diffuseMaterial = diffuseMaterial.mul(color);
+            this.specularMaterial = specularMaterial.mul(color);
+        } else {
+            this.ambientMaterial = ambientMaterial;
+            this.diffuseMaterial = diffuseMaterial;
+            this.specularMaterial = specularMaterial;
+        }
+        
         this.specularPower = specularPower;
     }
 
@@ -51,6 +59,7 @@ public class SmoothMaterial implements PhongMaterial {
         return texture;
     }
 
+    @Override
     public SmoothMaterial setTexture(Texture texture) {
         this.texture = texture;
         return this;

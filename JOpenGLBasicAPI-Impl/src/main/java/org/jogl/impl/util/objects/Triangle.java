@@ -19,6 +19,7 @@ import java.awt.Color;
 import org.jogl.impl.util.MeshCreator;
 import org.jogl.impl.util.Util;
 import org.jogl.materials.SmoothMaterial;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 /**
@@ -34,6 +35,11 @@ public class Triangle extends AbstractObject<Triangle> {
                 .to(new Vector3f(-0.5f, -0.5f, 0.5f))
                 .to(new Vector3f(0.5f, -0.5f, 0.5f))
                 .create();
+        
+        mesh.getTexturePos().add(new Vector2f(0f, 0f));
+        mesh.getTexturePos().add(new Vector2f(1f, 0f));
+        mesh.getTexturePos().add(new Vector2f(0f, 1f));
+        mesh.getTexturePos().add(new Vector2f(1f, 1f));
 //
 
 //      Metal
@@ -59,7 +65,9 @@ public class Triangle extends AbstractObject<Triangle> {
                         new Vector3f(1f, 1f, 1f), // specular material
                         500f, // power
                         Util.convert(Color.BLUE), // color
-                        null)); // texture
+                        null)
+        ); // texture
+
 
     }
 }

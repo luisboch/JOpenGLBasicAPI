@@ -26,4 +26,5 @@ public interface Material {
     Shader getShader();
 
     Texture getTexture();
+    Material setTexture(Texture texture);
 }
