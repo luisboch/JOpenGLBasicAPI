@@ -209,12 +209,9 @@ public abstract class AbstractScene implements Scene {
             if (object3D.getMaterial().getTexture() != null) {
                 final Texture tx = object3D.getMaterial().getTexture();
                 
-                
-        
                 FloatBuffer texCoordBuffer = BufferUtils.convertVec2f(mesh.getTexturePos());
                 final int texCoordBufferID = createBuffer(meshId, texCoordBuffer);
                 final ArrayBuffer aTexCoord = new ArrayBuffer(texCoordBufferID, 2, (texCoordBuffer.remaining() / 2));
-
                 
                 if (tx instanceof RenderTexture) {
                     final RenderTexture rtx = (RenderTexture) tx;
@@ -417,13 +414,13 @@ public abstract class AbstractScene implements Scene {
             final List<MeshReference> meshs = entry.getValue();
 
             sh.setCamera(camera)
-                    .render(meshs, lights);
+                    .render(meshs);
         }
 
         if (getShader() != null) {
             getShader().setCamera(camera)
 //                    .enable()
-                    .render(objects, lights)
+                    .render(objects)
 //                    .disable()
                     ;
         } else if (!objects.isEmpty()) {

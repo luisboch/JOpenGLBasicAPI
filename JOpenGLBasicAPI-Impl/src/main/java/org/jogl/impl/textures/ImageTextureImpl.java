@@ -34,6 +34,7 @@ public class ImageTextureImpl implements ImageTexture {
         this.parameters = null;
     }
 
+    // Cria um espaço em memoria para alocar textura (usado para espelho/camera de segurança/TV)
     public ImageTextureImpl(String path, TextureParameters parameters) {
         if (path == null || path.isEmpty()) {
             image = null;

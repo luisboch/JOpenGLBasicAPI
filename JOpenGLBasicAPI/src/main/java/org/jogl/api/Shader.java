@@ -34,7 +34,7 @@ public interface Shader {
      * @param light
      * @return 
      */
-    Shader render(List<Scene.MeshReference> objects, List<GlobalLight> light);
+    Shader render(List<Scene.MeshReference> objects);
     
     /**
      * Enable this render on GPU (use program cmd)

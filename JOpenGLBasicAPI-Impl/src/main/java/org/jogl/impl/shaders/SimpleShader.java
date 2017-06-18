@@ -54,7 +54,7 @@ public class SimpleShader extends AbstractShader {
     }
 
     @Override
-    public Shader render(List<Scene.MeshReference> objects, List<GlobalLight> light) {
+    public Shader render(List<Scene.MeshReference> objects) {
 
         // Set camera uniforms;
         // camera projectionMatrix;
@@ -78,10 +78,10 @@ public class SimpleShader extends AbstractShader {
                     // uDiffuseMaterial
                     // uSpecularMaterial
                     // uSpecularPower
-
-                    if (material.getColor() != null) {
-                        OpenGLUtil.setUniform(this.programId, "aColor", material.getColor());
-                    }
+//
+//                    if (material.getColor() != null) {
+//                        OpenGLUtil.setUniform(this.programId, "aColor", material.getColor());
+//                    }
                 }
 
                 OpenGLUtil.bindBuffer(this.programId, "aVertex", ob.vertexArray,  GL11.GL_FLOAT);

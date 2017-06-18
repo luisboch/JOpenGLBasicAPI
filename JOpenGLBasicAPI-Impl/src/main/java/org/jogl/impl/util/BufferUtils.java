@@ -45,7 +45,7 @@ public class BufferUtils {
     
     public static FloatBuffer convert(List<Vector3f> vertices) {
 
-        final int width = vertices.size() * 9;
+        final int width = vertices.size() * 3;
 
         final float[] vertexData = new float[width];
 
@@ -66,7 +66,7 @@ public class BufferUtils {
     
     public static FloatBuffer convertVec2f(List<Vector2f> vertices) {
 
-        final int width = vertices.size() * 9;
+        final int width = vertices.size() * 2;
 
         final float[] vertexData = new float[width];
 
@@ -86,7 +86,7 @@ public class BufferUtils {
 
     public static FloatBuffer convertTo2d(List<Vector3f> vertices) {
 
-        final int width = vertices.size() * 6;
+        final int width = vertices.size() * 2;
 
         final float[] vertexData = new float[width];
 

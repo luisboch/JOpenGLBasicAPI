@@ -86,12 +86,11 @@ public class OpenGLUtil {
 
     public static void bindBuffer(int programID, String attribName, Scene.ArrayBuffer buffer, int glType){
 
-        int attrID = glGetAttribLocation(programID, attribName);
-        glEnableVertexAttribArray(attrID); //0
-
         // Bind no FloatBuffer
         glBindBuffer(GL_ARRAY_BUFFER, buffer.id); //1
         
+        int attrID = glGetAttribLocation(programID, attribName);
+        glEnableVertexAttribArray(attrID); //0
         // Aponta para o atributo
         glVertexAttribPointer(attrID, buffer.elementSize , glType, false, 0, 0); //2 , 5126
         

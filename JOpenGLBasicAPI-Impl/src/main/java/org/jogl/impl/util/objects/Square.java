@@ -28,16 +28,24 @@ public class Square extends AbstractObject<Square>{
     public Square() {
         mesh = new MeshCreator()
                 .setOptimizeIndexBuffer(false)
-                .to(new Vector3f(-0.5f, 0.5f, 0.5f))
-                .to(new Vector3f(-0.5f, -0.5f, 0.5f))
-                .to(new Vector3f(0.5f, -0.5f, 0.5f))
-                .flipTo(new Vector3f(0.5f, 0.5f, 0.5f))
+                .to(new Vector3f(-0.5f, 0.5f, 0f))
+                .to(new Vector3f(-0.5f, -0.5f, 0f))
+                .to(new Vector3f(0.5f, -0.5f, 0f))
+                .flipTo(new Vector3f(0.5f, 0.5f, 0f))
                 .create();
         
         mesh.getTexturePos().add(new Vector2f(0f, 0f));
         mesh.getTexturePos().add(new Vector2f(1f, 0f));
         mesh.getTexturePos().add(new Vector2f(0f, 1f));
         mesh.getTexturePos().add(new Vector2f(1f, 1f));
+        
+        mesh.getNormals().add(new Vector3f(0f, 0f, +1f));
+        mesh.getNormals().add(new Vector3f(0f, 0f, +1f));
+        mesh.getNormals().add(new Vector3f(0f, 0f, +1f));
+        mesh.getNormals().add(new Vector3f(0f, 0f, +1f));
+        mesh.getNormals().add(new Vector3f(0f, 0f, +1f));
+        mesh.getNormals().add(new Vector3f(0f, 0f, +1f));
+//        
     }
     
     

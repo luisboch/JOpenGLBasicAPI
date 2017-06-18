@@ -62,8 +62,8 @@ public class PhongShader extends AbstractShader {
     }
 
     @Override
-    public Shader render(List<Scene.MeshReference> objects, List<GlobalLight> light) {
-
+    public Shader render(List<Scene.MeshReference> objects) {
+        int texCount = 0;
         final Matrix4f world = new Matrix4f().identity();
 
         enable();
@@ -73,30 +73,31 @@ public class PhongShader extends AbstractShader {
         OpenGLUtil.setUniform(this.programId, "uView", camera.getViewMatrix());
         OpenGLUtil.setUniform(this.programId, "uWorld", world);
         OpenGLUtil.setUniform(this.programId, "uCameraPosition", camera.getPosition());
-        
-        // LIGHT
-        
-//                .setUniform("uAmbientLight", new Vector3f(0.1f, 0.1f, 0.1f))
-//                .setUniform("uDiffuseLight", new Vector3f(1.0f, 1.0f, 0.5f))
-//                .setUniform("uSpecularLight", new Vector3f(1.0f, 1.0f, 1.0f))
 
+        // Light
         OpenGLUtil.setUniform(this.programId, "uLightDir", new Vector3f(-1.0f, -1.0f, -1.0f).normalize());
         OpenGLUtil.setUniform(this.programId, "uAmbientLight", new Vector3f(0.1f, 0.1f, 0.1f));
         OpenGLUtil.setUniform(this.programId, "uDiffuseLight", new Vector3f(1f, 1f, 0.5f));
         OpenGLUtil.setUniform(this.programId, "uSpecularLight", new Vector3f(1.0f, 1.0f, 1f));
 
         disable();
+        
         if (objects != null) {
-            objects.forEach((Scene.MeshReference ob) -> {
+            for (Scene.MeshReference ob : objects) {
+        
                 glBindVertexArray(ob.meshId);
-
                 enable();
+                OpenGLUtil.bindBuffer(this.programId, "aNormal", ob.normalArray, GL_FLOAT);
+                OpenGLUtil.bindBuffer(this.programId, "aVertex", ob.vertexArray, GL_FLOAT);
+
+                if (ob.texture != null) {
+                    OpenGLUtil.bindBuffer(this.programId, "aTexCoord", ob.texture.texCoord, GL_FLOAT);
+                }
 
                 OpenGLUtil.setUniform(this.programId, "uPosition", ob.object.getPosition());
                 OpenGLUtil.setUniform(this.programId, "uTransform", ob.object.getTransform());
-                OpenGLUtil.bindBuffer(this.programId, "aVertex", ob.vertexArray, GL_FLOAT);
-                OpenGLUtil.bindBuffer(this.programId, "aNormal", ob.normalArray, GL_FLOAT);
-                
+                OpenGLUtil.setUniform(this.programId, "uUseTexture", ob.texture != null);
+
                 if (ob.object.getMaterial() != null) {
 
                     final Material material = ob.object.getMaterial();
@@ -107,31 +108,20 @@ public class PhongShader extends AbstractShader {
                         OpenGLUtil.setUniform(this.programId, "uDiffuseMaterial", phongMaterial.getDiffuseMaterial());
                         OpenGLUtil.setUniform(this.programId, "uSpecularMaterial", phongMaterial.getSpecularMaterial());
                         OpenGLUtil.setUniform(this.programId, "uSpecularPower", phongMaterial.getSpecularPower());
-
-                    }
-
-                    if (material.getColor() != null) {
-                        OpenGLUtil.setUniform(this.programId, "uUseColor", true);
-                        OpenGLUtil.setUniform(this.programId, "uColor", material.getColor());
-                    } else {
-                        OpenGLUtil.setUniform(this.programId, "uUseColor", false);
                     }
 
                     if (ob.texture != null) {
-                        OpenGLUtil.setUniform(this.programId, "uUseTexture", true);
-                        glActiveTexture(GL_TEXTURE0);
+                        glActiveTexture(GL_TEXTURE0 + texCount);
                         glBindTexture(GL_TEXTURE_2D, ob.texture.id);
-                        OpenGLUtil.setUniform(this.programId, "uTexture", GL_TEXTURE0);
+                        OpenGLUtil.setUniform(this.programId, "uTexture", texCount);
                         glBindTexture(GL_TEXTURE_2D, 0);
-                        OpenGLUtil.bindBuffer(this.programId, "aTexCoord", ob.texture.texCoord, GL_FLOAT);
-                    } else {
-                        OpenGLUtil.setUniform(this.programId, "uUseTexture", false);
+                        texCount++;
                     }
 
                 }
-                
+
                 // Temos Index buffer?
-                if(!ob.indexBuffer.validIndexBuffer()){
+                if (!ob.indexBuffer.validIndexBuffer()) {
 
                     // Nao
                     glDrawArrays(GL_TRIANGLES, 0, ob.vertexArray.elementCount);
@@ -140,22 +130,24 @@ public class PhongShader extends AbstractShader {
                     // Faz o bind no indexBuffer
                     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ob.indexBuffer.id);
                     // Escreve o array.
-                    glDrawElements(GL_TRIANGLES, ob.indexBuffer.elementCount, GL_UNSIGNED_INT,  0);
+                    glDrawElements(GL_TRIANGLES, ob.indexBuffer.elementCount, GL_UNSIGNED_INT, 0);
 
                     // Unbind
                     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
                 }
 
-                OpenGLUtil.unbindBuffer(this.programId, "aVertex", ob.vertexArray, GL_FLOAT);
-                OpenGLUtil.unbindBuffer(this.programId, "aNormal", ob.normalArray, GL_FLOAT);
+                OpenGLUtil.unbindBuffer(this.programId, "aVertex", null, GL_FLOAT);
                 OpenGLUtil.unbindBuffer(this.programId, "aTexCoord", null, GL_FLOAT);
-                
-                disable();
+                OpenGLUtil.unbindBuffer(this.programId, "aNormal", null, GL_FLOAT);
+
+                enable();
                 glBindVertexArray(0);
 
-            });
+            };
         }
+
+        disable();
 
         return this;
     }

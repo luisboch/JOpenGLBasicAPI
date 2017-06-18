@@ -38,7 +38,7 @@ public class TextureUtil {
     
     public static ByteBuffer loadResourceToBuffer(String resource) throws IOException {
         ByteBuffer buffer;
-
+        System.out.println("Loading image from: "+ Paths.get(resource).toAbsolutePath().toString());
         Path path = Paths.get(resource);
         if (Files.isReadable(path)) {
             try (SeekableByteChannel fc = Files.newByteChannel(path)) {
@@ -48,20 +48,7 @@ public class TextureUtil {
                 }
             }
         } else {
-            try (InputStream source = Thread.currentThread().getContextClassLoader().getResourceAsStream(resource);
-                    ReadableByteChannel rbc = Channels.newChannel(source)) {
-                buffer = org.lwjgl.BufferUtils.createByteBuffer(8 * 1024);
-
-                while (true) {
-                    int bytes = rbc.read(buffer);
-                    if (bytes == -1) {
-                        break;
-                    }
-                    if (buffer.remaining() == 0) {
-                        buffer = resizeBuffer(buffer, buffer.capacity() * 2);
-                    }
-                }
-            }
+            throw new IllegalStateException("Can't load resource: "+resource);
         }
 
         buffer.flip();

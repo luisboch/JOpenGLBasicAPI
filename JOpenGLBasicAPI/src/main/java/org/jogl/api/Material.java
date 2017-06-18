@@ -26,6 +26,4 @@ public interface Material {
     Shader getShader();
 
     Texture getTexture();
-
-    Vector3f getColor();
 }

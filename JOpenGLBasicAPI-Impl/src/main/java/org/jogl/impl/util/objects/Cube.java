@@ -39,6 +39,7 @@ public class Cube extends AbstractObject<Cube> {
                 .to(new Vector3f(+0.5f, -0.5f, -0.5f))
                 .to(new Vector3f(-0.5f, -0.5f, -0.5f))
                 .flipTo(new Vector3f(-0.5f, +0.5f, -0.5f)) // 3+ vertexs
+                
                 .close()
                 // Create right face
                 .to(new Vector3f(+0.5f, +0.5f, +0.5f))
