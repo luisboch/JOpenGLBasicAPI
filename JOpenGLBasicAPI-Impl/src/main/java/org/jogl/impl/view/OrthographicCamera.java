@@ -15,7 +15,6 @@
  */
 package org.jogl.impl.view;
 
-import org.jogl.api.Camera;
 import org.jogl.impl.util.OpenGLUtil;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;

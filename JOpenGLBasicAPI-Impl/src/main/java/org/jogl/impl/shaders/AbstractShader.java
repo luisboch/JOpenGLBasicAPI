@@ -6,9 +6,7 @@
 package org.jogl.impl.shaders;
 
 import org.jogl.api.Camera;
-import org.jogl.api.Scene;
 import org.jogl.api.Shader;
-import org.jogl.impl.util.OpenGLUtil;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
 

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jogl.impl;
+package org.jogl.simpleapp.main;
 
 import java.awt.Color;
 import org.jogl.api.Config;
@@ -21,38 +21,39 @@ import org.jogl.api.Object3D;
 import org.jogl.api.TextureParameters;
 import org.jogl.api.input.Key;
 import org.jogl.api.screen.Scene;
-import org.jogl.impl.shaders.SimpleShader;
+import org.jogl.impl.AbstractScene;
+import org.jogl.impl.shaders.PhongShader;
 import org.jogl.impl.textures.ImageTextureImpl;
 import org.jogl.impl.util.Util;
+import org.jogl.impl.util.objects.Cube;
 import org.jogl.impl.util.objects.Square;
-import org.jogl.impl.view.PerspectiveCamera;
+import org.jogl.impl.util.objects.Triangle;
 import org.jogl.materials.SmoothMaterial;
 import org.joml.Vector3f;
 
 public class SimpleScreen extends AbstractScene {
 
-//    private Cube cube = new Cube();
-//    private Triangle triangle = new Triangle();
+    private Cube cube = new Cube();
+    private Triangle triangle = new Triangle();
     private Square square1 = new Square();
-//    private Square square2 = new Square();
+    private Square square2 = new Square();
 
     public SimpleScreen() {
     }
 
     @Override
     public Scene init() {
-        super.init();
-
         Config.defaultView();
+        super.init();
+        super.setShader(new PhongShader());
 
 //
-//        scene.addObject(cube.setMaterial(new SmoothMaterial(Util.convert(Color.YELLOW)))
-//                .setPosition(new Vector3f(-1.2f, 0f, -5f))
-//        );
-        square1
-                .setPosition(new Vector3f(.8f, -0.2f, 0f))
+        addObject(cube.setMaterial(new SmoothMaterial(Util.convert(Color.YELLOW)))
+                .setPosition(new Vector3f(-1.2f, 0f, -5f))
+        );
+        square1.setPosition(new Vector3f(.8f, -0.2f, 0f))
                 .setMaterial(new SmoothMaterial(Util.convert(Color.RED))
-                        .setTexture(new ImageTextureImpl("textures/bricks_t.jpg", new TextureParameters()))
+                //                        .setTexture(new ImageTextureImpl("textures/bricks_t.jpg", new TextureParameters()))
                 );
 
         addObject(square1);
@@ -69,11 +70,10 @@ public class SimpleScreen extends AbstractScene {
 //        ).setPosition(new Vector3f(-0.5f, -0.5f, -1f)
 //        ));
 //        
-//        scene.addObject(square2.setMaterial(
-//                new SmoothMaterial(Util.convert(Color.GREEN))
-////                        .setTexture(new ImageTextureImpl("textures/bricks_t.jpg", new TextureParameters()))
-//        ).setPosition(new Vector3f(1f, -1f, -01f)
-//        ));
+        addObject(square2.setMaterial(
+                new SmoothMaterial(Util.convert(Color.GREEN))
+        ).setPosition(new Vector3f(1f, -1f, -01f)
+        ));
 
         return this;
     }

@@ -32,7 +32,7 @@
                     <separateDirs>false</separateDirs> 
                 </configuration>
             </plugin>
-<!--            <plugin>
+            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>1.6.0</version>
@@ -45,13 +45,16 @@
                 </executions>
                 <configuration>
                     <executable>java</executable>
-                     optional 
+                    <!--                     optional 
                     <workingDirectory>${project.basedir}</workingDirectory>
                     <arguments>
                         <argument>-Djava.library.path="${project.build.directory}/natives"</argument>
-                    </arguments>
+                    </arguments>-->
+                    <environmentVariables>
+                        <DRI_PRIME>1</DRI_PRIME>
+                    </environmentVariables>
                 </configuration>
-            </plugin>-->
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -72,6 +75,16 @@
                     </execution>
                 </executions>
             </plugin>
+            
+<!--            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.20</version>
+                <configuration>
+                    <systemPropertyVariables>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>-->
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -87,6 +100,11 @@
                     </archive>
                 </configuration>
             </plugin>
+            
+            <!--            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId></artifactId>
+            </plugin>-->
         </plugins>
     </build>
     
@@ -95,12 +113,6 @@
             <groupId>org.jogl</groupId>
             <artifactId>JOpenGLBasicAPI-Impl</artifactId>
             <version>[0,)</version>
-        </dependency>
-        <dependency>
-            <groupId>org.lwjgl.lwjgl</groupId>
-            <artifactId>lwjgl</artifactId>
-            <version>2.9.3</version>
-            <type>jar</type>
         </dependency>
     </dependencies>
 </project>

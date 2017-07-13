@@ -17,7 +17,7 @@ package org.jogl.impl.util;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import org.jogl.api.Scene;
+import org.jogl.api.screen.Scene;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
@@ -56,6 +56,11 @@ public class OpenGLUtil {
         glUniform1f(uniform, value);
     }
 
+    public static void setUniform(int programID, String name, int value) {
+        int uniform = findUniform(programID, name);
+        glUniform1i(uniform, value);
+    }
+
     public static void setUniform(int programID, String name, boolean value) {
         int uniform = findUniform(programID, name);
         glUniform1i(uniform, value ? GL_TRUE : GL_FALSE);
@@ -78,7 +83,7 @@ public class OpenGLUtil {
         int uniform = glGetUniformLocation(programID, name);
         
         if (uniform == -1) {
-            System.out.println("WARM:  Uniform with name: " + name + " not found...");
+            System.out.println("WARN:  Uniform with name: " + name + " not found...");
         }
         
         return uniform;

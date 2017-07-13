@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jogl.impl.scene;
+package org.jogl.impl;
 
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
@@ -29,31 +29,30 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jogl.api.Camera;
 import org.jogl.api.Config;
-import org.jogl.api.Filter;
 import org.jogl.api.GlobalLight;
 import org.jogl.api.Image;
 import org.jogl.api.ImageTexture;
 import org.jogl.api.Mesh;
 import org.jogl.api.Object3D;
 import org.jogl.api.RenderTexture;
-import org.jogl.api.Scene;
 import org.jogl.api.Shader;
 import org.jogl.api.Texture;
 import org.jogl.api.input.Keyboard;
 import org.jogl.api.input.events.Mouse;
+import org.jogl.api.screen.Scene;
+import org.jogl.impl.shaders.SimpleShader;
 import org.jogl.impl.util.BufferUtils;
 import org.jogl.impl.util.Util;
+import org.jogl.impl.view.PerspectiveCamera;
 import org.joml.Vector3f;
-
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
-import static org.lwjgl.opengl.GL30.glBindVertexArray;
-import static org.lwjgl.opengl.GL30.glGenVertexArrays;
-import static org.lwjgl.opengl.GL30.glGenerateMipmap;
+import static org.lwjgl.opengl.GL30.*;
 
 /**
  *
  * @author luis
+ * @param <S>
  */
 public abstract class AbstractScene implements Scene {
 
@@ -75,14 +74,13 @@ public abstract class AbstractScene implements Scene {
     @Override
     public Scene init() {
 
-        if (camera == null) {
-            throw new IllegalStateException("Camera not defined, please set it to Scene");
-        }
+        setShader(new SimpleShader());
+        setCamera(new PerspectiveCamera().moveToRear(3));
 
         if (Config.depthTest) {
             glEnable(GL_DEPTH_TEST);
         }
-        
+
         if (Config.cullFace) {
             glEnable(GL_CULL_FACE);
         }
@@ -124,16 +122,11 @@ public abstract class AbstractScene implements Scene {
 
     public void setShader(Shader shader) {
         this.shader = shader;
-    }
-
-    @Override
-    public List<GlobalLight> getLights() {
-        return null;
-    }
-
-    @Override
-    public List<Filter> getFilters() {
-        return null;
+        try {
+            shader.compile();
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     @Override
@@ -142,7 +135,7 @@ public abstract class AbstractScene implements Scene {
     }
 
     @Override
-    public Scene deiInit() {
+    public Scene deinit() {
         glDisable(GL_DEPTH_TEST);
         glDisable(GL_CULL_FACE);
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -177,10 +170,10 @@ public abstract class AbstractScene implements Scene {
         if (object3D.getMesh() == null) {
             throw new IllegalArgumentException("Object withou mesh not allowed!");
         }
-        
+
         final int meshId = createMesh();
         final Mesh mesh = object3D.getMesh();
-        
+
         // Vertex array
         final Buffer vertexBuffer = BufferUtils.convert(mesh.getVertices());
         final int arrayBufferID = createBuffer(meshId, vertexBuffer);
@@ -191,28 +184,28 @@ public abstract class AbstractScene implements Scene {
         if (mesh.getNormals().isEmpty()) {
             calculateNormals(mesh);
         }
-        
+
         final FloatBuffer normalBuffer = BufferUtils.convert(mesh.getNormals());
         final int normalBufferID = createBuffer(meshId, normalBuffer);
         final ArrayBuffer normals = new ArrayBuffer(normalBufferID, elementSize, (normalBuffer.remaining() / elementSize));
-        
+
         final IndexBuffer indexBuffer;
         if (mesh.getIndexBuffer() != null) {
             int indexBufferID = createIndexBuffer(meshId, BufferUtils.convertIndexBuffer(mesh.getIndexBuffer()));
-             indexBuffer = new IndexBuffer(indexBufferID, mesh.getIndexBuffer().size());
+            indexBuffer = new IndexBuffer(indexBufferID, mesh.getIndexBuffer().size());
         } else {
-             indexBuffer = new IndexBuffer(-1, 0);
+            indexBuffer = new IndexBuffer(-1, 0);
         }
-        
+
         final TextureInfo texture;
         if (object3D.getMaterial() != null) {
             if (object3D.getMaterial().getTexture() != null) {
                 final Texture tx = object3D.getMaterial().getTexture();
-                
+
                 FloatBuffer texCoordBuffer = BufferUtils.convertVec2f(mesh.getTexturePos());
                 final int texCoordBufferID = createBuffer(meshId, texCoordBuffer);
                 final ArrayBuffer aTexCoord = new ArrayBuffer(texCoordBufferID, 2, (texCoordBuffer.remaining() / 2));
-                
+
                 if (tx instanceof RenderTexture) {
                     final RenderTexture rtx = (RenderTexture) tx;
                     texture = createRenderTexture(rtx, meshId, mesh, aTexCoord);
@@ -370,9 +363,9 @@ public abstract class AbstractScene implements Scene {
     private TextureInfo createRenderTexture(RenderTexture rtx, int meshId, Mesh mesh, ArrayBuffer aTexCoord) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     protected TextureInfo createTexture(ImageTexture tx, int meshId, Mesh mesh, ArrayBuffer aTexCoord) {
-        
+
         Image image = tx.getImage();
         int format = image.getChannels() == 3 ? GL_RGB : GL_RGBA;
 
@@ -389,14 +382,13 @@ public abstract class AbstractScene implements Scene {
         glTexParameteri(tx.getType(), GL_TEXTURE_WRAP_S, tx.getParameters().getWrapS());
         glTexParameteri(tx.getType(), GL_TEXTURE_WRAP_T, tx.getParameters().getWrapT());
 
-        
         if (tx.getParameters().isMipMapped()) {
             glGenerateMipmap(tx.getType());
         }
 
         //Limpeza
         glBindTexture(tx.getType(), 0);
-        
+
         return new TextureInfo(id, aTexCoord, tx.getParameters());
     }
 
@@ -405,7 +397,7 @@ public abstract class AbstractScene implements Scene {
     }
 
     @Override
-    public Scene render() {
+    public Scene draw() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 //        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
@@ -419,9 +411,8 @@ public abstract class AbstractScene implements Scene {
 
         if (getShader() != null) {
             getShader().setCamera(camera)
-//                    .enable()
-                    .render(objects)
-//                    .disable()
+                    //                    .enable()
+                    .render(objects) //                    .disable()
                     ;
         } else if (!objects.isEmpty()) {
             Logger.getLogger(AbstractScene.class.getSimpleName()).severe("No default shader defined in scene, but there are itens without custom shader.");
@@ -467,6 +458,4 @@ public abstract class AbstractScene implements Scene {
             mesh.getNormals().add(normal);
         }
     }
-
-
 }

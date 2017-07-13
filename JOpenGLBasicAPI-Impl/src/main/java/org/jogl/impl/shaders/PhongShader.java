@@ -18,8 +18,8 @@ package org.jogl.impl.shaders;
 import java.util.List;
 import org.jogl.api.Material;
 import org.jogl.api.PhongMaterial;
-import org.jogl.api.Scene;
 import org.jogl.api.Shader;
+import org.jogl.api.screen.Scene;
 import org.jogl.impl.util.FileUtil;
 import org.jogl.impl.util.OpenGLUtil;
 import org.joml.Matrix4f;
@@ -37,11 +37,7 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
  */
 public class PhongShader extends AbstractShader {
 
-    private static final String PATH;
-
-    static {
-        PATH = PhongShader.class.getClassLoader().getResource("shaders/").getPath();
-    }
+    private static final String PATH = PhongShader.class.getResource("/shaders/").getPath();
 
     private static final String VERTEX_SHADER
             = FileUtil.readFile(PATH + "phong.vert");

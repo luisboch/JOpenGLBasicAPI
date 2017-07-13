@@ -15,6 +15,8 @@
  */
 package org.jogl.impl.util.objects;
 
+import java.util.List;
+import org.jogl.api.Mesh;
 import org.jogl.impl.util.MeshCreator;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -23,26 +25,53 @@ import org.joml.Vector3f;
  *
  * @author luis
  */
-public class Square extends AbstractObject<Square>{
+public class Square extends AbstractObject<Square> {
 
     public Square() {
-        mesh = new MeshCreator()
-                .setOptimizeIndexBuffer(false)
-                .to(new Vector3f(-0.5f, 0.5f, 0f))
-                .to(new Vector3f(-0.5f, -0.5f, 0f))
-                .to(new Vector3f(0.5f, -0.5f, 0f))
-                .flipTo(new Vector3f(0.5f, 0.5f, 0f))
-                .create();
-        
-        
-        mesh.getTexturePos().add(new Vector2f(0f, 0f));
-        mesh.getTexturePos().add(new Vector2f(0f, 1f));
-        mesh.getTexturePos().add(new Vector2f(1f, 1f));
-        mesh.getTexturePos().add(new Vector2f(0f, 0f));
-        mesh.getTexturePos().add(new Vector2f(1f, 1f));
-        mesh.getTexturePos().add(new Vector2f(1f, 0f));
+//        mesh = new MeshCreator()
+//                .setOptimizeIndexBuffer(false)
+//                .to(new Vector3f(-0.5f, 0.5f, 0f))
+//                .to(new Vector3f(-0.5f, -0.5f, 0f))
+//                .to(new Vector3f(0.5f, -0.5f, 0f))
+//                .flipTo(new Vector3f(0.5f, 0.5f, 0f))
+//                .create();
+//        
+//        
+//        mesh.getTexturePos().add(new Vector2f(0f, 0f));
+//        mesh.getTexturePos().add(new Vector2f(0f, 1f));
+//        mesh.getTexturePos().add(new Vector2f(1f, 1f));
+//        mesh.getTexturePos().add(new Vector2f(0f, 0f));
+//        mesh.getTexturePos().add(new Vector2f(1f, 1f));
+//        mesh.getTexturePos().add(new Vector2f(1f, 0f));
+        mesh = new Mesh();
+
+        List<Vector3f> vertices = mesh.getVertices();
+        vertices.add(new Vector3f(-0.5f, 0.5f, 0.0f)); // 0
+        vertices.add(new Vector3f(0.5f, 0.5f, 0.0f)); // 1
+        vertices.add(new Vector3f(-0.5f, -0.5f, 0.0f)); // 2
+        vertices.add(new Vector3f(0.5f, -0.5f, 0.0f)); // 3
+
+        final List<Vector2f> texturePos = mesh.getTexturePos();
+        texturePos.add(new Vector2f(0.0f, 0.0f));
+        texturePos.add(new Vector2f(1.0f, 0.0f));
+        texturePos.add(new Vector2f(0.0f, 1.0f));
+        texturePos.add(new Vector2f(1.0f, 1.0f));
+
+        List<Vector3f> normals = mesh.getNormals();
+        normals.add(new Vector3f(0f, 0f, 1f));
+        normals.add(new Vector3f(0f, 0f, 1f));
+        normals.add(new Vector3f(0f, 0f, 1f));
+        normals.add(new Vector3f(0f, 0f, 1f));
+
+        List<Integer> idx = mesh.getIndexBuffer();
+        idx.add(0);
+        idx.add(2);
+        idx.add(3);
+        idx.add(0);
+        idx.add(3);
+        idx.add(1);
+
 //        
     }
-    
-    
+
 }

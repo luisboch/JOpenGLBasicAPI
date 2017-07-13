@@ -30,6 +30,10 @@ public class Config {
     public static boolean depthTest = true;
     public static final List<RenderMode> modes = new ArrayList<>();
     
+    public static int windowWidth;
+    public static int windowHeight;
+    
+    
     
     /**
      * start default configurations

@@ -16,6 +16,7 @@
 package org.jogl.impl.view;
 
 import org.jogl.api.Camera;
+import org.jogl.api.Config;
 import org.jogl.impl.util.OpenGLUtil;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -25,7 +26,7 @@ import org.joml.Vector3f;
  * @author luis
  */
 abstract class AbstractCamera implements Camera {
-    
+
     protected final Vector3f position;
     protected final Vector3f direction;
     protected final Vector3f up;
@@ -42,7 +43,6 @@ abstract class AbstractCamera implements Camera {
         this.target = new Vector3f(position).add(direction);
     }
 
-    
     @Override
     public Vector3f getPosition() {
         return position;
@@ -70,12 +70,9 @@ abstract class AbstractCamera implements Camera {
     public Vector3f getDirection() {
         return direction;
     }
-    
+
     public float getAspect() {
-        final Vector2f screenSize = OpenGLUtil.getScreenSize();
-        return screenSize.x / screenSize.y;
+        return ((float) Config.windowWidth) / (float) Config.windowHeight;
     }
 
-    
-    
 }

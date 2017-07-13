@@ -1,11 +1,27 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2017 luis.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
-package org.jogl.api;
+package org.jogl.api.screen;
 
 import java.util.List;
+import org.jogl.api.Camera;
+import org.jogl.api.GlobalLight;
+import org.jogl.api.Mesh;
+import org.jogl.api.Object3D;
+import org.jogl.api.Shader;
+import org.jogl.api.TextureParameters;
 import org.jogl.api.input.Keyboard;
 import org.jogl.api.input.events.Mouse;
 
@@ -14,9 +30,21 @@ import org.jogl.api.input.events.Mouse;
  * @author luis
  */
 public interface Scene {
+    
+    Scene setMouse(Mouse m);
+
+    Scene setKeyboard(Keyboard m);
 
     Scene init();
 
+    Scene update(float secs);
+
+    Scene draw();
+
+    Scene deinit();
+    
+    
+    
     /**
      * default shader
      *
@@ -24,17 +52,7 @@ public interface Scene {
      */
     Shader getShader();
 
-    List<GlobalLight> getLights();
-
-    List<Filter> getFilters();
-
     List<Object3D> getObjects();
-
-    Scene update(float secs);
-
-    Scene render();
-
-    Scene deiInit();
 
     Scene addObject(Object3D object3D);
 
@@ -43,10 +61,6 @@ public interface Scene {
     Scene addLight(GlobalLight light);
 
     Scene removeLight(GlobalLight light);
-
-    Scene setMouse(Mouse m);
-
-    Scene setKeyboard(Keyboard keyboard);
 
     Scene setCamera(Camera camera);
 

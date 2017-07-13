@@ -6,6 +6,7 @@
 package org.jogl.api;
 
 import java.util.List;
+import org.jogl.api.screen.Scene;
 
 /**
  *

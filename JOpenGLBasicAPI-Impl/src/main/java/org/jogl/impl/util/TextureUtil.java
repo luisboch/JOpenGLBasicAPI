@@ -35,11 +35,11 @@ import static org.lwjgl.stb.STBImage.stbi_load_from_memory;
  * @author luis
  */
 public class TextureUtil {
-    
+
     public static ByteBuffer loadResourceToBuffer(String resource) throws IOException {
         ByteBuffer buffer;
-        System.out.println("Loading image from: "+ Paths.get(resource).toAbsolutePath().toString());
         Path path = Paths.get(resource);
+        System.out.println("Loading image from: " + path.toAbsolutePath().toString());
         if (Files.isReadable(path)) {
             try (SeekableByteChannel fc = Files.newByteChannel(path)) {
                 buffer = org.lwjgl.BufferUtils.createByteBuffer((int) fc.size() + 1);
@@ -48,39 +48,37 @@ public class TextureUtil {
                 }
             }
         } else {
-            throw new IllegalStateException("Can't load resource: "+resource);
+            throw new IllegalStateException("Can't load resource: " + resource);
         }
 
         buffer.flip();
         return buffer;
     }
-    
-    public static Image loadImage(String path){
+
+    public static Image loadImage(String path) {
         final Image img = new Image();
         try {
             ByteBuffer buffer = loadResourceToBuffer(path);
             IntBuffer w = org.lwjgl.BufferUtils.createIntBuffer(1);
             IntBuffer h = org.lwjgl.BufferUtils.createIntBuffer(1);
             IntBuffer c = org.lwjgl.BufferUtils.createIntBuffer(1);
-    
+
             img.setPixels(stbi_load_from_memory(buffer, w, h, c, 0));
-            
+
             if (img.getPixels() == null) {
                 throw new RuntimeException("Failed to load image: " + path);
             }
 
             img.setWidth(w.get());
             img.setHeight(h.get());
-            img.setChannels (c.get());
-            
+            img.setChannels(c.get());
+
         } catch (IOException e) {
             throw new RuntimeException("Failed to load image: " + path, e);
         }
-        
+
         return img;
     }
-    
-    
 
     private static ByteBuffer resizeBuffer(ByteBuffer buffer, int newCapacity) {
         ByteBuffer newBuffer = org.lwjgl.BufferUtils.createByteBuffer(newCapacity);

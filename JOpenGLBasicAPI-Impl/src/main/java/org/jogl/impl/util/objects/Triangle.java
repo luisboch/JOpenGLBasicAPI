@@ -31,9 +31,9 @@ public class Triangle extends AbstractObject<Triangle> {
     public Triangle() {
 
         mesh = new MeshCreator()
-                .to(new Vector3f(0.0f, 0.5f, 0.5f))
-                .to(new Vector3f(-0.5f, -0.5f, 0.5f))
-                .to(new Vector3f(0.5f, -0.5f, 0.5f))
+                .to(new Vector3f(0.0f, 0.5f, 0f))
+                .to(new Vector3f(-0.5f, -0.5f, 0f))
+                .to(new Vector3f(0.5f, -0.5f, 0f))
                 .create();
         
         mesh.getTexturePos().add(new Vector2f(0f, 0f));

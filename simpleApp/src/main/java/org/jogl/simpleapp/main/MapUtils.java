@@ -1,3 +1,10 @@
+package org.jogl.simpleapp.main;
+
+
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+
 /*
  * Copyright 2017 luis.
  *
@@ -13,12 +20,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jogl.impl.scene;
-
 /**
  *
  * @author luis
  */
-public class SimpleScene extends AbstractScene{
+public class MapUtils {
 
+    public static <K, V> String toString(Map<K, V> map) {
+        StringBuilder sb = new StringBuilder();
+        Iterator<Entry<K, V>> iter = map.entrySet().iterator();
+        
+        while (iter.hasNext()) {
+            Entry<K, V> entry = iter.next();
+            sb.append(entry.getKey());
+            sb.append('=').append('"');
+            sb.append(entry.getValue());
+            sb.append('"').append("\n");
+        }
+        return sb.toString();
+
+    }
 }

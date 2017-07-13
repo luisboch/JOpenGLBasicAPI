@@ -16,27 +16,15 @@
 package org.jogl.simpleapp.main;
 
 import org.jogl.api.screen.Window;
-import org.jogl.impl.SimpleScreen;
 
 /**
  *
  * @author luis
  */
 public class Screen {
-//
-//    private Mesh mesh;
-//    private OpenGLManager manager;
-    private float angle;
-    private final int horizontal;
-    private final int vertical;
-
-    public Screen(int horizontal, int vertical) {
-        this.horizontal = horizontal;
-        this.vertical = vertical;
-    }
-
 
     public static void main(String[] args) {
+        System.out.println(MapUtils.toString(System.getenv()));
         new Window(new SimpleScreen()).show();
 
     }

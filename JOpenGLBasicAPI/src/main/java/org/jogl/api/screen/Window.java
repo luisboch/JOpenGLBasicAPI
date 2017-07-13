@@ -15,6 +15,7 @@
  */
 package org.jogl.api.screen;
 
+import org.jogl.api.Config;
 import org.jogl.api.input.Keyboard;
 import org.jogl.api.input.events.Mouse;
 import static org.lwjgl.glfw.GLFW.*;
@@ -24,15 +25,14 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
 import org.lwjgl.opengl.GL;
+import static org.lwjgl.opengl.GL11.glViewport;
 import org.lwjgl.opengl.GLCapabilities;
 
 public class Window {
 
     // The window handle
     private long windowID;
-    private Screen screen;
-    private int width;
-    private int height;
+    private Scene screen;
     private String title;
     private Mouse mouse;
     private Keyboard keyboard;
@@ -40,26 +40,28 @@ public class Window {
     private GLFWErrorCallback errorCallback = GLFWErrorCallback.createPrint(System.out);
     private GLFWWindowSizeCallback resizeCallback = GLFWWindowSizeCallback.create(new GLFWWindowSizeCallback.SAM() {
         @Override
-         public void invoke(long window, int w, int h) {
+        public void invoke(long window, int w, int h) {
             if (window == windowID) {
-                width = w;
-                height = h;
+                Config.windowWidth = w;
+                Config.windowHeight = h;
+                glViewport(0, 0, w, h);
+                
             }
         }
     });
-    
-    public Window(Screen screen, String title, int width, int height) {
+
+    public Window(Scene screen, String title, int width, int height) {
         this.screen = screen;
         this.title = title;
-        this.width = width;
-        this.height = height;
+        Config.windowWidth = width;
+        Config.windowHeight = height;
     }
 
-    public Window(Screen screen, String title) {
+    public Window(Scene screen, String title) {
         this(screen, title, 800, 600);
     }
 
-    public Window(Screen screen) {
+    public Window(Scene screen) {
         this(screen, "Game");
     }
 
@@ -76,16 +78,16 @@ public class Window {
 
         // Configure our window
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden
-                                                  // after creation
+        // after creation
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be
-                                                   // resizable
+        // resizable
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
         // Create the window
-        windowID = glfwCreateWindow(width, height, title, NULL, NULL);
+        windowID = glfwCreateWindow(Config.windowWidth, Config.windowHeight, title, NULL, NULL);
         if (windowID == NULL) {
             throw new RuntimeException("Failed to create the GLFW window");
         }
@@ -94,15 +96,16 @@ public class Window {
         // repeated or released.
         mouse = new Mouse(windowID);
         keyboard = new Keyboard(windowID);
-       
+
         screen.setMouse(mouse);
         screen.setKeyboard(keyboard);
-        
+
         // Get the resolution of the primary monitor
         GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
         // Center our window
-        glfwSetWindowPos(windowID, (vidmode.width() - width) / 2, (vidmode.height() - height) / 2);
-
+        glfwSetWindowPos(windowID, (vidmode.width() - Config.windowWidth) / 2, (vidmode.height() - Config.windowHeight) / 2);
+        glfwSetWindowSizeCallback(windowID, resizeCallback);
+        
         // Make the OpenGL context current
         glfwMakeContextCurrent(windowID);
         // Enable v-sync
@@ -134,11 +137,11 @@ public class Window {
 
             keyboard.update();
             mouse.update();
-            
+
             glfwSwapBuffers(windowID);
             glfwPollEvents();
         }
-        
+
         screen.deinit();
     }
 
