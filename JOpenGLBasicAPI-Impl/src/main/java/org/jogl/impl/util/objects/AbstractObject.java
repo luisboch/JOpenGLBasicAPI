@@ -15,26 +15,40 @@
  */
 package org.jogl.impl.util.objects;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.jogl.api.Material;
 import org.jogl.api.Mesh;
 import org.jogl.api.Object3D;
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
+import org.jphysics.api.PhysicObject;
+import org.jphysics.math.Vector3f;
 
 /**
  *
  * @author luis
  */
-abstract class AbstractObject<A> implements Object3D<A> {
+abstract class AbstractObject<A extends AbstractObject> implements Object3D<A> {
 
     protected Mesh mesh;
     protected Material material;
     protected Vector3f position = new Vector3f();
     protected Matrix4f transformation = new Matrix4f().identity();
+    protected boolean alive;
+    protected float mass;
+
+    private Vector3f velocity = new Vector3f();
+    private Vector3f direction = new Vector3f();
+    private Vector3f scale = new Vector3f();
+
+    private float radius;
+    private float maxVelocity;
+    private List<PhysicObject> children = new ArrayList<>();
+    private PhysicObject parent;
 
     @Override
     public Vector3f getPosition() {
-        return position;
+        return new Vector3f(position);
     }
 
     @Override
@@ -64,8 +78,102 @@ abstract class AbstractObject<A> implements Object3D<A> {
     }
 
     @Override
+    public boolean isAlive() {
+        return this.alive;
+    }
+
+    public A setAlive(boolean alive) {
+        this.alive = alive;
+        return (A) this;
+    }
+
+    @Override
     public String toString() {
         return this.getClass().getSimpleName() + "{" + "position=" + position + ", transformation=" + transformation + '}';
+    }
+
+    @Override
+    public void update(float secs) {
+    }
+
+    @Override
+    public float getMass() {
+        return mass;
+    }
+
+    @Override
+    public PhysicObject decreaseLife() {
+        // Nothing to do so far
+        return this;
+    }
+
+    @Override
+    public List<PhysicObject> getChildren() {
+        return children;
+    }
+
+    @Override
+    public float getRadius() {
+        return radius;
+    }
+
+    public void setRadius(float radius) {
+        this.radius = radius;
+    }
+
+    @Override
+    public Vector3f getDirection() {
+        return new Vector3f(direction);
+    }
+
+    @Override
+    public float getMaxVelocity() {
+        return maxVelocity;
+    }
+
+    public Matrix4f getTransformation() {
+        return transformation;
+    }
+
+    public void setTransformation(Matrix4f transformation) {
+        this.transformation = transformation;
+    }
+
+    @Override
+    public Vector3f getVelocity() {
+        return new Vector3f(velocity);
+    }
+
+    @Override
+    public AbstractObject setVelocity(Vector3f velocity) {
+        this.velocity = velocity;
+        return this;
+    }
+
+    @Override
+    public Vector3f getScale() {
+        return new Vector3f(scale);
+    }
+
+    public void setScale(Vector3f scale) {
+        this.scale = scale;
+    }
+
+    @Override
+    public PhysicObject getParent() {
+        return parent;
+    }
+
+    @Override
+    public PhysicObject setParent(PhysicObject parent) {
+        this.parent = parent;
+        return this;
+    }
+
+    @Override
+    public AbstractObject setDirection(Vector3f direction) {
+        this.direction = direction;
+        return this;
     }
 
 }

@@ -43,6 +43,11 @@
             <artifactId>joml</artifactId>
             <version>1.9.3</version>
         </dependency>
+        <dependency>
+            <groupId>org.jphysics</groupId>
+            <artifactId>jphysics3d</artifactId>
+            <version>1.0.12-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 </project>
 

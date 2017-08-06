@@ -16,7 +16,7 @@
 package org.jogl.impl.util.objects;
 
 import org.jogl.impl.util.MeshCreator;
-import org.joml.Vector3f;
+import org.jphysics.math.Vector3f;
 
 /**
  *

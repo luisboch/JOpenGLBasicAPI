@@ -21,13 +21,11 @@ import org.jogl.api.Object3D;
 import org.jogl.api.TextureParameters;
 import org.jogl.api.input.Key;
 import org.jogl.api.screen.Scene;
-import org.jogl.impl.shaders.SimpleShader;
 import org.jogl.impl.textures.ImageTextureImpl;
 import org.jogl.impl.util.Util;
 import org.jogl.impl.util.objects.Square;
-import org.jogl.impl.view.PerspectiveCamera;
 import org.jogl.materials.SmoothMaterial;
-import org.joml.Vector3f;
+import org.jphysics.math.Vector3f;
 
 public class SimpleScreen extends AbstractScene {
 

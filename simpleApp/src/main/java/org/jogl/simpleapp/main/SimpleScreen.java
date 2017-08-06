@@ -23,13 +23,14 @@ import org.jogl.api.input.Key;
 import org.jogl.api.screen.Scene;
 import org.jogl.impl.AbstractScene;
 import org.jogl.impl.shaders.PhongShader;
+import org.jogl.impl.shaders.SimpleShader;
 import org.jogl.impl.textures.ImageTextureImpl;
 import org.jogl.impl.util.Util;
 import org.jogl.impl.util.objects.Cube;
 import org.jogl.impl.util.objects.Square;
 import org.jogl.impl.util.objects.Triangle;
 import org.jogl.materials.SmoothMaterial;
-import org.joml.Vector3f;
+import org.jphysics.math.Vector3f;
 
 public class SimpleScreen extends AbstractScene {
 
@@ -45,35 +46,36 @@ public class SimpleScreen extends AbstractScene {
     public Scene init() {
         Config.defaultView();
         super.init();
-        super.setShader(new PhongShader());
+        super.setShader(new SimpleShader());
 
-//
-        addObject(cube.setMaterial(new SmoothMaterial(Util.convert(Color.YELLOW)))
-                .setPosition(new Vector3f(-1.2f, 0f, -5f))
-        );
+////
+//        addObject(cube.setMaterial(new SmoothMaterial(Util.convert(Color.YELLOW)))
+//                .setPosition(new Vector3f(-1.2f, 0f, -5f))
+//                //                        .setTexture(new ImageTextureImpl("textures/bricks_t.jpg", new TextureParameters()))
+//        );
         square1.setPosition(new Vector3f(.8f, -0.2f, 0f))
                 .setMaterial(new SmoothMaterial(Util.convert(Color.RED))
-                //                        .setTexture(new ImageTextureImpl("textures/bricks_t.jpg", new TextureParameters()))
+                        .setTexture(new ImageTextureImpl("textures/bricks_t.jpg", new TextureParameters()))
                 );
 
         addObject(square1);
 //
-//        scene.addObject(square1.setMaterial(
-//                new SmoothMaterial(
-//                        new Vector3f(1f, 1f, 1f), // ambient 
-//                        new Vector3f(1f, 0.2f, 1f), // difuse
-//                        new Vector3f(1f, 1f, 1f), // specular material
-//                        300f, // power
-//                        Util.convert(Color.BLUE), // color
-//                        null)
-////                        .setTexture(new ImageTextureImpl("textures/bricks_t.jpg", new TextureParameters()))
-//        ).setPosition(new Vector3f(-0.5f, -0.5f, -1f)
-//        ));
-//        
+        addObject(square1.setMaterial(
+                new SmoothMaterial(
+                        new Vector3f(1f, 1f, 1f), // ambient 
+                        new Vector3f(1f, 0.2f, 1f), // difuse
+                        new Vector3f(1f, 1f, 1f), // specular material
+                        300f, // power
+                        Util.convert(Color.BLUE), // color
+                        null)
+        ////                        .setTexture(new ImageTextureImpl("textures/bricks_t.jpg", new TextureParameters()))
+        ).setPosition(new Vector3f(-0.5f, -0.5f, -1f)
+        ));
+        //       
+
         addObject(square2.setMaterial(
                 new SmoothMaterial(Util.convert(Color.GREEN))
-        ).setPosition(new Vector3f(1f, -1f, -01f)
-        ));
+        ).setPosition(new Vector3f(1f, -1f, -01f)));
 
         return this;
     }

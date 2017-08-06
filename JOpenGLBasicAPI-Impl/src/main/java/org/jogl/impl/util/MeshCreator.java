@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.jogl.api.Mesh;
 import static org.jogl.impl.util.Util.*;
-import org.joml.Vector3f;
+import org.jphysics.math.Vector3f;
 
 /**
  *

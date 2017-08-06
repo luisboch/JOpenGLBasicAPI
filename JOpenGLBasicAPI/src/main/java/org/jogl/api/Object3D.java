@@ -16,20 +16,23 @@
 package org.jogl.api;
 
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
+import org.jphysics.api.GameObject;
+import org.jphysics.api.PhysicObject;
+import org.jphysics.math.Vector3f;
 
 /**
  *
  * @author luis
  * @param <Type>
  */
-public interface Object3D<Type> {
-    
+public interface Object3D<T extends Object3D> extends PhysicObject {
+
     Mesh getMesh();
-    
+
     Material getMaterial();
-    
-    Vector3f getPosition();
-    Type setPosition(Vector3f position);
+
+    @Override
+    T setPosition(Vector3f position);
+
     Matrix4f getTransform();
 }

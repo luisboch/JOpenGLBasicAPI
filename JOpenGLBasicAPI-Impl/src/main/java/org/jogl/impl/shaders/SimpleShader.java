@@ -61,7 +61,7 @@ public class SimpleShader extends AbstractShader {
     @Override
     public Shader render(List<Scene.MeshReference> objects) {
 
-        int texCount = 1;
+        int texCount = 0;
 
         // Set camera uniforms;
         // camera projectionMatrix;
@@ -85,7 +85,7 @@ public class SimpleShader extends AbstractShader {
                     OpenGLUtil.bindBuffer(this.programId, "aTexCoord", ob.texture.texCoord, GL_FLOAT);
                 }
 
-                OpenGLUtil.setUniform(this.programId, "uUseTexture", ob.texture != null);
+                OpenGLUtil.setUniform(this.programId, "uUseTexture", false);
 
                 if (ob.object.getMaterial() != null) {
 

@@ -44,7 +44,7 @@ import org.jogl.impl.shaders.SimpleShader;
 import org.jogl.impl.util.BufferUtils;
 import org.jogl.impl.util.Util;
 import org.jogl.impl.view.PerspectiveCamera;
-import org.joml.Vector3f;
+import org.jphysics.math.Vector3f;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL30.*;

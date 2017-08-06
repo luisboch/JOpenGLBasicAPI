@@ -18,7 +18,7 @@ package org.jogl.api;
 import java.util.ArrayList;
 import java.util.List;
 import org.joml.Vector2f;
-import org.joml.Vector3f;
+import org.jphysics.math.Vector3f;
 
 /**
  *

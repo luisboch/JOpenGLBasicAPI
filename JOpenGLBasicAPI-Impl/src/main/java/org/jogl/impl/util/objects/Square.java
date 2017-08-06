@@ -17,9 +17,9 @@ package org.jogl.impl.util.objects;
 
 import java.util.List;
 import org.jogl.api.Mesh;
-import org.jogl.impl.util.MeshCreator;
 import org.joml.Vector2f;
-import org.joml.Vector3f;
+import org.jphysics.api.PhysicObject;
+import org.jphysics.math.Vector3f;
 
 /**
  *
@@ -70,8 +70,5 @@ public class Square extends AbstractObject<Square> {
         idx.add(0);
         idx.add(3);
         idx.add(1);
-
-//        
     }
-
 }

@@ -51,7 +51,7 @@
                         <argument>-Djava.library.path="${project.build.directory}/natives"</argument>
                     </arguments>-->
                     <environmentVariables>
-                        <DRI_PRIME>1</DRI_PRIME>
+                        <!--<DRI_PRIME>1</DRI_PRIME>-->
                     </environmentVariables>
                 </configuration>
             </plugin>
