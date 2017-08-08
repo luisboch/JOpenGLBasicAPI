@@ -33,13 +33,13 @@ abstract class AbstractObject<A extends AbstractObject> implements Object3D<A> {
     protected Mesh mesh;
     protected Material material;
     protected Vector3f position = new Vector3f();
-    protected Matrix4f transformation = new Matrix4f().identity();
-    protected boolean alive;
-    protected float mass;
+    protected Matrix4f transform = new Matrix4f().identity().rotateY(0.1f);
+    protected boolean alive = true;
+    protected float mass = 1f;
 
     private Vector3f velocity = new Vector3f();
     private Vector3f direction = new Vector3f();
-    private Vector3f scale = new Vector3f();
+    private Vector3f scale = new Vector3f(1f);
 
     private float radius;
     private float maxVelocity;
@@ -55,11 +55,6 @@ abstract class AbstractObject<A extends AbstractObject> implements Object3D<A> {
     public A setPosition(Vector3f position) {
         this.position = position;
         return (A) this;
-    }
-
-    @Override
-    public Matrix4f getTransform() {
-        return transformation;
     }
 
     @Override
@@ -89,7 +84,7 @@ abstract class AbstractObject<A extends AbstractObject> implements Object3D<A> {
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + "{" + "position=" + position + ", transformation=" + transformation + '}';
+        return this.getClass().getSimpleName() + "{" + "position=" + position + ", transform=" + transform + '}';
     }
 
     @Override
@@ -131,12 +126,17 @@ abstract class AbstractObject<A extends AbstractObject> implements Object3D<A> {
         return maxVelocity;
     }
 
-    public Matrix4f getTransformation() {
-        return transformation;
+    public void setMaxVelocity(float maxVelocity) {
+        this.maxVelocity = maxVelocity;
+    }
+    
+    @Override
+    public Matrix4f getTransform() {
+        return transform;
     }
 
-    public void setTransformation(Matrix4f transformation) {
-        this.transformation = transformation;
+    public void setTransform(Matrix4f transform) {
+        this.transform = transform;
     }
 
     @Override
@@ -155,8 +155,9 @@ abstract class AbstractObject<A extends AbstractObject> implements Object3D<A> {
         return new Vector3f(scale);
     }
 
-    public void setScale(Vector3f scale) {
-        this.scale = scale;
+    public void scale(Vector3f scale) {
+        this.scale.add(scale);
+        getTransform().scale(scale);
     }
 
     @Override
@@ -174,6 +175,10 @@ abstract class AbstractObject<A extends AbstractObject> implements Object3D<A> {
     public AbstractObject setDirection(Vector3f direction) {
         this.direction = direction;
         return this;
+    }
+
+    public void setMass(float mass) {
+        this.mass = mass;
     }
 
 }

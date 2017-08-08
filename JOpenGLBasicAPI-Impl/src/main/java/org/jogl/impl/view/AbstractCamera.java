@@ -17,9 +17,7 @@ package org.jogl.impl.view;
 
 import org.jogl.api.Camera;
 import org.jogl.api.Config;
-import org.jogl.impl.util.OpenGLUtil;
-import org.joml.Vector2f;
-import org.joml.Vector3f;
+import org.jphysics.math.Vector3f;
 
 /**
  *

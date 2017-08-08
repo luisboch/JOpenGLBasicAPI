@@ -16,8 +16,7 @@
 package org.jogl.api;
 
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
-import org.joml.Vector3fc;
+import org.jphysics.math.Vector3f;
 
 /**
  *
@@ -30,42 +29,55 @@ public interface Camera {
     Matrix4f getViewMatrix();
 
     Vector3f getPosition();
-    
+
     Vector3f getTarget();
 
-    public default Camera moveToFront(float secs){
+    public default Camera moveToFront(float secs) {
         Vector3f sum = new Vector3f(getDirection()).normalize().mul(secs);
         getPosition().add(sum);
-        getTarget() .set(new Vector3f(getPosition()).add(getDirection()));
+        getTarget().set(new Vector3f(getPosition()).add(getDirection()));
         return this;
     }
-    
-    public default Camera moveToRear(float secs){
+
+    public default Camera moveToRear(float secs) {
         Vector3f sum = new Vector3f(getDirection()).normalize().mul(secs);
         getPosition().sub(sum);
         getTarget().set(new Vector3f(getPosition()).add(getDirection()));
         return this;
     }
 
-    public default Camera rotateLeft(float secs){
-        getDirection().set(new Matrix4f().rotateY((float)Math.toRadians(30d) * secs ).transformDirection(getDirection()));
-        getTarget() .set(new Vector3f(getPosition()).add(getDirection()));
+    public default Camera rotateLeft(float secs) {
+        getDirection().set(new Matrix4f().rotateY((float) Math.toRadians(30d) * secs).transformDirection(getDirection()));
+        getTarget().set(new Vector3f(getPosition()).add(getDirection()));
         return this;
     }
-    public default Camera rotateRight(float secs){
-        getDirection().set(new Matrix4f().rotateY((float)Math.toRadians(30d) * secs * -1).transformDirection(getDirection()));
-        getTarget().set( new Vector3f(getPosition()).add(getDirection()));
+
+    default Camera lookDown(float secs) {
+        getDirection().set(new Matrix4f().rotateX((float) Math.toRadians(30d) * secs * -1).transformDirection(getDirection()));
+        getTarget().set(new Vector3f(getPosition()).add(getDirection()));
         return this;
     }
-    
-    public default Camera strafeRight(float secs){
+
+    default Camera lookUP(float secs) {
+        getDirection().set(new Matrix4f().rotateX((float) Math.toRadians(30d) * secs).transformDirection(getDirection()));
+        getTarget().set(new Vector3f(getPosition()).add(getDirection()));
+        return this;
+    }
+
+    public default Camera rotateRight(float secs) {
+        getDirection().set(new Matrix4f().rotateY((float) Math.toRadians(30d) * secs * -1).transformDirection(getDirection()));
+        getTarget().set(new Vector3f(getPosition()).add(getDirection()));
+        return this;
+    }
+
+    public default Camera strafeRight(float secs) {
         Vector3f cross = new Vector3f(getUp()).cross(getDirection()).normalize();
         getPosition().sub(cross.mul(secs));
         getTarget().set(new Vector3f(getPosition()).add(getDirection()));
         return this;
     }
-    
-    public default Camera strafeLeft(float secs){
+
+    public default Camera strafeLeft(float secs) {
         Vector3f cross = new Vector3f(getUp()).cross(getDirection()).normalize();
         getPosition().add(cross.mul(secs));
         getTarget().set(new Vector3f(getPosition()).add(getDirection()));
@@ -75,4 +87,17 @@ public interface Camera {
     public Vector3f getUp();
 
     public Vector3f getDirection();
+
+    default Camera setDirection(Vector3f dir) {
+        getDirection().set(dir);
+        getTarget().set(new Vector3f(getPosition()).add(getDirection()));
+        return this;
+    }
+
+    default Camera setPosition(Vector3f pos) {
+        getPosition().set(pos);
+        getTarget().set(new Vector3f(getPosition()).add(getDirection()));
+        return this;
+    }
+
 }

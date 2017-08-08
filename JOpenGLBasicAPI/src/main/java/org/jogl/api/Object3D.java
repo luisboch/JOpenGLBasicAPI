@@ -23,7 +23,7 @@ import org.jphysics.math.Vector3f;
 /**
  *
  * @author luis
- * @param <Type>
+ * @param <T>
  */
 public interface Object3D<T extends Object3D> extends PhysicObject {
 
