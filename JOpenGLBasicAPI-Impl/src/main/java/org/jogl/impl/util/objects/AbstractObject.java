@@ -28,12 +28,12 @@ import org.jphysics.math.Vector3f;
  *
  * @author luis
  */
-abstract class AbstractObject<A extends AbstractObject> implements Object3D<A> {
+public abstract class AbstractObject<A extends AbstractObject> implements Object3D<A> {
 
     protected Mesh mesh;
     protected Material material;
     protected Vector3f position = new Vector3f();
-    protected Matrix4f transform = new Matrix4f().identity().rotateY(0.1f);
+    protected Matrix4f transform = new Matrix4f().identity().rotateY(0.0001f);
     protected boolean alive = true;
     protected float mass = 1f;
 
@@ -45,6 +45,7 @@ abstract class AbstractObject<A extends AbstractObject> implements Object3D<A> {
     private float maxVelocity;
     private List<PhysicObject> children = new ArrayList<>();
     private PhysicObject parent;
+    private String name;
 
     @Override
     public Vector3f getPosition() {
@@ -129,7 +130,7 @@ abstract class AbstractObject<A extends AbstractObject> implements Object3D<A> {
     public void setMaxVelocity(float maxVelocity) {
         this.maxVelocity = maxVelocity;
     }
-    
+
     @Override
     public Matrix4f getTransform() {
         return transform;
@@ -181,4 +182,12 @@ abstract class AbstractObject<A extends AbstractObject> implements Object3D<A> {
         this.mass = mass;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    
 }

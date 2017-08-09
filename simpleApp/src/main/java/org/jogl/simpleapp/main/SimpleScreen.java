@@ -16,6 +16,8 @@
 package org.jogl.simpleapp.main;
 
 import java.awt.Color;
+import java.util.Objects;
+import java.util.Random;
 import org.jogl.api.Config;
 import org.jogl.api.Object3D;
 import org.jogl.api.input.Key;
@@ -23,52 +25,84 @@ import org.jogl.api.screen.Scene;
 import org.jogl.impl.AbstractScene;
 import org.jogl.impl.shaders.PhongShader;
 import org.jogl.impl.util.Util;
+import org.jogl.impl.util.objects.AbstractObject;
 import org.jogl.impl.util.objects.Cube;
 import org.jogl.impl.util.objects.Square;
 import org.jogl.materials.SmoothMaterial;
+import org.jphysics.DestroyListener;
 import org.jphysics.Engine;
+import org.jphysics.api.GameObject;
 import org.jphysics.math.Vector3f;
 
-public class SimpleScreen extends AbstractScene {
-    
+public class SimpleScreen extends AbstractScene implements DestroyListener {
+
     private static final float MOVE_MULTIPLIER = 4f;
     private static final float WEAPON_RELOAD = 1f;
-    
+    private static final float WEAPON_EXPLOSION_TIME = 0.2f;
+    private static final float WEAPON_EXPLOSION_VELOCITY = 2f;
+
+    private static final String WEAPON_NAME = "_FIRE_";
     private Cube control = new Cube();
+    private Cube top = new Cube();
+    private Cube left = new Cube();
+    private Cube rigth = new Cube();
+
     private Square square1 = new Square();
     private Square square2 = new Square();
-    
-    private float lastfire = 0f;
-    
-    final Engine engine = new Engine(10000, 10000);
-    
+    private Weapon weapon;
+
+    final Engine engine = new Engine(10, 10, 10);
+
     public SimpleScreen() {
     }
-    
+
     @Override
     public Scene init() {
         Config.defaultView();
         super.init();
         super.setShader(new PhongShader());
-        
+
+        //Configuring the area.
         control.setMaterial(new SmoothMaterial(Util.convert(Color.BLUE)));
+        control.scale(new Vector3f(2f, 0.5f, 0.5f));
+        control.setPosition(new Vector3f(engine.getHeight() * 0.5f, engine.getHeight() * 0.5f, 0));
         addObject(control);
+        weapon = new Weapon(control, () -> {
+            Cube cube = new Cube();
+            cube.setMaterial(new SmoothMaterial(Util.convert(Color.YELLOW)));
+            cube.setMaxVelocity(15f);
+
+            cube.scale(new Vector3f(0.05f, 0.05f, 0.1f));
+            cube.setName(WEAPON_NAME);
+            return cube;
+        }, WEAPON_RELOAD, this);
+
+        // Configuring the space
+        top.setPosition(control.getPosition().add(new Vector3f(0, 0, -15)));
+//        top.scale(new Vector3f(10));
+        top.setMaterial(new SmoothMaterial(Util.convert(Color.red)));
+        addObject(top);
         
-        getCamera().setPosition(new Vector3f(0f, 4.4f, 9.6f));
+        
+        // Configuing camera view
+        getCamera().setPosition(control.getPosition().add(new Vector3f(0f, 4.4f, 9.6f)));
         getCamera().setDirection(new Vector3f(0f, -0.308f, -1.976f));
-        
+
+        engine.setDestroyListener(this);
+        engine.setDestroyOnLeaveMap(true);
+        engine.setAvoidOjectsLeaveMap(true);
         return this;
     }
-    
+
     @Override
     protected void createObject(Object3D object3D) {
         super.createObject(object3D);
         engine.add(object3D);
     }
-    
+
     @Override
     public Scene update(float secs) {
-        
+
         final Object3D object = control;
 //        
         super.update(secs);
@@ -79,19 +113,19 @@ public class SimpleScreen extends AbstractScene {
         if (keyboard.isDown(Key.J)) {
             getCamera().moveToRear(secs);
         }
-        
+
         if (keyboard.isDown(Key.H)) {
             getCamera().strafeLeft(secs);
         }
-        
+
         if (keyboard.isDown(Key.K)) {
             getCamera().strafeRight(secs);
         }
-        
+
         if (keyboard.isDown(Key.I)) {
             getCamera().rotateRight(secs);
         }
-        
+
         if (keyboard.isDown(Key.Y)) {
             getCamera().rotateLeft(secs);
         }
@@ -102,8 +136,6 @@ public class SimpleScreen extends AbstractScene {
             getCamera().lookDown(secs);
         }
 
-//        System.out.println("Camera pos:" + getCamera().getPosition());
-//        System.out.println("Camera dir:" + getCamera().getDirection());
         if (keyboard.isDown(Key.A) || keyboard.isDown(Key.LEFT)) {
             final Vector3f pos = object.getPosition();
             pos.x -= secs * MOVE_MULTIPLIER;
@@ -114,7 +146,7 @@ public class SimpleScreen extends AbstractScene {
             pos.x += secs * MOVE_MULTIPLIER;
             object.setPosition(pos);
         }
-        
+
         if (keyboard.isDown(Key.T)) {
             object.getTransform().rotateZ(-secs);
         }
@@ -122,26 +154,32 @@ public class SimpleScreen extends AbstractScene {
             object.getTransform().rotateY(-secs);
         }
         if (keyboard.isDown(Key.SPACE)) {
-            fire(secs);
+            weapon.fire();
+
         }
-        
-        lastfire += secs;
-        
+        weapon.update(secs);
+
         return this;
     }
-    
-    public void fire(float secs) {
-        if (lastfire >= WEAPON_RELOAD) {
-            Cube cube = new Cube();
-            cube.setMaterial(new SmoothMaterial(Util.convert(Color.YELLOW)));
-            Vector3f pos = control.getPosition();
-            cube.setPosition(pos);
-            cube.scale(new Vector3f(0.05f, 0.05f, 0.1f));
-            cube.setVelocity(new Vector3f(0f, 0f, -5f));
-            cube.setMaxVelocity(15f);
-            addObject(cube);
-            lastfire = 0f;
+
+    @Override
+    public void destroy(GameObject obj) {
+        if (obj instanceof AbstractObject && Objects.equals(((AbstractObject) obj).getName(), WEAPON_NAME)) {
+            final Random r = new Random();
+            // Just for better view
+            final float maxVel = WEAPON_EXPLOSION_VELOCITY;
+            for (int i = 0; i < 7; i++) {
+                final TimeOutObject t = new ExplosionEffect(WEAPON_EXPLOSION_TIME);
+                t.setPosition(obj.getPosition());
+                float x = r.nextFloat() * (r.nextBoolean() ? -maxVel : maxVel);
+                float y = r.nextFloat() * (r.nextBoolean() ? -maxVel : maxVel);
+                float z = r.nextFloat() * (r.nextBoolean() ? -maxVel : maxVel);
+                t.setVelocity(new Vector3f(x, y, z));
+                addObject(t);
+            }
         }
+
+        removeObject((Object3D) obj);
     }
-    
+
 }
