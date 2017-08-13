@@ -15,7 +15,10 @@
  */
 package org.jogl.impl.shaders;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.jogl.api.Material;
 import org.jogl.api.Shader;
 import org.jogl.api.screen.Scene;
@@ -40,13 +43,18 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
  */
 public class SimpleShader extends AbstractShader {
 
-    private static final String PATH = SimpleShader.class.getResource("/shaders/").getPath();
+    private static final String VERTEX_SHADER;
 
-    private static final String VERTEX_SHADER
-            = FileUtil.readFile(PATH + "simpleshader.vert");
+    private static final String FRAGMENT_SHADER;
 
-    private static final String FRAGMENT_SHADER
-            = FileUtil.readFile(PATH + "simpleshader.frag");
+    static {
+        try {
+            VERTEX_SHADER = FileUtil.readFile(SimpleShader.class.getResource("/shaders/simpleshader.vert").openStream());
+            FRAGMENT_SHADER = FileUtil.readFile(SimpleShader.class.getResource("/shaders/simpleshader.frag").openStream());
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
 
     @Override
     protected String getVertexShaderCode() {
@@ -55,6 +63,7 @@ public class SimpleShader extends AbstractShader {
 
     @Override
     protected String getFragmetShaderCode() {
+        System.out.println();
         return FRAGMENT_SHADER;
     }
 
@@ -94,7 +103,7 @@ public class SimpleShader extends AbstractShader {
                     if (ob.texture != null) {
                         glActiveTexture(GL_TEXTURE0 + texCount);
                         glBindTexture(GL_TEXTURE_2D, ob.texture.id);
-                        OpenGLUtil.setUniform(this.programId, "uTexture",texCount);
+                        OpenGLUtil.setUniform(this.programId, "uTexture", texCount);
                         glBindTexture(GL_TEXTURE_2D, 0);
                         texCount++;
                     }

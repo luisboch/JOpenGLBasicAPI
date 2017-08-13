@@ -15,6 +15,7 @@
  */
 package org.jogl.impl.shaders;
 
+import java.io.IOException;
 import java.util.List;
 import org.jogl.api.Material;
 import org.jogl.api.PhongMaterial;
@@ -36,15 +37,20 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
  * @author luis
  */
 public class PhongShader extends AbstractShader {
+    
+    private static final String VERTEX_SHADER;
 
-    private static final String PATH = PhongShader.class.getResource("/shaders/").getPath();
+    private static final String FRAGMENT_SHADER;
 
-    private static final String VERTEX_SHADER
-            = FileUtil.readFile(PATH + "phong.vert");
-
-    private static final String FRAGMENT_SHADER
-            = FileUtil.readFile(PATH + "phong.frag");
-
+    static {
+        try {
+            VERTEX_SHADER = FileUtil.readFile(SimpleShader.class.getResource("/shaders/phong.vert").openStream());
+            FRAGMENT_SHADER = FileUtil.readFile(SimpleShader.class.getResource("/shaders/phong.frag").openStream());
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+    
     @Override
     protected String getVertexShaderCode() {
         return VERTEX_SHADER;

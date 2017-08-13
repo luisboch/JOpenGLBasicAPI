@@ -150,10 +150,8 @@ public abstract class AbstractShader implements Shader {
         return compiled;
     }
     
-    
     public boolean isUsing(){
         return using;
     }
-    
     
 }
