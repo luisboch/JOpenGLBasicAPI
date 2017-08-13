@@ -344,9 +344,7 @@ public abstract class AbstractScene implements Scene {
 
         if (key != null) {
             objects.remove(key);
-        } else {
-            System.out.println("Can't remove object " + ref.toString() + " reference key not found, ignoring... ");
-        }
+        } 
     }
 
     @Override
@@ -427,8 +425,6 @@ public abstract class AbstractScene implements Scene {
     }
 
     private void calculateNormals(Mesh mesh) {
-
-        System.out.println("Calculating Normals for: " + mesh.getVertices().size());
 
         final List<Vector3f> vertices = new ArrayList<>();
 

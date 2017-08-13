@@ -15,38 +15,47 @@
  */
 package org.jogl.simpleapp.main;
 
+import java.awt.Color;
+import org.jogl.impl.util.Util;
 import org.jogl.impl.util.objects.Cube;
-import org.jphysics.api.PhysicObject;
+import org.jogl.materials.SmoothMaterial;
+import org.jphysics.math.Vector3f;
 
 /**
  *
  * @author luis
  */
-public class TimeOutObject extends Cube {
+public class Enemy extends Cube {
 
-    private final float life;
-    private long born;
+    private int life;
 
-    public TimeOutObject(float secs) {
+    public Enemy() {
         super();
-        this.life = secs;
-        this.born = System.currentTimeMillis();
+        life = 5;
+        setMaterial(new SmoothMaterial(Util.convert(Color.RED)));
+        scale(new Vector3f(1.2f));
+        setMaxVelocity(10f);
+        setRadius(1f);
+
     }
 
-    @Override
-    public void update(float secs) {
-        super.update(secs);
-        final float currLife = ((float) (System.currentTimeMillis() - born)) / 1000;
-        if (currLife > life) {
-            setAlive(false);
-        }
+    public void setLife(int life) {
+        this.life = life;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
-    public PhysicObject decreaseLife() {
-        // when decrease life is called then we need to destroy this instance.
-        born -= life * 1000;
+    public Enemy decreaseLife() {
+        life--;
         return this;
+    }
+
+    @Override
+    public boolean isAlive() {
+        return life > 0;
     }
 
 }
